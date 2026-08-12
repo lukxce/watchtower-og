@@ -16,9 +16,9 @@ export interface ThreatRow {
   delta: number | null;
 }
 
-export async function computeThreat(): Promise<ThreatRow[]> {
+export async function computeThreat(orgId: string): Promise<ThreatRow[]> {
   const db = await getDb();
-  const comps = await allCompetitors();
+  const comps = await allCompetitors(orgId);
   const rows: ThreatRow[] = [];
   for (const c of comps) {
     const count = async (channel: string) => {
@@ -65,9 +65,12 @@ export async function computeThreat(): Promise<ThreatRow[]> {
 
 // Snapshot current totals into history (called once per collection run) so
 // week-over-week deltas have a trail to compare against.
-export async function snapshotThreat(): Promise<void> {
+export async function snapshotThreat(orgId: string): Promise<void> {
   const db = await getDb();
-  const rows = await db.query<{ competitor_id: number; total: number }>('SELECT competitor_id, total FROM threat_scores');
+  const rows = await db.query<{ competitor_id: number; total: number }>(
+    'SELECT ts.competitor_id, ts.total FROM threat_scores ts JOIN competitors c ON c.id = ts.competitor_id WHERE c.org_id = $1',
+    [orgId],
+  );
   for (const r of rows) {
     await db.query('INSERT INTO threat_history (competitor_id, total) VALUES ($1, $2)', [r.competitor_id, r.total]);
   }

@@ -3,6 +3,7 @@
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
+import { requireOrgId } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ const catClass = (c: string) => `c-${(c || 'other').toLowerCase()}`;
 const scoreClass = (n: number) => (n >= 70 ? 's-hi' : n >= 45 ? 's-md' : 's-lo');
 
 // gauge ring color by threat level
-const ring = (n: number) => (n >= 70 ? '#C4453A' : n >= 55 ? '#E08A34' : n >= 42 ? '#4E9AC4' : '#3A9B6E');
+const ring = (n: number) => (n >= 70 ? '#B8362A' : n >= 55 ? '#9A5B00' : n >= 42 ? '#4A5BC9' : '#1F7A45');
 
 function ago(iso: string): string {
   const d = Date.now() - new Date(iso).getTime();
@@ -24,10 +25,11 @@ function ago(iso: string): string {
 export default async function Home({ searchParams }: { searchParams: Promise<{ cat?: string; comp?: string }> }) {
   const { cat, comp } = await searchParams;
   const active = cat && FILTERS.includes(cat) ? cat : 'All channels';
+  const orgId = await requireOrgId();
   const db = await getDb();
 
-  const clauses: string[] = ["si.status IN ('pending','signaled')"];
-  const params: unknown[] = [];
+  const clauses: string[] = ["si.status IN ('pending','signaled')", 'c.org_id = $1'];
+  const params: unknown[] = [orgId];
   if (active !== 'All channels') {
     params.push(active);
     clauses.push(`si.category = $${params.length}`);
@@ -43,8 +45,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
      ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 40`,
     params,
   );
-  const compCount = (await db.query<{ n: string }>('SELECT COUNT(*)::text n FROM competitors'))[0]?.n ?? '0';
-  const threat = await computeThreat();
+  const compCount = (await db.query<{ n: string }>('SELECT COUNT(*)::text n FROM competitors WHERE org_id = $1', [orgId]))[0]?.n ?? '0';
+  const threat = await computeThreat(orgId);
   const activeComp = comp ? threat.find((t) => t.slug === comp)?.competitor ?? comp : null;
   const pillHref = (f: string) => {
     const p = new URLSearchParams();

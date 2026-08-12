@@ -14,9 +14,11 @@
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.7.4",
     "@electric-sql/pglite": "^0.2.17",
     "diff": "^7.0.0",
     "fast-xml-parser": "^4.5.1",
+    "geist": "^1.7.2",
     "html-to-text": "^9.0.5",
     "next": "^15.1.0",
     "postgres": "^3.4.5",

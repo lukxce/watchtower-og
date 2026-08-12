@@ -35,9 +35,12 @@ function narrate(name: string, ev: { subdomains: string[]; aiHires: number; even
   return { headline: `${name} shows clustered activity worth watching — ${signals} pre-launch signals aligned` };
 }
 
-export async function computeRadar(): Promise<RadarForecast[]> {
+export async function computeRadar(orgId: string): Promise<RadarForecast[]> {
   const db = await getDb();
-  const comps = await db.query<{ id: number; name: string; slug: string }>('SELECT id, name, slug FROM competitors ORDER BY id');
+  const comps = await db.query<{ id: number; name: string; slug: string }>(
+    'SELECT id, name, slug FROM competitors WHERE org_id = $1 ORDER BY id',
+    [orgId],
+  );
   const out: RadarForecast[] = [];
   for (const c of comps) {
     const rows = await db.query<SignalRow>(

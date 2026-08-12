@@ -11,9 +11,11 @@ import { collectAdsGoogle } from '../src/collectors/adsGoogle';
 import { collectAdsLinkedin } from '../src/collectors/adsLinkedin';
 import { computeThreat } from '../src/lib/threat';
 
+const ORG_ID = process.env.ORG_ID ?? 'dev-workspace';
+
 async function main() {
   const db = await getDb();
-  const comps = await allCompetitors();
+  const comps = await allCompetitors(ORG_ID);
   if (comps.length === 0) {
     console.error('No competitors — run `npm run seed` first.');
     process.exit(1);
@@ -30,7 +32,7 @@ async function main() {
   console.log('  ads_linkedin', await collectAdsLinkedin(c));
 
   console.log('\n== threat index ==');
-  for (const t of await computeThreat()) console.log(`  ${t.competitor.padEnd(11)} ${t.total}  (gtm ${t.dims.gtm} talent ${t.dims.talent} product ${t.dims.product} market ${t.dims.market})`);
+  for (const t of await computeThreat(ORG_ID)) console.log(`  ${t.competitor.padEnd(11)} ${t.total}  (gtm ${t.dims.gtm} talent ${t.dims.talent} product ${t.dims.product} market ${t.dims.market})`);
 
   console.log('\n== feed sample ==');
   const items = await db.query<{ channel: string; title: string }>(

@@ -1,23 +1,31 @@
-# Watchtower SaaS
+# Watchtower
 
-Competitive-intelligence tracker — the Node/Next.js/Vercel implementation of
-`SAAS_BUILD_SPEC.md` (in the sibling `~/watchtower` repo). Tracks a competitor
-set across 14 channels, detects changes, and scores a per-competitor Threat
-Index.
+Verifiable competitive-intelligence SaaS — Next.js/Vercel, multi-tenant. Every
+workspace tracks its own competitor set across 22 channels, turns captured
+pages into cited claims (not just diffs), and scores a per-competitor Threat
+Index. Marketing site (home/pricing/blog/contact) lives alongside the product
+app in the same repo; see `field-report` context in `HANDOFF.md` for the full
+positioning rationale.
 
 ## Run locally (zero config)
 
 ```sh
 export PATH="$HOME/.local/node/bin:$PATH"
 npm install
-npm run seed     # load the competitor registry (verified IDs from the MVP)
+npm run seed     # load the competitor registry into the dev workspace
 npm run smoke    # end-to-end pipeline test (one competitor, free channels)
-npm run dev      # dashboard at http://localhost:3000
+npm run dev      # marketing site at /, app at /feed — http://localhost:3000
 ```
 
 With no `DATABASE_URL`, it uses an embedded Postgres (PGlite) in `./data` — no
 database to install. Set `DATABASE_URL` to a Neon connection string for
 production; the schema is identical.
+
+**Multi-tenancy (Clerk):** without `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` +
+`CLERK_SECRET_KEY` set, auth is skipped entirely and everything runs as one
+`dev-workspace` — no sign-in needed locally. Set both (free at
+dashboard.clerk.com, enable Organizations) to get real multi-tenant auth, an
+org switcher, and `/sign-in` `/sign-up` `/select-org`. See `.env.example`.
 
 Trigger a collection run manually:
 ```sh
@@ -45,15 +53,25 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.
   Day-one uses transparent count proxies; Phase 2 swaps in LLM-scored dims.
-- **Dashboard** (`app/page.tsx`): signal feed + threat index.
-- **Cron + manual run** API routes, `CRON_SECRET`-guarded.
+- **App** (`app/(app)/`): signal feed + threat index, gated behind Clerk auth
+  once configured. **Marketing site** (`app/(marketing)/`): home, pricing,
+  contact, blog — served at `/`.
+- **Cron + manual run** API routes, `CRON_SECRET`-guarded, now iterate every
+  workspace.
 
-## Not yet wired (next phases, per spec §9)
+## Not yet wired (next)
 
+- **Billing (Stripe)** — pricing tiers exist on the marketing site; checkout
+  isn't wired to Clerk org creation yet.
+- **Claim ledger execution** — the `claims`, `comparison_pages`, and
+  `our_claims` tables exist (field-report §03 architecture); the
+  extract → dedupe → contradict pipeline that fills them isn't implemented.
+- **Comparison-page & campaign-landing-page collectors** — the Wayback CDX +
+  sitemap + pattern-match discovery method is designed, not yet a collector.
 - LLM interpret/enrich layer (Claude) — turn changes into scored signals + the
   written digest. Routes and schema are ready; needs `ANTHROPIC_API_KEY` + the
   prompt wiring.
-- Multi-tenancy (Clerk/Stripe), onboarding auto-discovery, battlecards, Ask/RAG.
+- Onboarding auto-discovery, Ask/RAG.
 - Deferred channels: LinkedIn posts, reviews cluster, Glassdoor, traffic/SEO.
 
 ## Local dev note (PGlite is single-process)

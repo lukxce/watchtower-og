@@ -14,8 +14,8 @@ export interface RunLine {
   result: string;
 }
 
-export async function runCollection(opts: { channels?: string[]; tier2?: boolean } = {}): Promise<RunLine[]> {
-  const comps = await allCompetitors();
+export async function runCollection(orgId: string, opts: { channels?: string[]; tier2?: boolean } = {}): Promise<RunLine[]> {
+  const comps = await allCompetitors(orgId);
   const channels = opts.channels ? RUNNABLE_CHANNELS.filter((c) => opts.channels!.includes(c.key)) : RUNNABLE_CHANNELS;
   const out: RunLine[] = [];
   for (const comp of comps) {

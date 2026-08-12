@@ -141,6 +141,70 @@ CREATE TABLE IF NOT EXISTS battlecards (
   generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   generated_by TEXT NOT NULL DEFAULT 'claude-in-session'
 );
+
+-- Multi-tenancy: every competitor belongs to a workspace (Clerk org id, or
+-- 'dev-workspace' when Clerk isn't configured for local dev). Competitors were
+-- previously globally unique by slug (single shared workspace) — now uniqueness
+-- is scoped per workspace so two customers can each track a "salesforce".
+ALTER TABLE competitors DROP CONSTRAINT IF EXISTS competitors_slug_key;
+ALTER TABLE competitors ADD COLUMN IF NOT EXISTS org_id TEXT NOT NULL DEFAULT 'dev-workspace';
+CREATE UNIQUE INDEX IF NOT EXISTS idx_competitors_org_slug ON competitors(org_id, slug);
+CREATE INDEX IF NOT EXISTS idx_competitors_org ON competitors(org_id);
+
+-- Claim ledger (field report §03): structured claims extracted from any
+-- captured page, deduped/tracked new-vs-changed, and checked against the
+-- workspace's own feature truth table for contradiction ("how to win").
+CREATE TABLE IF NOT EXISTS claims (
+  id SERIAL PRIMARY KEY,
+  org_id TEXT NOT NULL,
+  competitor_id INT NOT NULL REFERENCES competitors(id),
+  section TEXT NOT NULL, -- positioning | pricing | feature | integration | compliance | proof | objection
+  claim_text TEXT NOT NULL,
+  source_url TEXT,
+  source_quote TEXT,
+  status TEXT NOT NULL DEFAULT 'new', -- new | reaffirmed | changed | contradicted
+  confidence INT NOT NULL DEFAULT 1, -- bumped on repetition across sources
+  first_seen TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_claims_org_comp ON claims(org_id, competitor_id, section);
+
+-- Comparison / alternative pages discovered per competitor (sitemap + pattern
+-- match + Wayback CDX union, per field-report §03) — the highest-value page
+-- type: a competitor's own claimed differentiators about us.
+CREATE TABLE IF NOT EXISTS comparison_pages (
+  id SERIAL PRIMARY KEY,
+  org_id TEXT NOT NULL,
+  competitor_id INT NOT NULL REFERENCES competitors(id),
+  url TEXT NOT NULL,
+  discovered_via TEXT NOT NULL, -- sitemap | crawl | wayback
+  mentions_us BOOLEAN NOT NULL DEFAULT false,
+  first_seen TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_checked TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(competitor_id, url)
+);
+
+-- Workspace's own feature/claim truth table — what the claim ledger checks
+-- competitor claims against to auto-derive "how to win" content.
+CREATE TABLE IF NOT EXISTS our_claims (
+  id SERIAL PRIMARY KEY,
+  org_id TEXT NOT NULL,
+  section TEXT NOT NULL,
+  claim_text TEXT NOT NULL,
+  source_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_our_claims_org ON our_claims(org_id, section);
+
+-- Marketing-site contact form submissions. No email service is wired yet
+-- (would be Resend) — submissions land here so nothing is silently dropped.
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 `;
 
 declare global {

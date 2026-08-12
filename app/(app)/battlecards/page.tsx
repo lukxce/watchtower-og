@@ -3,6 +3,7 @@
 // Falls back to the "what this needs" stub if none have been generated yet.
 import { getDb } from '@/db/client';
 import { Soon } from '@/lib/soon';
+import { requireOrgId } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,10 +24,12 @@ function ago(iso: string): string {
 }
 
 export default async function Battlecards() {
+  const orgId = await requireOrgId();
   const db = await getDb();
   const rows = await db.query<{ name: string; slug: string; content: Card | string; generated_at: string; generated_by: string }>(
     `SELECT c.name, c.slug, b.content, b.generated_at, b.generated_by
-     FROM battlecards b JOIN competitors c ON c.id = b.competitor_id ORDER BY c.id`,
+     FROM battlecards b JOIN competitors c ON c.id = b.competitor_id WHERE c.org_id = $1 ORDER BY c.id`,
+    [orgId],
   );
   if (rows.length === 0) {
     return (

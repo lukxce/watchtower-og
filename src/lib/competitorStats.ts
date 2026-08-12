@@ -13,10 +13,11 @@ export interface CompStat {
   threat: number | null;
 }
 
-export async function competitorStats(): Promise<CompStat[]> {
+export async function competitorStats(orgId: string): Promise<CompStat[]> {
   const db = await getDb();
   const comps = await db.query<{ id: number; slug: string; name: string; domain: string }>(
-    'SELECT id, slug, name, domain FROM competitors ORDER BY id',
+    'SELECT id, slug, name, domain FROM competitors WHERE org_id = $1 ORDER BY id',
+    [orgId],
   );
   const out: CompStat[] = [];
   for (const c of comps) {

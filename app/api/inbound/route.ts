@@ -24,13 +24,18 @@ function domainOf(from: string): string | null {
 
 export async function POST(req: NextRequest) {
   if (!authorized(req)) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // Each workspace gets its own forwarding address (…/api/inbound?org=<id>) so
+  // a forwarded newsletter routes to the right tenant — the email itself
+  // carries no workspace context.
+  const orgId = req.nextUrl.searchParams.get('org');
+  if (!orgId) return NextResponse.json({ error: 'missing ?org=' }, { status: 400 });
   const body = (await req.json().catch(() => ({}))) as Inbound;
   const from = body.from ?? '';
   const senderDomain = domainOf(from);
   if (!senderDomain) return NextResponse.json({ ok: false, reason: 'no sender domain' });
 
   const db = await getDb();
-  const comps = await db.query<{ id: number; domain: string }>('SELECT id, domain FROM competitors');
+  const comps = await db.query<{ id: number; domain: string }>('SELECT id, domain FROM competitors WHERE org_id = $1', [orgId]);
   const match = comps.find((c) => senderDomain.endsWith(c.domain.replace(/^www\./, '')) || c.domain.replace(/^www\./, '').endsWith(senderDomain));
   if (!match) return NextResponse.json({ ok: true, matched: false });
 

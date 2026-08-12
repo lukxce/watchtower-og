@@ -5,6 +5,7 @@ import { getDb } from './client';
 
 export interface Competitor {
   id: number;
+  org_id: string;
   slug: string;
   name: string;
   domain: string;
@@ -16,9 +17,15 @@ export interface Competitor {
   extra_tier2: string[];
 }
 
-export async function allCompetitors(): Promise<Competitor[]> {
+export async function allCompetitors(orgId: string): Promise<Competitor[]> {
   const db = await getDb();
-  return db.query<Competitor>('SELECT * FROM competitors ORDER BY id');
+  return db.query<Competitor>('SELECT * FROM competitors WHERE org_id = $1 ORDER BY id', [orgId]);
+}
+
+export async function distinctOrgIds(): Promise<string[]> {
+  const db = await getDb();
+  const rows = await db.query<{ org_id: string }>('SELECT DISTINCT org_id FROM competitors');
+  return rows.map((r) => r.org_id);
 }
 
 export interface StreamItem {

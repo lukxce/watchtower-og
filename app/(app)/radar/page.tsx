@@ -1,11 +1,13 @@
 // Launch Radar — the flagship. Cross-signal forecasts per competitor.
 import { computeRadar } from '@/lib/radar';
+import { requireOrgId } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 const conf = (c: string) => (c === 'High' ? 'r-hi' : c === 'Medium' ? 'r-md' : 'r-lo');
 
 export default async function Radar() {
-  const forecasts = await computeRadar();
+  const orgId = await requireOrgId();
+  const forecasts = await computeRadar(orgId);
   return (
     <main className="main solo">
       <section className="feed">

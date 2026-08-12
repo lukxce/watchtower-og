@@ -6,6 +6,7 @@
 import { getDb } from '../src/db/client';
 import { competitorStats } from '../src/lib/competitorStats';
 
+const ORG_ID = process.env.ORG_ID ?? 'dev-workspace';
 const adCount = (note?: string) => note?.match(/~?([\d,-]+)\s*(active |total )?ads/i)?.[1] ?? (note && note.includes('0 ') ? '0' : '—');
 
 interface Card {
@@ -113,7 +114,7 @@ const STRATEGY: Record<string, (n: { meta: string; google: string; linkedin: str
 
 async function main() {
   const db = await getDb();
-  const stats = await competitorStats();
+  const stats = await competitorStats(ORG_ID);
   for (const s of stats) {
     const gen = STRATEGY[s.slug];
     if (!gen) continue;

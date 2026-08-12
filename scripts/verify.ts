@@ -4,8 +4,10 @@ import { allCompetitors } from '../src/db/queries';
 import { CHANNELS } from '../src/lib/channels';
 import { clearCaptureCache } from '../src/lib/fetchLadder';
 
+const ORG_ID = process.env.ORG_ID ?? 'dev-workspace';
+
 async function main() {
-  const comps = await allCompetitors();
+  const comps = await allCompetitors(ORG_ID);
   const c = comps.find((x) => x.slug === 'modash') ?? comps[0];
   console.log(`\nRunning all ${CHANNELS.length} channels for ${c.name}:\n`);
   clearCaptureCache();
