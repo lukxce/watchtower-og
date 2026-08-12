@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Pricing — Watchtower',
-  description: 'Self-serve from $99/mo. No demo required to see a price — the rest of this category makes you ask.',
+  description: "Self-serve from $99/mo. No demo required to see a price, unlike the rest of this category.",
 };
 
 export default function Pricing() {
@@ -13,9 +13,9 @@ export default function Pricing() {
           <span className="kicker">Pricing</span>
           <h1 className="mkt-h1">Published prices. No sales call required.</h1>
           <p className="lede">
-            Every established competitive intelligence platform gates pricing behind a demo — third-party trackers
+            Every established competitive intelligence platform gates pricing behind a demo. Third-party trackers
             estimate entry deployments around $15,000/year, scaling well past six figures. We think that friction
-            protects the vendor, not the buyer. Here&apos;s what it actually costs.
+            protects the vendor more than the buyer, so here&apos;s what it actually costs.
           </p>
         </div>
       </section>
@@ -76,16 +76,16 @@ export default function Pricing() {
               <h2>The honest test is whether it survives a stranger signing up.</h2>
               <p className="lede">
                 If a competitive intelligence tool actually works, a new user should be able to pick two or three
-                competitors and watch real, sourced signals appear inside an hour — no demo, no sales call needed
-                to find out whether it&apos;s worth the price. Gating that behind a conversation doesn&apos;t protect
-                the product&apos;s value. It hides how long it actually takes to deliver any.
+                competitors and watch real, sourced signals appear inside an hour. No demo, no sales call needed to
+                find out whether it&apos;s worth the price. Gating that behind a conversation doesn&apos;t protect
+                the product&apos;s value; it just hides how long it actually takes to deliver any.
               </p>
             </div>
             <div>
               <span className="mkt-eyebrow">Unit economics, honestly</span>
               <h2 style={{ fontSize: 22 }}>What the entry tier does and doesn&apos;t include</h2>
               <p className="lede">
-                Starter runs the 15 channels that need no paid API key at all — ads, hiring, product pages,
+                Starter runs the 15 channels that need no paid API key at all: ads, hiring, product pages,
                 subdomains, tech stack, reviews. Paid-source channels (traffic/SEO data, G2/Capterra, review
                 platforms billed per call) sit in Growth and above, because those costs scale with usage and we
                 won&apos;t promise a flat price we can&apos;t actually hold.

@@ -10,7 +10,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 const isProtectedRoute = createRouteMatcher([
-  '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/compare(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)',
+  '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/compare(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)', '/newsletters(.*)',
 ]);
 
 export default clerkConfigured

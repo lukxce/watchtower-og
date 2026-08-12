@@ -8,7 +8,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Watchtower — Verifiable competitive intelligence',
   description:
-    'Every signal cited, every gap disclosed. Track every competitor across 22 channels — self-serve, from $99/mo.',
+    'Every signal cited, every gap disclosed. Track every competitor across 22 channels, self-serve, from $99/mo.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

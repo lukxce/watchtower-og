@@ -11,6 +11,8 @@ export interface CompStat {
   adNote: { meta?: string; google?: string; linkedin?: string };
   jobs: number;
   threat: number | null;
+  dims: { gtm: number; talent: number; product: number; market: number; corporate: number } | null;
+  latestSignal: { title: string; createdAt: string } | null;
 }
 
 export async function competitorStats(orgId: string): Promise<CompStat[]> {
@@ -34,7 +36,13 @@ export async function competitorStats(orgId: string): Promise<CompStat[]> {
       );
       return r[0]?.note ?? undefined;
     };
-    const threatRow = await db.query<{ total: number }>('SELECT total FROM threat_scores WHERE competitor_id=$1', [c.id]);
+    const threatRow = await db.query<{ total: number; dims: CompStat['dims'] | string }>('SELECT total, dims FROM threat_scores WHERE competitor_id=$1', [c.id]);
+    const rawDims = threatRow[0]?.dims;
+    const dims = typeof rawDims === 'string' ? (JSON.parse(rawDims) as CompStat['dims']) : rawDims ?? null;
+    const latest = await db.query<{ title: string; created_at: string }>(
+      "SELECT title, created_at FROM stream_items WHERE competitor_id=$1 AND status IN ('pending','signaled') ORDER BY created_at DESC LIMIT 1",
+      [c.id],
+    );
     out.push({
       id: c.id,
       slug: c.slug,
@@ -45,7 +53,25 @@ export async function competitorStats(orgId: string): Promise<CompStat[]> {
       adNote: { meta: await note('ads_meta'), google: await note('ads_google'), linkedin: await note('ads_linkedin') },
       jobs: byChannel['jobs'] ?? 0,
       threat: threatRow[0]?.total ?? null,
+      dims,
+      latestSignal: latest[0] ? { title: latest[0].title, createdAt: latest[0].created_at } : null,
     });
+  }
+  return out;
+}
+
+// For each competitor, count how many of the 5 threat dimensions it has the
+// (tied-)highest score on among the set passed in. Real, computed from
+// threat_scores — not the authored positioning-map read.
+export function leadCounts(stats: CompStat[]): Record<number, number> {
+  const dimKeys = ['gtm', 'talent', 'product', 'market', 'corporate'] as const;
+  const out: Record<number, number> = {};
+  for (const s of stats) out[s.id] = 0;
+  for (const key of dimKeys) {
+    const withDim = stats.filter((s) => s.dims);
+    if (withDim.length === 0) continue;
+    const max = Math.max(...withDim.map((s) => s.dims![key]));
+    for (const s of withDim) if (s.dims![key] === max) out[s.id] += 1;
   }
   return out;
 }

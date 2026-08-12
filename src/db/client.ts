@@ -196,6 +196,23 @@ CREATE TABLE IF NOT EXISTS our_claims (
 );
 CREATE INDEX IF NOT EXISTS idx_our_claims_org ON our_claims(org_id, section);
 
+-- Newsletters & secret shopper (handoff §"channels"): a persona inbox signs
+-- up for each competitor's newsletter/product emails, and forwarded mail
+-- lands in stream_items via /api/inbound. This table tracks the manual signup
+-- step itself, since nothing can automate "fill out a form on their site"
+-- honestly without a real browser session and a real inbox to receive the
+-- confirmation link.
+CREATE TABLE IF NOT EXISTS secret_shopper (
+  id SERIAL PRIMARY KEY,
+  org_id TEXT NOT NULL,
+  competitor_id INT NOT NULL REFERENCES competitors(id),
+  persona_email TEXT,
+  status TEXT NOT NULL DEFAULT 'not_started', -- not_started | signed_up | confirmed | bounced
+  note TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(org_id, competitor_id)
+);
+
 -- Marketing-site contact form submissions. No email service is wired yet
 -- (would be Resend) — submissions land here so nothing is silently dropped.
 CREATE TABLE IF NOT EXISTS contact_messages (
@@ -231,7 +248,12 @@ async function connect(): Promise<Db> {
       },
     };
   }
-  for (const stmt of DDL.split(';').map((s) => s.trim()).filter(Boolean)) {
+  // Strip `-- line comments` before splitting on `;` — a semicolon inside a
+  // comment (e.g. "emails; forwarded mail...") otherwise breaks a statement
+  // in half. This has bitten this file twice; fixing it here instead of
+  // just the symptom.
+  const withoutComments = DDL.replace(/--[^\n]*/g, '');
+  for (const stmt of withoutComments.split(';').map((s) => s.trim()).filter(Boolean)) {
     await db.query(stmt);
   }
   return db;

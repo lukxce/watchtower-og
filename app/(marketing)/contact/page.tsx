@@ -2,7 +2,7 @@ import ContactForm from './ContactForm';
 
 export const metadata = {
   title: 'Contact — Watchtower',
-  description: 'Questions about a workspace, Enterprise, or anything else — reach us directly.',
+  description: 'Questions about a workspace, Enterprise, or anything else. Reach us directly.',
 };
 
 export default function Contact() {
@@ -11,7 +11,7 @@ export default function Contact() {
       <div className="wrap">
         <span className="mkt-eyebrow">Contact</span>
         <h2>Talk to us.</h2>
-        <p className="lede">Sales questions, an Enterprise workspace, or something broke — this reaches the people building it, not a queue.</p>
+        <p className="lede">Sales questions, an Enterprise workspace, or something broke. This reaches the people building it, not a queue.</p>
         <div className="contact-grid">
           <ContactForm />
           <div className="contact-info">
