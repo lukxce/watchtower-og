@@ -1,0 +1,157 @@
+/* Watchtower app shell — committed dark theme matching the product design.
+   Left sidebar · signal feed · threat-index rail. */
+:root{
+  --bg:#0E141B; --panel:#131B23; --card:#161F28; --card-hover:#1B2530;
+  --ink:#EAEEF2; --mut:#8A95A1; --faint:#5E6975; --line:#212C37; --line2:#1A232C;
+  --accent:#E08A34; --accent-soft:#F0A75E;
+  --up:#E0776B; --down:#5FB88C; --idle:#8792A0;
+  --sans:"Avenir Next","Segoe UI",system-ui,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gr:#2A3742;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.app{display:grid;grid-template-columns:212px 1fr;min-height:100vh}
+@media(max-width:860px){.app{grid-template-columns:1fr}}
+
+/* sidebar */
+.side{border-right:1px solid var(--line);padding:22px 0;background:var(--bg)}
+@media(max-width:860px){.side{display:none}}
+.logo{font-weight:700;font-size:18px;letter-spacing:-.01em;padding:2px 22px 22px}
+.logo b{color:var(--accent)}
+.side nav a{display:block;padding:9px 22px;font-size:14px;color:var(--mut);border-left:2px solid transparent}
+.side nav a:hover{color:var(--ink)}
+.side nav a.on{color:var(--ink);background:var(--panel);border-left-color:var(--accent);font-weight:600}
+
+/* main columns */
+.main{display:grid;grid-template-columns:1fr 300px;gap:0}
+@media(max-width:1040px){.main{grid-template-columns:1fr}}
+.feed{padding:30px 34px;min-width:0;border-right:1px solid var(--line)}
+.rail{padding:30px 26px}
+@media(max-width:1040px){.rail{border-top:1px solid var(--line)}}
+
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em;font-weight:700}
+.sub{color:var(--mut);font-size:13.5px;margin:0 0 20px}
+
+/* filter pills */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.pill{font-size:13px;padding:6px 14px;border:1px solid var(--line);border-radius:20px;color:var(--mut);background:transparent}
+.pill:hover{color:var(--ink);border-color:var(--faint)}
+.pill.on{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+
+/* signal cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:17px 19px;margin-bottom:12px;transition:background .15s}
+.card:hover{background:var(--card-hover)}
+.crow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:600}
+.c-pricing{background:#3A2A12;color:#E8A24C}
+.c-ads{background:#331F2C;color:#D986B4}
+.c-hiring{background:#14303A;color:#5FB6D6}
+.c-product{background:#183026;color:#63C08F}
+.c-news{background:#26263E;color:#9C9CE0}
+.c-reviews{background:#3A1E1C;color:#E0776B}
+.c-customers{background:#2E2A16;color:#D6C24C}
+.c-community,.c-marketing,.c-positioning,.c-funding,.c-other{background:#232E38;color:#9AA6B2}
+.comp{font-weight:700;font-size:14px}
+.score{font-family:var(--mono);font-size:12px;font-weight:700;padding:2px 8px;border-radius:5px;font-variant-numeric:tabular-nums}
+.score.s-hi{color:#F08A7E;background:rgba(196,69,58,.16)}
+.score.s-md{color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.score.s-lo{color:#8FA3B5;background:rgba(120,140,160,.12)}
+/* launch radar */
+.radar{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--up);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.radar-top{display:flex;align-items:center;margin-bottom:12px}
+.conf{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px}
+.conf.r-hi{color:#F08A7E;background:rgba(196,69,58,.16)}
+.conf.r-md{color:var(--accent);background:color-mix(in srgb,var(--accent) 15%,transparent)}
+.conf.r-lo{color:#8FA3B5;background:rgba(120,140,160,.12)}
+.radar-h{font-size:19px;margin:0 0 4px}
+.radar-win{font-family:var(--mono);font-size:11px;color:var(--faint);margin-bottom:12px}
+.radar-ev{margin:0;padding-left:18px}
+.radar-ev li{font-size:13.5px;color:#CBD3DB;margin-bottom:7px;line-height:1.5}
+.when{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.when.seen{font-style:italic;opacity:.9}
+.title{font-size:14.5px;color:#DDE3E9;line-height:1.5}
+.title a:hover{color:var(--accent-soft)}
+.empty{color:var(--mut);font-size:13.5px;padding:26px;border:1px dashed var(--line);border-radius:11px;background:var(--panel)}
+.empty code{font-family:var(--mono);font-size:12px;color:var(--accent-soft)}
+
+/* solo pages (competitors, compare, stubs) — single column */
+.main.solo{grid-template-columns:1fr}
+.main.solo .feed{border-right:none;max-width:900px}
+
+/* competitor cards */
+.compcard{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:11px}
+.compcard:hover{background:var(--card-hover)}
+.gauge.sm{width:44px;height:44px}
+.gauge.sm span{font-size:13px}
+.cc-body{flex:1;min-width:0}
+.cc-top{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.cc-dom{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+.cc-stats{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mut)}
+.cc-stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+.cc-arrow{color:var(--faint);font-size:18px}
+
+/* compare table */
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;margin-top:8px}
+table.cmp{border-collapse:collapse;width:100%;font-size:13.5px;min-width:560px}
+table.cmp th{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+table.cmp th a:hover{color:var(--accent-soft)}
+table.cmp td{padding:11px 14px;border-bottom:1px solid var(--line2)}
+table.cmp td.rl{color:var(--mut);font-size:12.5px}
+table.cmp td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+table.cmp tr:last-child td{border-bottom:none}
+
+/* battlecards */
+.bc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.bc-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.bc-head .comp{font-size:17px}
+.bc-link{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--accent)}
+.bc-pos{font-size:14px;color:var(--mut);line-height:1.55;margin:0 0 16px}
+.bc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:14px}
+@media(max-width:760px){.bc-grid{grid-template-columns:1fr}}
+.bc-col h4{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px;font-weight:600}
+.bc-col.strengths h4{color:var(--up)}
+.bc-col.vulns h4{color:var(--accent-soft)}
+.bc-col.win h4{color:var(--down)}
+.bc-col ul{margin:0;padding-left:16px}
+.bc-col li{font-size:12.8px;color:#CBD3DB;line-height:1.5;margin-bottom:8px}
+.bc-q{background:var(--panel);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;font-size:14px;color:var(--ink);font-style:italic}
+.bc-q span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-style:normal;margin-bottom:4px}
+
+/* soon stubs */
+.soon{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:22px 24px;margin-top:8px}
+.soon-tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);padding:4px 10px;border-radius:6px;margin-bottom:16px}
+.soon ul{margin:0;padding-left:20px;color:var(--mut)}
+.soon li{margin-bottom:10px;line-height:1.55}
+
+/* threat rail */
+.rail h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:0 0 20px;font-weight:600}
+.trow{display:flex;align-items:center;gap:13px;margin-bottom:8px;padding:8px 10px;margin-left:-10px;margin-right:-10px;border-radius:9px;border:1px solid transparent}
+.trow:hover{background:var(--panel)}
+.trow.on{background:var(--panel);border-color:var(--line)}
+.filterchip{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 13px;margin-bottom:16px}
+.filterchip b{color:var(--ink)}
+.filterchip a{color:var(--accent);font-family:var(--mono);font-size:11px}
+.gauge{width:46px;height:46px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative}
+.gauge::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--bg)}
+.gauge span{position:relative;z-index:1;font-family:var(--mono);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.tnm{font-weight:700;font-size:14.5px}
+.tdl{font-family:var(--mono);font-size:11.5px;margin-top:1px}
+.tdl.up{color:var(--up)}
+.tdl.down{color:var(--down)}
+.tdl.flat{color:var(--faint)}
+
+/* coverage strip under threat */
+.cov{margin-top:30px}
+.cov h3{margin-bottom:14px}
+.covgrp{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:12px 0 6px}
+.covitem{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:2px 0;color:var(--mut)}
+.covitem.live{color:var(--ink)}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.d-active{background:var(--down)}
+.d-needs_key,.d-needs_account{background:var(--accent)}
+.d-paid{background:#5FB6D6}
+.covnote{font-size:11px;color:var(--faint);margin-top:14px;line-height:1.5}

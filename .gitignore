@@ -1,0 +1,10 @@
+node_modules/
+.next/
+data/
+.env*
+*.log
+.DS_Store
+
+# build artifacts
+tsconfig.tsbuildinfo
+*.tsbuildinfo
