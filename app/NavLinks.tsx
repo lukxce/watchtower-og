@@ -10,6 +10,7 @@ const NAV = [
   { label: 'Ask', href: '/ask' },
   { label: 'Reports', href: '/reports' },
   { label: 'Alerts', href: '/alerts' },
+  { label: 'Admin', href: '/admin' },
 ];
 
 export default function NavLinks() {
