@@ -1,17 +1,25 @@
 // Cross-referencing signal context — "connect everything" (per the user's
 // GRIN-research-brief reasoning: a single trigger like launch.grin.co only
 // tells the real story once it's read alongside what's already known about
-// that competitor — real corporate moves in the news, the battlecard's
-// authored read, other buildouts in the same window). Batched once per page
-// load (one query per data source, not per row) so Feed/Overview stay cheap.
+// that competitor — real corporate moves in the news, hiring, product-page
+// activity, other buildouts, the battlecard's authored read if one exists).
+// Batched once per page load (one query per data source, not per row) so
+// Feed/Overview stay cheap.
+//
+// Deliberately does NOT require a battlecard to exist — a competitor added
+// via the UI (no card generated yet) still has real signals on file and
+// deserves the same connective read as one with a hand-authored card. The
+// card is one more input when present, never a gate.
 import { getDb } from '@/db/client';
 import { CORPORATE_MOVE } from '@/lib/radar';
 
 // The narrower subset of corporate moves that read as a go-to-market or
-// pricing/business-model shift — the kind worth connecting to a fresh
-// buildout hostname, not just "something happened at this company."
+// pricing/business-model shift — worth its own, more specific headline
+// phrasing than "something happened at this company."
 const MODEL_MOVE = /self-serve|self serve|month-to-month|no[- ]demo|free tier|freemium|repric|pricing model|business model|enterprise-only|instant access/i;
 const MODEL_CATEGORY_HINTS = new Set(['pricing_change', 'product_launch']);
+const RELEVANT_ROLE = /engineer|ai|ml|data|product|developer|architect/i;
+const PRODUCT_PAGE = /product|pricing|feature|platform/i;
 
 export interface CorporateMove {
   title: string;
@@ -22,6 +30,8 @@ export interface CorporateMove {
 export interface CompetitorContext {
   moves: CorporateMove[];
   modelMoves: CorporateMove[];
+  hireCluster: number;
+  productChanges: number;
   positioning?: string;
   siblingBuildouts: string[];
 }
@@ -35,7 +45,7 @@ function inClause(ids: number[], startAt = 1): { sql: string; params: number[] }
 export async function getCompetitorContext(competitorIds: number[]): Promise<Map<number, CompetitorContext>> {
   const map = new Map<number, CompetitorContext>();
   const ids = [...new Set(competitorIds)];
-  for (const id of ids) map.set(id, { moves: [], modelMoves: [], siblingBuildouts: [] });
+  for (const id of ids) map.set(id, { moves: [], modelMoves: [], hireCluster: 0, productChanges: 0, siblingBuildouts: [] });
   if (ids.length === 0) return map;
 
   const db = await getDb();
@@ -51,6 +61,18 @@ export async function getCompetitorContext(competitorIds: number[]): Promise<Map
   const subRows = await db.query<{ competitor_id: number; title: string }>(
     `SELECT competitor_id, title FROM stream_items
      WHERE competitor_id IN (${idList}) AND channel = 'subdomains' AND status IN ('pending','signaled')
+       AND COALESCE(published_at, created_at) >= now() - interval '${WINDOW_DAYS} days'`,
+    idParams,
+  );
+  const jobRows = await db.query<{ competitor_id: number; title: string }>(
+    `SELECT competitor_id, title FROM stream_items
+     WHERE competitor_id IN (${idList}) AND channel = 'jobs' AND status IN ('pending','signaled')
+       AND COALESCE(published_at, created_at) >= now() - interval '${WINDOW_DAYS} days'`,
+    idParams,
+  );
+  const productRows = await db.query<{ competitor_id: number; title: string }>(
+    `SELECT competitor_id, title FROM stream_items
+     WHERE competitor_id IN (${idList}) AND channel IN ('sitemap','website') AND status IN ('pending','signaled')
        AND COALESCE(published_at, created_at) >= now() - interval '${WINDOW_DAYS} days'`,
     idParams,
   );
@@ -76,6 +98,14 @@ export async function getCompetitorContext(competitorIds: number[]): Promise<Map
   for (const r of subRows) {
     const ctx = map.get(r.competitor_id);
     if (ctx) ctx.siblingBuildouts.push(r.title.replace(/^Subdomain observed:\s*/, ''));
+  }
+  for (const r of jobRows) {
+    const ctx = map.get(r.competitor_id);
+    if (ctx && RELEVANT_ROLE.test(r.title)) ctx.hireCluster++;
+  }
+  for (const r of productRows) {
+    const ctx = map.get(r.competitor_id);
+    if (ctx && PRODUCT_PAGE.test(r.title)) ctx.productChanges++;
   }
   for (const r of bcRows) {
     const ctx = map.get(r.competitor_id);

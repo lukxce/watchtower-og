@@ -2,6 +2,7 @@
 // bootstrap-archiving, collection-run health records, and resolved-source
 // caching. Ports the proven MVP semantics 1:1.
 import { getDb } from './client';
+import { CORPORATE_MOVE } from '@/lib/radar';
 
 export interface Competitor {
   id: number;
@@ -45,6 +46,16 @@ export interface StreamItem {
 // (live ads, open roles, product/pricing pages, reviews) stay visible so a new
 // workspace sees its baseline immediately. After the first run, every new item
 // is pending. "Change" channels (website/sitemap) only ever emit real diffs.
+//
+// Exception: a real corporate move (funding, exec hire, partnership, launch,
+// acquisition — CORPORATE_MOVE) is never bootstrap-archived just for being
+// old. This was a real gap: a competitor added weeks after founding had its
+// entire funding round (6 weeks old on day one) silently archived by this
+// heuristic — genuinely significant history isn't "stale press" just because
+// the workspace onboarded after it happened, and every downstream reader
+// (the feed, Mentions, the connect.ts cross-referencing context) depends on
+// this staying visible. Generic old press (top-10 listicles, think pieces)
+// still gets archived; a real move doesn't.
 const ARCHIVE_ON_BOOTSTRAP = new Set(['news', 'youtube', 'podcasts', 'reddit']);
 export async function ingestItems(
   competitorId: number,
@@ -64,8 +75,11 @@ export async function ingestItems(
     if (!it.externalId || !it.title) continue;
     const ts = it.publishedAt ? Date.parse(it.publishedAt) : NaN;
     // Archive when the collector itself flags known noise, or on bootstrap
-    // for dated news-style channels with old dates.
-    const archive = it.archive === true || (bootstrap && ARCHIVE_ON_BOOTSTRAP.has(channel) && !Number.isNaN(ts) && ts < cutoff);
+    // for dated news-style channels with old dates — unless it's a real
+    // corporate move, which stays visible regardless of age.
+    const archive =
+      it.archive === true ||
+      (bootstrap && ARCHIVE_ON_BOOTSTRAP.has(channel) && !Number.isNaN(ts) && ts < cutoff && !CORPORATE_MOVE.test(it.title));
     const res = await db.query<{ id: number }>(
       `INSERT INTO stream_items (competitor_id, channel, external_id, title, url, published_at, payload, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
