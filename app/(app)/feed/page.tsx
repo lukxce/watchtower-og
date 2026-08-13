@@ -5,6 +5,7 @@ import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
 import { requireOrgId } from '@/lib/tenant';
+import { industryNews } from '@/lib/industryNews';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,6 +84,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
            WHERE c.org_id = $1 ORDER BY cr.id DESC LIMIT 60) last_runs`,
     [orgId],
   ))[0] ?? { ok: '0', fail: '0' };
+  const mix = await db.query<{ category: string | null; n: string }>(
+    `SELECT si.category, COUNT(*)::text n FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
+     WHERE c.org_id = $1 AND si.status IN ('pending','signaled') AND si.category IS NOT NULL
+     GROUP BY si.category ORDER BY COUNT(*) DESC LIMIT 7`,
+    [orgId],
+  );
+  const mixMax = Math.max(1, ...mix.map((m) => Number(m.n)));
+  const pulse = await industryNews(orgId);
   const threat = await computeThreat(orgId);
   const top = threat[0];
   const activeComp = comp ? threat.find((t) => t.slug === comp)?.competitor ?? comp : null;
@@ -230,10 +239,37 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               <h3>Ask Watchtower</h3>
               <p className="mod-ask-t">Question the corpus.</p>
               <p className="mod-ask-p">
-                “What changed on CreatorIQ&apos;s pricing this quarter?” Answers cite captured signals — never a guess.
+                “What changed on CreatorIQ&apos;s pricing this quarter?” Answers cite captured signals, never a guess.
               </p>
               <a className="mod-ask-a" href="/ask">Open Ask →</a>
             </div>
+
+            {mix.length > 0 && (
+              <div className="mod">
+                <h3>Signal mix</h3>
+                {mix.map((m) => (
+                  <div className="mix-row" key={m.category}>
+                    <span className="mix-label">{m.category}</span>
+                    <span className="mix-track"><span className={`mix-bar mb-${(m.category ?? 'other').toLowerCase()}`} style={{ width: `${(Number(m.n) / mixMax) * 100}%` }} /></span>
+                    <span className="mix-n mono">{m.n}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {pulse.length > 0 && (
+              <div className="mod">
+                <h3>Industry pulse</h3>
+                {pulse.map((p, i) => (
+                  <a className="pulse-row" key={i} href={p.url} target="_blank" rel="noreferrer">
+                    <span className="pulse-t">{p.title}</span>
+                    <span className="pulse-s">{p.source}</span>
+                  </a>
+                ))}
+                <p className="covnote">Market-wide headlines via Google News, separate from competitor signals.</p>
+              </div>
+            )}
+
             <div className="mod cov" id="coverage">
               <h3>Channel coverage · {activeCount}/{CHANNELS.length}</h3>
               {groups.map((g) => (

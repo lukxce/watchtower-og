@@ -49,6 +49,13 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   LinkedIn ads**, logos, events. Every collection lesson from the MVP is encoded
   (identity-by-domain/page-id, prefix-match advertisers, crt.sh retries,
   bootstrap-archiving, honest failures).
+- **Subdomain judgment**: sending/CDN/auth infrastructure hostnames
+  (email.x.com, link.x.com, sso.x.com…) are recorded but archived — only
+  build/marketing tells (launch.x.com, beta.x.com, pricepilot.x.com) reach the
+  feed. Pre-launch labels get a scoring bump.
+- **Industry pulse** (`src/lib/industryNews.ts`): market-wide headlines via
+  Google News RSS on the Overview, separate from competitor signals. Query is
+  hardcoded per-workspace until workspace settings exist.
 - **Fetch ladder** (`src/lib/fetchLadder.ts`): plain fetch → challenge detect →
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.

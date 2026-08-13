@@ -56,7 +56,7 @@ h1.mkt-h1{font-size:clamp(38px,5.4vw,64px);font-weight:700;letter-spacing:-.035e
 h1.mkt-h1 .accent{color:var(--a-violet)}
 .mkt-dek{font-size:18px;color:var(--a-mut);max-width:54ch;line-height:1.6;margin:0 auto 32px}
 .mkt-hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
-.mkt-hero-note{font-size:12.5px;color:var(--a-faint);font-family:var(--mono, var(--font-geist-mono), monospace)}
+.mkt-hero-note{font-size:12.5px;color:var(--a-faint);font-weight:500}
 .mkt-hero-device{margin-top:56px;position:relative}
 
 /* floating accent chips around the hero shot */
@@ -81,42 +81,22 @@ h1.mkt-h1 .accent{color:var(--a-violet)}
 .shot-frame.light{box-shadow:var(--a-shadow-lift);border-radius:20px;margin:32px auto 0}
 .shot-frame.light .shot-bar{border-radius:20px 20px 0 0}
 
-/* ---------- Stat bar ---------- */
-.mkt-stats{padding:56px 0 8px}
-.mkt-stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-@media(max-width:760px){.mkt-stats .wrap{grid-template-columns:repeat(2,1fr)}}
-.mkt-stat{padding:22px 22px 20px;background:var(--a-card);border-radius:18px;box-shadow:var(--a-shadow)}
-.mkt-stat .n{font-family:var(--mono, monospace);font-variant-numeric:tabular-nums;font-size:clamp(26px,3vw,34px);font-weight:700;color:var(--a-violet);letter-spacing:-.01em;display:block;line-height:1}
-.mkt-stat .l{font-size:13px;color:var(--a-mut);margin-top:9px;line-height:1.45;display:block}
-
 /* ---------- Section scaffolding ---------- */
 .mkt-section{padding:96px 0}
 .mkt-section.tight{padding:64px 0}
 .mkt-section.alt{background:rgba(255,255,255,.5)}
-.mkt-eyebrow{font-family:var(--mono, monospace);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-violet);font-weight:700;margin-bottom:14px;display:inline-block;background:var(--a-violet-wash);padding:6px 14px;border-radius:999px}
+.mkt-eyebrow{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-violet);font-weight:800;margin-bottom:14px;display:inline-block}
 .mkt-section h2{font-size:clamp(28px,3.4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin:0 0 16px;text-wrap:balance}
 .mkt-section .lede{font-size:16.5px;color:var(--a-mut);max-width:60ch;line-height:1.65;margin:0 0 12px}
 .mkt-2col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 @media(max-width:860px){.mkt-2col{grid-template-columns:1fr;gap:36px}}
 
-/* problem section contrast card */
-.contrast{display:grid;gap:14px}
-.contrast-card{border-radius:18px;padding:20px 22px;background:var(--a-card);box-shadow:var(--a-shadow)}
-.contrast-card.bad{background:var(--a-red-wash)}
-.contrast-card.good{background:var(--a-violet-wash)}
-.contrast-tag{font-family:var(--mono, monospace);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:8px;display:block}
-.contrast-card.bad .contrast-tag{color:var(--a-red)}
-.contrast-card.good .contrast-tag{color:var(--a-violet)}
-.contrast-card p{margin:0;font-size:14.5px;color:#332f40;line-height:1.5}
-.contrast-card .cite{display:block;margin-top:8px;font-family:var(--mono, monospace);font-size:11.5px;color:var(--a-violet)}
-
-/* pipeline steps */
-.mkt-pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
-@media(max-width:860px){.mkt-pipeline{grid-template-columns:1fr}}
-.mkt-step{padding:26px 24px;background:var(--a-card);border-radius:18px;box-shadow:var(--a-shadow)}
-.mkt-step .sn{font-family:var(--mono, monospace);font-size:11px;color:var(--a-violet);font-weight:700;letter-spacing:.06em;margin-bottom:10px}
-.mkt-step h4{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
-.mkt-step p{font-size:13px;color:var(--a-mut);line-height:1.55;margin:0}
+/* signal-to-move engine cards */
+.mkt-3up{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+@media(max-width:860px){.mkt-3up{grid-template-columns:1fr}}
+.engine-card{background:var(--a-card);border-radius:20px;padding:30px 28px;box-shadow:var(--a-shadow)}
+.engine-card h4{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
+.engine-card p{font-size:14px;color:var(--a-mut);line-height:1.6;margin:0}
 
 /* feature grid */
 .mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}

@@ -27,7 +27,7 @@ export default function Pricing() {
               <span className="tier-tag">Starter</span>
               <h3>Self-serve</h3>
               <div className="price">$99<span>/mo</span></div>
-              <p className="tier-note">3 competitors · 15 zero-key channels</p>
+              <p className="tier-note">3 competitors · watched daily</p>
               <ul>
                 <li>Signal feed &amp; Threat Index</li>
                 <li>Comparison-page discovery</li>
@@ -40,10 +40,10 @@ export default function Pricing() {
               <span className="tier-tag">Growth</span>
               <h3>Full coverage</h3>
               <div className="price">$399<span>/mo</span></div>
-              <p className="tier-note">10 competitors · all 22 channels</p>
+              <p className="tier-note">10 competitors · full coverage</p>
               <ul>
                 <li>Everything in Starter</li>
-                <li>Claim ledger &amp; auto-generated battlecards</li>
+                <li>Auto-generated battlecards, always current</li>
                 <li>Campaign &amp; landing-page tracking</li>
                 <li>Slack / Teams digest</li>
                 <li>Paid-source channels (traffic, reviews, G2/Capterra)</li>
@@ -85,10 +85,10 @@ export default function Pricing() {
               <span className="mkt-eyebrow">Unit economics, honestly</span>
               <h2 style={{ fontSize: 22 }}>What the entry tier does and doesn&apos;t include</h2>
               <p className="lede">
-                Starter runs the 15 channels that need no paid API key at all: ads, hiring, product pages,
-                subdomains, tech stack, reviews. Paid-source channels (traffic/SEO data, G2/Capterra, review
-                platforms billed per call) sit in Growth and above, because those costs scale with usage and we
-                won&apos;t promise a flat price we can&apos;t actually hold.
+                Starter runs everything that needs no paid data source: ads, hiring, product pages, launches,
+                tech stack, reviews. Paid market data (traffic/SEO, G2/Capterra, review platforms billed per call)
+                sits in Growth and above, because those costs scale with usage and we won&apos;t promise a flat
+                price we can&apos;t actually hold.
               </p>
             </div>
           </div>

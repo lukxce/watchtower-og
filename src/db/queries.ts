@@ -34,6 +34,9 @@ export interface StreamItem {
   url?: string;
   publishedAt?: string;
   payload?: unknown;
+  // Collector-level judgment: record the item (dedup, history) but keep it
+  // out of the feed. Used for known-noise like email/CDN infra subdomains.
+  archive?: boolean;
 }
 
 // Dedup by (competitor, channel, external_id). On the first run per
@@ -60,8 +63,9 @@ export async function ingestItems(
   for (const it of items) {
     if (!it.externalId || !it.title) continue;
     const ts = it.publishedAt ? Date.parse(it.publishedAt) : NaN;
-    // Archive on bootstrap only for dated news-style channels with old dates.
-    const archive = bootstrap && ARCHIVE_ON_BOOTSTRAP.has(channel) && !Number.isNaN(ts) && ts < cutoff;
+    // Archive when the collector itself flags known noise, or on bootstrap
+    // for dated news-style channels with old dates.
+    const archive = it.archive === true || (bootstrap && ARCHIVE_ON_BOOTSTRAP.has(channel) && !Number.isNaN(ts) && ts < cutoff);
     const res = await db.query<{ id: number }>(
       `INSERT INTO stream_items (competitor_id, channel, external_id, title, url, published_at, payload, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)

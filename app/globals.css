@@ -117,6 +117,27 @@ h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em;font-weight:700}
 .mod-ask-a{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);color:var(--on-dark);font-size:12.5px;font-weight:600;padding:8px 15px;border-radius:999px;transition:background .14s}
 .mod-ask-a:hover{background:rgba(255,255,255,.16)}
 
+/* signal mix bars */
+.mix-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.mix-label{font-size:12px;font-weight:600;color:var(--mut);width:74px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mix-track{flex:1;height:8px;border-radius:99px;background:var(--line2);overflow:hidden}
+.mix-bar{display:block;height:100%;border-radius:99px;background:var(--violet-soft)}
+.mb-pricing{background:#e8b471}
+.mb-ads{background:#f3a1c4}
+.mb-hiring{background:#93b6f5}
+.mb-product{background:#7fd0ab}
+.mb-news{background:#a89bf5}
+.mb-reviews{background:#eb9a8f}
+.mb-customers{background:#dcc76a}
+.mix-n{font-size:11px;color:var(--faint);width:30px;text-align:right;flex:none;font-variant-numeric:tabular-nums}
+
+/* industry pulse */
+.pulse-row{display:block;padding:9px 0;border-bottom:1px solid var(--line2)}
+.pulse-row:last-of-type{border-bottom:none}
+.pulse-row:hover .pulse-t{color:var(--violet)}
+.pulse-t{display:block;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.45;transition:color .12s}
+.pulse-s{display:block;font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px}
+
 /* filter pills */
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .pill{font-size:13px;font-weight:600;padding:7px 15px;border-radius:999px;color:var(--mut);background:rgba(255,255,255,.65);border:1px solid var(--line)}

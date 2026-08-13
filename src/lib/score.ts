@@ -35,7 +35,7 @@ const BUMP: [RegExp, number][] = [
   [/layoff|shuts? down|deprecat|sunset/i, 20],
   [/\b(head of|vp|vice president|chief|director|c[a-z]o)\b/i, 14],
   [/enterprise|agency|holdco/i, 8],
-  [/beta\.|ai\.|app\.|staging|preview/i, 16], // pre-launch subdomains
+  [/\b(launch|beta|labs?|pilot|demo|alpha|early|next|v2)\.|ai\.|app\.|staging|preview/i, 16], // pre-launch subdomains
 ];
 const DAMP: [RegExp, number][] = [
   [/no new|repeated|existing positioning|unchanged/i, -22],
