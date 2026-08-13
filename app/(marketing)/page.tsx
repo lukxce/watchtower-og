@@ -53,17 +53,25 @@ export default function Home() {
             something can't be verified, the feed says so instead of guessing.
           </p>
           <div className="mkt-hero-cta">
-            <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
-            <Link href="#brain" className="btn btn-on-navy-ghost btn-lg">See how it works</Link>
+            <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
+            <Link href="#brain" className="btn btn-ghost btn-lg">See how it works</Link>
           </div>
           <p className="mkt-hero-note">Self-serve from $99/mo. No demo required to see it run.</p>
         </div>
         <div className="mkt-hero-device">
-          <div className="wrap">
+          <div className="wrap" style={{ position: 'relative' }}>
+            <div className="float-chip fc-1">
+              <span className="fc-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 5h16M4 12h16M4 19h10" strokeLinecap="round" /></svg></span>
+              <span>New signal<span className="fc-sub">cite: northwind.com/pricing</span></span>
+            </div>
+            <div className="float-chip fc-2">
+              <span className="fc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
+              <span>Threat 86<span className="fc-sub">▲ +6 this week</span></span>
+            </div>
             <div className="shot-frame">
               <div className="shot-bar"><span /><span /><span /></div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/screenshots/feed.png" alt="The Watchtower signal feed: threat-index strip, category-coded signal cards, channel coverage" className="shot-img" />
+              <img src="/screenshots/feed.png" alt="The Watchtower overview: KPI cards, threat-index gauges, day-grouped signal timeline, channel coverage" className="shot-img" />
             </div>
           </div>
         </div>
@@ -264,12 +272,14 @@ export default function Home() {
 
       <section className="mkt-cta-band">
         <div className="wrap">
-          <span className="kicker">Get started</span>
-          <h2>See your competitors before they announce anything.</h2>
-          <p className="lede">Pick two or three competitors. Watch real, cited signals appear inside an hour.</p>
-          <div className="mkt-hero-cta">
-            <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
-            <Link href="/contact" className="btn btn-on-navy-ghost btn-lg">Talk to us</Link>
+          <div className="mkt-cta-inner">
+            <span className="kicker">Get started</span>
+            <h2>See your competitors before they announce anything.</h2>
+            <p className="lede">Pick two or three competitors. Watch real, cited signals appear inside an hour.</p>
+            <div className="mkt-hero-cta">
+              <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
+              <Link href="/contact" className="btn btn-on-navy-ghost btn-lg">Talk to us</Link>
+            </div>
           </div>
         </div>
       </section>

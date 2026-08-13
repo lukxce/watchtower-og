@@ -1,7 +1,6 @@
-// Signal feed dashboard — a threat strip up top (not buried in a side rail),
-// a day-grouped timeline of scored signal cards below it, and channel
-// coverage as a secondary rail. Deliberately not the generic
-// sidebar+list+rail shape: the threat data is the hero, not an afterthought.
+// Overview — the condensed all-in-one dashboard: greeting, KPI row, threat
+// gauges, then a day-grouped signal timeline with side modules (channel
+// coverage + Ask teaser). Deep dives live on their own pages.
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
@@ -13,8 +12,8 @@ const FILTERS = ['All channels', 'Pricing', 'Product', 'Hiring', 'Ads', 'News', 
 const catClass = (c: string) => `c-${(c || 'other').toLowerCase()}`;
 const scoreClass = (n: number) => (n >= 70 ? 's-hi' : n >= 45 ? 's-md' : 's-lo');
 
-// gauge ring color by threat level
-const ring = (n: number) => (n >= 70 ? '#B8362A' : n >= 55 ? '#9A5B00' : n >= 42 ? '#4A5BC9' : '#1F7A45');
+// gauge ring color by threat level — pastel but legible
+const ring = (n: number) => (n >= 70 ? '#d96a5c' : n >= 55 ? '#c98a35' : n >= 42 ? '#6f9df3' : '#4fae85');
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 function ago(iso: string): string {
@@ -23,6 +22,14 @@ function ago(iso: string): string {
   if (h < 1) return `${Math.max(1, Math.floor(d / 60000))}m ago`;
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
+}
+
+function greeting(): string {
+  const h = new Date().getHours();
+  if (h < 5) return 'Working late';
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
 }
 
 const BUCKET_ORDER = ['Today', 'Yesterday', 'This week', 'Earlier'] as const;
@@ -63,8 +70,21 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
      ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 40`,
     params,
   );
-  const compCount = (await db.query<{ n: string }>('SELECT COUNT(*)::text n FROM competitors WHERE org_id = $1', [orgId]))[0]?.n ?? '0';
+  const compCount = Number((await db.query<{ n: string }>('SELECT COUNT(*)::text n FROM competitors WHERE org_id = $1', [orgId]))[0]?.n ?? 0);
+  const totalSignals = Number(
+    (await db.query<{ n: string }>(
+      "SELECT COUNT(*)::text n FROM stream_items si JOIN competitors c ON c.id = si.competitor_id WHERE c.org_id = $1 AND si.status IN ('pending','signaled')",
+      [orgId],
+    ))[0]?.n ?? 0,
+  );
+  const runStats = (await db.query<{ ok: string; fail: string }>(
+    `SELECT COUNT(*) FILTER (WHERE ok)::text ok, COUNT(*) FILTER (WHERE NOT ok)::text fail
+     FROM (SELECT cr.ok FROM collection_runs cr JOIN competitors c ON c.id = cr.competitor_id
+           WHERE c.org_id = $1 ORDER BY cr.id DESC LIMIT 60) last_runs`,
+    [orgId],
+  ))[0] ?? { ok: '0', fail: '0' };
   const threat = await computeThreat(orgId);
+  const top = threat[0];
   const activeComp = comp ? threat.find((t) => t.slug === comp)?.competitor ?? comp : null;
   const pillHref = (f: string) => {
     const p = new URLSearchParams();
@@ -86,11 +106,50 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   return (
     <main className="main">
       <section className="feed">
-        <h1>{activeComp ? `${activeComp} — signals` : 'Signal feed'}</h1>
-        <p className="sub">
-          {items.length} signals · {activeComp ? '1 competitor' : `${compCount} competitors`} · ranked by impact. Times are the event
-          date where known, else when Watchtower first observed it.
-        </p>
+        <header className="ov-head">
+          <h1 className="ov-hello">{activeComp ? `${activeComp} signals` : greeting()}<span>{activeComp ? '' : '. Here’s what your competitors did.'}</span></h1>
+          <p className="sub">
+            {items.length} signals · {activeComp ? '1 competitor' : `${compCount} competitors`} · ranked by impact. Times are the event
+            date where known, else when Watchtower first observed it.
+          </p>
+        </header>
+
+        {!activeComp && (
+          <div className="kpis">
+            <div className="kpi">
+              <div className="kpi-top">
+                <span className="kpi-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 5h16M4 12h16M4 19h10" strokeLinecap="round" /></svg></span>
+                <span className="kpi-l">Signals captured</span>
+              </div>
+              <span className="kpi-n mono">{totalSignals}</span>
+              <span className="kpi-s">across all channels</span>
+            </div>
+            <div className="kpi">
+              <div className="kpi-top">
+                <span className="kpi-ic b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="3.2" /><path d="M5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6" strokeLinecap="round" /></svg></span>
+                <span className="kpi-l">Competitors tracked</span>
+              </div>
+              <span className="kpi-n mono">{compCount}</span>
+              <span className="kpi-s">in this workspace</span>
+            </div>
+            <div className="kpi">
+              <div className="kpi-top">
+                <span className="kpi-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
+                <span className="kpi-l">Highest threat</span>
+              </div>
+              <span className="kpi-n mono">{top?.total ?? '—'}</span>
+              <span className="kpi-s">{top ? top.competitor : 'no data yet'}</span>
+            </div>
+            <div className="kpi">
+              <div className="kpi-top">
+                <span className="kpi-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+                <span className="kpi-l">Last crawl</span>
+              </div>
+              <span className="kpi-n mono"><span className="ok">{runStats.ok}</span> / <span className="bad">{runStats.fail}</span></span>
+              <span className="kpi-s">runs ok / failed, honestly logged</span>
+            </div>
+          </div>
+        )}
 
         {!activeComp && threat.length > 0 && (
           <div className="tstrip">
@@ -122,65 +181,77 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </div>
         )}
 
-        <div className="pills">
-          {FILTERS.map((f) => (
-            <a key={f} href={pillHref(f)} className={`pill ${f === active ? 'on' : ''}`}>
-              {f}
-            </a>
-          ))}
-        </div>
+        <div className="ov-grid">
+          <div className="ov-main">
+            <div className="pills">
+              {FILTERS.map((f) => (
+                <a key={f} href={pillHref(f)} className={`pill ${f === active ? 'on' : ''}`}>
+                  {f}
+                </a>
+              ))}
+            </div>
 
-        {items.length === 0 ? (
-          <div className="empty">
-            No signals in this view yet. Trigger a collection with <code>POST /api/run</code> (or wait for the daily
-            07:00 crawl). The first run captures each competitor&apos;s current state; changes surface from the next run.
-          </div>
-        ) : (
-          <div className="timeline">
-            {BUCKET_ORDER.filter((b) => buckets.has(b)).map((b) => (
-              <div className="tl-group" key={b}>
-                <div className="tl-label"><span>{b}</span></div>
-                {buckets.get(b)!.map((it, i) => (
-                  <div className={`card cat-${catClass(it.category ?? 'other').slice(2)}`} key={i}>
-                    <div className="crow">
-                      <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
-                      <span className="card-avatar">{initials(it.name)}</span>
-                      <span className="comp">{it.name}</span>
-                      {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
-                      {it.published_at ? (
-                        <span className="when">{ago(it.published_at)}</span>
-                      ) : (
-                        <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
-                          first seen {ago(it.created_at)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="title">{it.url ? <a href={it.url} target="_blank" rel="noreferrer">{it.title}</a> : it.title}</div>
+            {items.length === 0 ? (
+              <div className="empty">
+                No signals in this view yet. Trigger a collection with <code>POST /api/run</code> (or wait for the daily
+                07:00 crawl). The first run captures each competitor&apos;s current state; changes surface from the next run.
+              </div>
+            ) : (
+              <div className="timeline">
+                {BUCKET_ORDER.filter((b) => buckets.has(b)).map((b) => (
+                  <div className="tl-group" key={b}>
+                    <div className="tl-label"><span>{b}</span></div>
+                    {buckets.get(b)!.map((it, i) => (
+                      <div className="card" key={i}>
+                        <div className="crow">
+                          <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
+                          <span className="card-avatar">{initials(it.name)}</span>
+                          <span className="comp">{it.name}</span>
+                          {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
+                          {it.published_at ? (
+                            <span className="when">{ago(it.published_at)}</span>
+                          ) : (
+                            <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
+                              first seen {ago(it.created_at)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="title">{it.url ? <a href={it.url} target="_blank" rel="noreferrer">{it.title}</a> : it.title}</div>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
-      </section>
 
-      <aside className="rail">
-        <div className="cov" id="coverage">
-          <h3>Channel coverage · {activeCount}/{CHANNELS.length}</h3>
-          {groups.map((g) => (
-            <div key={g}>
-              <div className="covgrp">{g}</div>
-              {CHANNELS.filter((c) => c.group === g).map((c) => (
-                <div className={`covitem ${c.status === 'active' ? 'live' : ''}`} key={c.key} title={c.note}>
-                  <span className={`dot d-${c.status}`} />
-                  {c.label}
+          <aside className="ov-side">
+            <div className="mod dark">
+              <h3>Ask Watchtower</h3>
+              <p className="mod-ask-t">Question the corpus.</p>
+              <p className="mod-ask-p">
+                “What changed on CreatorIQ&apos;s pricing this quarter?” Answers cite captured signals — never a guess.
+              </p>
+              <a className="mod-ask-a" href="/ask">Open Ask →</a>
+            </div>
+            <div className="mod cov" id="coverage">
+              <h3>Channel coverage · {activeCount}/{CHANNELS.length}</h3>
+              {groups.map((g) => (
+                <div key={g}>
+                  <div className="covgrp">{g}</div>
+                  {CHANNELS.filter((c) => c.group === g).map((c) => (
+                    <div className={`covitem ${c.status === 'active' ? 'live' : ''}`} key={c.key} title={c.note}>
+                      <span className={`dot d-${c.status}`} />
+                      {c.label}
+                    </div>
+                  ))}
                 </div>
               ))}
+              <p className="covnote">Green = live now · orange = needs a free key/account · blue = paid data source. Deferred channels light up automatically once configured.</p>
             </div>
-          ))}
-          <p className="covnote">Green = live now · orange = needs a free key/account · blue = paid data source. Deferred channels light up automatically once configured.</p>
+          </aside>
         </div>
-      </aside>
+      </section>
     </main>
   );
 }

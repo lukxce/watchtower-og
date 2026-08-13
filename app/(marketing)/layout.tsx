@@ -25,6 +25,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       </header>
       {children}
       <footer className="mkt-footer">
+        <span className="mkt-watermark" aria-hidden="true">WATCHTOWER</span>
         <div className="wrap">
           <div className="fbrand">
             <div className="mkt-logo">
