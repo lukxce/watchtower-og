@@ -1,14 +1,13 @@
-// Competitors — market positioning map (authored read, see src/lib/positioning.ts)
-// plus a richer card per competitor: real latest signal, real dimension-lead
-// count, and the existing live stats. Each card links into the feed filtered
-// to that competitor.
+// Competitors — the market view: positioning map (authored read) plus a real
+// side-by-side comparison table, not a redundant list of cards duplicating
+// /compare. Each competitor also gets one compact "what's latest" line.
 import { competitorStats, leadCounts, adCount } from '@/lib/competitorStats';
+import { computeThreat } from '@/lib/threat';
 import { positionOf } from '@/lib/positioning';
 import { requireOrgId } from '@/lib/tenant';
 import AddCompetitor from './AddCompetitor';
 
 export const dynamic = 'force-dynamic';
-const ring = (n: number) => (n >= 70 ? '#ef7fae' : n >= 55 ? '#a89bf5' : n >= 42 ? '#93b6f5' : '#7fd0ab');
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 function ago(iso: string): string {
@@ -22,9 +21,25 @@ function ago(iso: string): string {
 export default async function Competitors() {
   const orgId = await requireOrgId();
   const stats = await competitorStats(orgId);
+  const threat = await computeThreat(orgId);
   const leads = leadCounts(stats);
   const dimCount = 5;
   const mapped = stats.map((c) => ({ ...c, pos: positionOf(c.slug) })).filter((c) => c.pos);
+  const tByName = Object.fromEntries(threat.map((t) => [t.competitor, t]));
+
+  const rows: [string, (c: (typeof stats)[number]) => string][] = [
+    ['Threat Index', (c) => String(c.threat ?? '—')],
+    ['Leads on', (c) => `${leads[c.id] ?? 0} of ${dimCount} dims`],
+    ['Signals captured', (c) => String(c.signals)],
+    ['Open roles', (c) => String(c.jobs)],
+    ['Meta ads', (c) => adCount(c.adNote.meta)],
+    ['Google ads', (c) => adCount(c.adNote.google)],
+    ['LinkedIn ads', (c) => adCount(c.adNote.linkedin)],
+    ['GTM dimension', (c) => String(tByName[c.name]?.dims.gtm ?? '—')],
+    ['Talent dimension', (c) => String(tByName[c.name]?.dims.talent ?? '—')],
+    ['Product dimension', (c) => String(tByName[c.name]?.dims.product ?? '—')],
+    ['Market dimension', (c) => String(tByName[c.name]?.dims.market ?? '—')],
+  ];
 
   return (
     <main className="main solo">
@@ -32,7 +47,7 @@ export default async function Competitors() {
         <div className="comp-head">
           <div>
             <h1>Competitors</h1>
-            <p className="sub" style={{ marginBottom: 0 }}>{stats.length} tracked · click any to see its full signal stream.</p>
+            <p className="sub" style={{ marginBottom: 0 }}>{stats.length} tracked, compared side by side on live signals — not a stale spreadsheet.</p>
           </div>
           <AddCompetitor />
         </div>
@@ -67,35 +82,49 @@ export default async function Competitors() {
           </>
         )}
 
-        <h3 className="admin-h">Tracked competitors</h3>
-        {stats.map((c) => (
-          <a className="compcard v2" key={c.slug} href={`/feed?comp=${c.slug}`}>
-            <div className="cc-avatar">{initials(c.name)}</div>
-            <div className="gauge sm" style={{ background: `conic-gradient(${ring(c.threat ?? 0)} ${(c.threat ?? 0) * 3.6}deg, var(--gr) 0)` }}>
-              <span>{c.threat ?? '—'}</span>
-            </div>
-            <div className="cc-body">
-              <div className="cc-top">
-                <span className="comp">{c.name}</span>
-                <span className="cc-dom">{c.domain}</span>
-                {c.threat != null && <span className="cc-lead">leads on {leads[c.id] ?? 0} of {dimCount} dimensions</span>}
-              </div>
+        <h3 className="admin-h">Side by side</h3>
+        <div className="tblwrap">
+          <table className="cmp">
+            <thead>
+              <tr>
+                <th></th>
+                {stats.map((c) => (
+                  <th key={c.slug}>
+                    <a href={`/feed?comp=${c.slug}`} className="cmp-th">
+                      <span className="cc-avatar sm">{initials(c.name)}</span>
+                      {c.name}
+                    </a>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(([label, fn]) => (
+                <tr key={label}>
+                  <td className="rl">{label}</td>
+                  {stats.map((c) => (
+                    <td key={c.slug} className="n">{fn(c)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="admin-h">What&apos;s latest</h3>
+        <div className="lb-list">
+          {stats.map((c) => (
+            <a className="lb-row" key={c.slug} href={`/feed?comp=${c.slug}`}>
+              <span className="lb-avatar">{initials(c.name)}</span>
+              <span className="lb-name">{c.name}</span>
               {c.latestSignal ? (
-                <div className="cc-latest">latest: {c.latestSignal.title} · {ago(c.latestSignal.createdAt)}</div>
+                <span className="latest-line">{c.latestSignal.title} <span className="latest-ago">· {ago(c.latestSignal.createdAt)}</span></span>
               ) : (
-                <div className="cc-latest muted">no signals captured yet</div>
+                <span className="latest-line muted">no signals captured yet</span>
               )}
-              <div className="cc-stats">
-                <span><b>{c.signals}</b> signals</span>
-                <span><b>{c.jobs}</b> open roles</span>
-                <span>Meta <b>{adCount(c.adNote.meta)}</b></span>
-                <span>Google <b>{adCount(c.adNote.google)}</b></span>
-                <span>LinkedIn <b>{adCount(c.adNote.linkedin)}</b> ads</span>
-              </div>
-            </div>
-            <span className="cc-arrow">→</span>
-          </a>
-        ))}
+            </a>
+          ))}
+        </div>
       </section>
     </main>
   );

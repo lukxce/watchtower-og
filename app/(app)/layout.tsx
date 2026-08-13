@@ -1,6 +1,7 @@
+import { Suspense } from 'react';
 import { OrganizationSwitcher, UserButton } from '@clerk/nextjs';
 import NavLinks from '../NavLinks';
-import TopTools from '../TopTools';
+import ChannelRail from '../ChannelRail';
 import { clerkConfigured } from '@/lib/tenant';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </a>
           <NavLinks />
           <div className="top-right">
-            <TopTools />
             {clerkConfigured ? (
               <>
                 <OrganizationSwitcher afterSelectOrganizationUrl="/overview" afterCreateOrganizationUrl="/overview" hidePersonal />
@@ -34,7 +34,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      {children}
+      <div className="app-body">
+        <Suspense fallback={<aside className="side-rail" />}>
+          <ChannelRail />
+        </Suspense>
+        {children}
+      </div>
     </div>
   );
 }

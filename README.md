@@ -14,7 +14,7 @@ export PATH="$HOME/.local/node/bin:$PATH"
 npm install
 npm run seed     # load the competitor registry into the dev workspace
 npm run smoke    # end-to-end pipeline test (one competitor, free channels)
-npm run dev      # marketing site at /, app at /feed — http://localhost:3000
+npm run dev      # marketing site at /, app at /overview — http://localhost:3000
 ```
 
 With no `DATABASE_URL`, it uses an embedded Postgres (PGlite) in `./data` — no
@@ -75,6 +75,23 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
 - **Add competitor**: form on `/competitors` → `POST /api/competitors`
   (org-scoped). New competitors baseline on the next crawl; the UI says so
   rather than pretending anything happens instantly.
+- **`/overview` vs `/feed`**: Overview is the dense command center (one
+  consolidated Threat Index leaderboard, insight KPIs, top signals,
+  battlecards, industry pulse, hiring/ad charts). Feed is every single event,
+  day-grouped. The persistent left rail (channel shortcuts) and top nav (all
+  pages) are both app-wide, in `app/(app)/layout.tsx`.
+- **Battlecards, three angles**: each card now carries `angles.sales`,
+  `.marketing`, `.product` alongside the original positioning/strengths/
+  vulnerabilities — a rep, a marketer, and a PM read the same intelligence
+  differently. Authored in `scripts/battlecards.ts`.
+- **Historical backfill** (`npm run backfill`, `scripts/backfill-history.ts`):
+  real, sourced events (funding, executive moves, partnerships, launches)
+  researched per competitor and ingested with their real dates — not
+  synthetic data. Deliberately does NOT fabricate a historical Threat Index
+  trend line (would require real point-in-time snapshots we don't have, or
+  invented numbers) — trend depth accumulates honestly from real crawls
+  instead. Radar's evidence window is 180 days and blends buildout
+  hostnames, hiring clusters, and these real "corporate moves" from news.
 - **Fetch ladder** (`src/lib/fetchLadder.ts`): plain fetch → challenge detect →
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.

@@ -1,7 +1,9 @@
-// Overview — the command center. Big, bold, at-a-glance: top signals already
-// interpreted, battlecards front and center, industry pulse prominent, hiring
-// and ad activity as chart modules. Single events live on /feed; this page is
-// for opening the app and knowing the state of the market in ten seconds.
+// Overview — the command center. Big, bold, at-a-glance: one consolidated
+// Threat Index leaderboard, insight KPIs (not raw counts), top signals
+// already interpreted, battlecards front and center, industry pulse
+// prominent, hiring and ad activity as chart modules. Single events live on
+// /feed; this page is for opening the app and knowing the state of the
+// market in ten seconds.
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
@@ -37,12 +39,6 @@ export default async function Overview() {
       [orgId],
     ))[0]?.n ?? 0,
   );
-  const runStats = (await db.query<{ ok: string; fail: string }>(
-    `SELECT COUNT(*) FILTER (WHERE ok)::text ok, COUNT(*) FILTER (WHERE NOT ok)::text fail
-     FROM (SELECT cr.ok FROM collection_runs cr JOIN competitors c ON c.id = cr.competitor_id
-           WHERE c.org_id = $1 ORDER BY cr.id DESC LIMIT 60) last_runs`,
-    [orgId],
-  ))[0] ?? { ok: '0', fail: '0' };
 
   // Top signals: the highest-impact single events, ads and jobs excluded
   // (those live as the activity charts below).
@@ -68,17 +64,35 @@ export default async function Overview() {
     return { name: r.name, slug: r.slug, ...c };
   });
 
-  const pulse = await industryNews(orgId, 5);
+  const pulseAll = await industryNews(orgId, 12);
+  const pulse = pulseAll.slice(0, 5);
   const competitors = await db.query<{ name: string; slug: string }>('SELECT name, slug FROM competitors WHERE org_id = $1', [orgId]);
   const mentionsOf = (title: string) => competitors.filter((c) => title.toLowerCase().includes(c.name.toLowerCase()));
+  const mentionCount = pulseAll.filter((p) => mentionsOf(p.title).length > 0).length;
 
   const ads = await adsRoundup(orgId);
   const adsMax = Math.max(1, ...ads.map((a) => a.total));
   const hiring = await hiringRoundup(orgId);
   const hiringMax = Math.max(1, ...hiring.map((h) => h.total));
   const threat = await computeThreat(orgId);
-  const top = threat[0];
   const activeCount = CHANNELS.filter((c) => c.status === 'active').length;
+
+  // Insight KPIs — what's DIFFERENT this week, not raw inventory counts.
+  const biggestMover = [...threat].filter((t) => t.delta != null).sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0))[0];
+  const needsAttention = Number(
+    (await db.query<{ n: string }>(
+      `SELECT COUNT(*)::text n FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
+       WHERE c.org_id = $1 AND si.status IN ('pending','signaled') AND si.score >= 70 AND si.created_at >= now() - interval '7 days'`,
+      [orgId],
+    ))[0]?.n ?? 0,
+  );
+  const newBuilds = Number(
+    (await db.query<{ n: string }>(
+      `SELECT COUNT(*)::text n FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
+       WHERE c.org_id = $1 AND si.channel = 'subdomains' AND si.status IN ('pending','signaled') AND si.created_at >= now() - interval '30 days'`,
+      [orgId],
+    ))[0]?.n ?? 0,
+  );
 
   return (
     <main className="main">
@@ -91,62 +105,74 @@ export default async function Overview() {
         <div className="kpis">
           <div className="kpi">
             <div className="kpi-top">
-              <span className="kpi-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 5h16M4 12h16M4 19h10" strokeLinecap="round" /></svg></span>
-              <span className="kpi-l">Signals on file</span>
+              <span className="kpi-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg></span>
+              <span className="kpi-l">Biggest mover</span>
             </div>
-            <span className="kpi-n">{totalSignals}</span>
-            <span className="kpi-s">every one sourced</span>
+            {biggestMover && (biggestMover.delta ?? 0) > 0 ? (
+              <>
+                <span className="kpi-n">+{biggestMover.delta}</span>
+                <span className="kpi-s">{biggestMover.competitor}, this week</span>
+              </>
+            ) : (
+              <>
+                <span className="kpi-n">—</span>
+                <span className="kpi-s">no upward movement yet</span>
+              </>
+            )}
           </div>
           <div className="kpi">
             <div className="kpi-top">
-              <span className="kpi-ic b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="3.2" /><path d="M5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6" strokeLinecap="round" /></svg></span>
-              <span className="kpi-l">Competitors</span>
+              <span className="kpi-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 4a5.5 5.5 0 0 0-5.5 5.5c0 4-1.8 5.5-1.8 5.5h14.6s-1.8-1.5-1.8-5.5A5.5 5.5 0 0 0 12 4Z" strokeLinejoin="round" /><path d="M10.3 18.5a1.8 1.8 0 0 0 3.4 0" strokeLinecap="round" /></svg></span>
+              <span className="kpi-l">Needs attention</span>
             </div>
-            <span className="kpi-n">{compCount}</span>
-            <span className="kpi-s">in this workspace</span>
+            <span className="kpi-n">{needsAttention}</span>
+            <span className="kpi-s">high-impact signals this week</span>
           </div>
           <div className="kpi">
             <div className="kpi-top">
-              <span className="kpi-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
-              <span className="kpi-l">Highest threat</span>
+              <span className="kpi-ic b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z" strokeLinejoin="round" /></svg></span>
+              <span className="kpi-l">New builds detected</span>
             </div>
-            <span className="kpi-n">{top?.total ?? '—'}</span>
-            <span className="kpi-s">{top ? top.competitor : 'no data yet'}</span>
+            <span className="kpi-n">{newBuilds}</span>
+            <span className="kpi-s">buildout hostnames, last 30 days</span>
           </div>
           <div className="kpi">
             <div className="kpi-top">
-              <span className="kpi-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
-              <span className="kpi-l">Last crawl</span>
+              <span className="kpi-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="4" y="5" width="16" height="14" rx="2" /><path d="M8 9.5h8M8 13h5" strokeLinecap="round" /></svg></span>
+              <span className="kpi-l">Industry mentions</span>
             </div>
-            <span className="kpi-n"><span className="ok">{runStats.ok}</span> / <span className="bad">{runStats.fail}</span></span>
-            <span className="kpi-s">runs ok / failed, honestly logged</span>
+            <span className="kpi-n">{mentionCount}</span>
+            <span className="kpi-s">headlines naming your set</span>
           </div>
         </div>
 
-        {threat.length > 0 && (
-          <div className="tstrip">
-            {threat.map((t) => (
-              <a className="ttile" key={t.competitor} href={`/feed?comp=${t.slug}`}>
-                <div className="ttile-top">
-                  <span className="ttile-avatar">{initials(t.competitor)}</span>
-                  <span className="ttile-name">{t.competitor}</span>
-                </div>
-                <div className="ttile-gauge" style={{ background: `conic-gradient(${ring(t.total)} ${t.total * 3.6}deg, var(--gr) 0)` }}>
-                  <span>{t.total}</span>
-                </div>
-                {t.delta == null ? (
-                  <div className="tdl flat">baseline</div>
-                ) : t.delta >= 0 ? (
-                  <div className="tdl up">▲ +{t.delta} wk</div>
-                ) : (
-                  <div className="tdl down">▼ {t.delta} wk</div>
-                )}
-              </a>
-            ))}
-          </div>
-        )}
-
         <div className="ovx">
+          <div className="mod ovx-w12">
+            <div className="mod-title-row">
+              <h3>Threat Index</h3>
+              <span className="covnote" style={{ margin: 0 }}>weighted composite · recomputed each crawl</span>
+            </div>
+            <div className="lb-list">
+              {threat.map((t) => (
+                <a className="lb-row" key={t.competitor} href={`/feed?comp=${t.slug}`}>
+                  <span className="lb-avatar">{initials(t.competitor)}</span>
+                  <span className="lb-name">{t.competitor}</span>
+                  <span className="lb-track"><span className="lb-bar" style={{ width: `${t.total}%`, background: ring(t.total) }} /></span>
+                  <span className="lb-score">{t.total}</span>
+                  {t.delta == null ? (
+                    <span className="lb-delta flat">baseline</span>
+                  ) : t.delta > 0 ? (
+                    <span className="lb-delta up">▲ +{t.delta}</span>
+                  ) : t.delta < 0 ? (
+                    <span className="lb-delta down">▼ {t.delta}</span>
+                  ) : (
+                    <span className="lb-delta flat">no change</span>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+
           <div className="mod ovx-w7">
             <div className="mod-title-row">
               <h3>Top signals right now</h3>

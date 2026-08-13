@@ -10,6 +10,7 @@
     "seed": "tsx scripts/seed.ts",
     "smoke": "tsx scripts/smoke.ts",
     "populate": "tsx scripts/populate.ts",
+    "backfill": "tsx scripts/backfill-history.ts",
     "battlecards": "tsx scripts/battlecards.ts",
     "verify": "tsx scripts/verify.ts"
   },
