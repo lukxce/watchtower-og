@@ -152,6 +152,10 @@ h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em;font-weight:700}
 /* signal cards */
 .card{background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:11px;box-shadow:var(--shadow);transition:transform .16s ease, box-shadow .16s ease}
 .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+/* ads roundup card — one per competitor, links into the full creative list */
+.card.adcard{display:block;background:linear-gradient(140deg,#fdf0f6,#fbe9f2)}
+.adcard-total{font-weight:700;font-size:13px;color:#c2517f}
+
 /* featured: the day's high-impact signals get a bigger, tinted card */
 .card.featured{padding:24px 26px;border-radius:20px;margin-bottom:14px}
 .card.featured .title{font-size:17px;font-weight:600;letter-spacing:-.015em;color:var(--ink)}

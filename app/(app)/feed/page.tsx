@@ -6,6 +6,7 @@ import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
 import { requireOrgId } from '@/lib/tenant';
 import { industryNews } from '@/lib/industryNews';
+import { adsRoundup } from '@/lib/adsSummary';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,6 +65,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
     params.push(comp);
     clauses.push(`c.slug = $${params.length}`);
   }
+  // Individual ad creatives are near-duplicates at volume; the timeline gets
+  // one roundup card per competitor instead, and the full list lives behind
+  // the Ads filter.
+  if (active !== 'Ads') {
+    clauses.push("si.channel NOT IN ('ads_meta','ads_google','ads_linkedin')");
+  }
   const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string }>(
     `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
@@ -91,6 +98,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
     [orgId],
   );
   const mixMax = Math.max(1, ...mix.map((m) => Number(m.n)));
+  const ads = (await adsRoundup(orgId)).filter((a) => !comp || a.slug === comp);
   const pulse = await industryNews(orgId);
   const threat = await computeThreat(orgId);
   const top = threat[0];
@@ -199,6 +207,24 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 </a>
               ))}
             </div>
+
+            {active !== 'Ads' && ads.length > 0 && (
+              <div className="tl-group">
+                <div className="tl-label"><span>Ad activity</span></div>
+                {ads.map((a) => (
+                  <a className="card adcard" key={a.slug} href={`/feed?cat=Ads${comp ? `&comp=${comp}` : `&comp=${a.slug}`}`}>
+                    <div className="crow">
+                      <span className="badge c-ads">Ads</span>
+                      <span className="card-avatar">{initials(a.name)}</span>
+                      <span className="comp">{a.name}</span>
+                      <span className="adcard-total">{a.total} active creatives</span>
+                      <span className="when">view all →</span>
+                    </div>
+                    <div className="title">{a.read || 'creative formats unavailable for these platforms'}</div>
+                  </a>
+                ))}
+              </div>
+            )}
 
             {items.length === 0 ? (
               <div className="empty">

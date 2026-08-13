@@ -49,12 +49,24 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   LinkedIn ads**, logos, events. Every collection lesson from the MVP is encoded
   (identity-by-domain/page-id, prefix-match advertisers, crt.sh retries,
   bootstrap-archiving, honest failures).
-- **Subdomain judgment (allowlist)**: a subdomain only reaches the feed when
-  its name hints at something being built or marketed (launch., beta.,
-  pricing., autopilot., agent-api., …). Everything else — email/CDN/auth
-  infra AND engineering plumbing (sentry.dev.x.com, cms-de.x.com) — is
-  recorded but archived. Pre-launch labels get a scoring bump on top of a
-  lower base, so scores vary instead of a wall of identical numbers.
+- **Subdomain judgment (allowlist + vetos)**: a subdomain only reaches the
+  feed when its name hints at something being built or marketed (launch.,
+  beta., pricing., …) AND none of three vetos fire: env markers
+  (sandbox/prod/dev/api — an existing product's engineering surface is not a
+  new buildout), infra tokens (upflow-email.billing.* matched "billing" but
+  is mail infra), and stale years (events.sept2024.* is history, not news).
+  Everything vetoed is recorded but archived.
+- **Radar honesty bar**: forecasts need either a buildout hostname + a real
+  hiring cluster (≥4 relevant roles — 2 open dev roles at a 200-person
+  company is Tuesday), or a cluster + repeated product-page changes. Ads
+  running is context, never evidence on its own. A single new buildout
+  hostname earns exactly "worth watching, not yet a pattern".
+- **Ads roundup**: the Overview shows one summary card per competitor
+  (volume per platform + creative-format mix); the full creative list lives
+  behind the Ads filter. Commentary on what the ads *say* honestly requires
+  creative text, which only the key-gated Meta channel returns today —
+  planned unlock, not faked. Same for founder/company posts: needs the
+  LinkedIn-posts channel (Apify), listed as deferred in the coverage map.
 - **Industry** (`/industry` + `src/lib/industryNews.ts`): standalone
   market-wide view — Google News headlines cross-tagged when they name a
   tracked competitor, next to the competitor-press column. A slimmed pulse
