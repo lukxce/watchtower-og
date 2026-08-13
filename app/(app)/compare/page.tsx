@@ -1,10 +1,9 @@
 // Compare — side-by-side matrix across competitors, assembled from live signals.
-import { competitorStats } from '@/lib/competitorStats';
+import { competitorStats, adCount } from '@/lib/competitorStats';
 import { computeThreat } from '@/lib/threat';
 import { requireOrgId } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
-const adCount = (note?: string) => note?.match(/~?([\d,-]+)\s*(active |total )?ads/i)?.[1] ?? (note && note.includes('0 ') ? '0' : '—');
 
 export default async function Compare() {
   const orgId = await requireOrgId();

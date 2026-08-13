@@ -4,10 +4,9 @@
 // strategic read is authored from the full competitive analysis. In production
 // this same output is produced automatically by the Claude API on a schedule.
 import { getDb } from '../src/db/client';
-import { competitorStats } from '../src/lib/competitorStats';
+import { competitorStats, adCount } from '../src/lib/competitorStats';
 
 const ORG_ID = process.env.ORG_ID ?? 'dev-workspace';
-const adCount = (note?: string) => note?.match(/~?([\d,-]+)\s*(active |total )?ads/i)?.[1] ?? (note && note.includes('0 ') ? '0' : '—');
 
 interface Card {
   positioning: string;

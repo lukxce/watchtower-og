@@ -2,13 +2,13 @@
 // plus a richer card per competitor: real latest signal, real dimension-lead
 // count, and the existing live stats. Each card links into the feed filtered
 // to that competitor.
-import { competitorStats, leadCounts } from '@/lib/competitorStats';
+import { competitorStats, leadCounts, adCount } from '@/lib/competitorStats';
 import { positionOf } from '@/lib/positioning';
 import { requireOrgId } from '@/lib/tenant';
+import AddCompetitor from './AddCompetitor';
 
 export const dynamic = 'force-dynamic';
-const ring = (n: number) => (n >= 70 ? '#B8362A' : n >= 55 ? '#9A5B00' : n >= 42 ? '#4A5BC9' : '#1F7A45');
-const adCount = (note?: string) => note?.match(/~?([\d,-]+)\s*(active |total )?ads/i)?.[1] ?? (note?.includes('0 ') ? '0' : '—');
+const ring = (n: number) => (n >= 70 ? '#ef7fae' : n >= 55 ? '#a89bf5' : n >= 42 ? '#93b6f5' : '#7fd0ab');
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 function ago(iso: string): string {
@@ -29,8 +29,13 @@ export default async function Competitors() {
   return (
     <main className="main solo">
       <section className="feed">
-        <h1>Competitors</h1>
-        <p className="sub">{stats.length} tracked · click any to see its full signal stream.</p>
+        <div className="comp-head">
+          <div>
+            <h1>Competitors</h1>
+            <p className="sub" style={{ marginBottom: 0 }}>{stats.length} tracked · click any to see its full signal stream.</p>
+          </div>
+          <AddCompetitor />
+        </div>
 
         {mapped.length > 1 && (
           <>

@@ -49,13 +49,20 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   LinkedIn ads**, logos, events. Every collection lesson from the MVP is encoded
   (identity-by-domain/page-id, prefix-match advertisers, crt.sh retries,
   bootstrap-archiving, honest failures).
-- **Subdomain judgment**: sending/CDN/auth infrastructure hostnames
-  (email.x.com, link.x.com, sso.x.com…) are recorded but archived — only
-  build/marketing tells (launch.x.com, beta.x.com, pricepilot.x.com) reach the
-  feed. Pre-launch labels get a scoring bump.
-- **Industry pulse** (`src/lib/industryNews.ts`): market-wide headlines via
-  Google News RSS on the Overview, separate from competitor signals. Query is
-  hardcoded per-workspace until workspace settings exist.
+- **Subdomain judgment (allowlist)**: a subdomain only reaches the feed when
+  its name hints at something being built or marketed (launch., beta.,
+  pricing., autopilot., agent-api., …). Everything else — email/CDN/auth
+  infra AND engineering plumbing (sentry.dev.x.com, cms-de.x.com) — is
+  recorded but archived. Pre-launch labels get a scoring bump on top of a
+  lower base, so scores vary instead of a wall of identical numbers.
+- **Industry** (`/industry` + `src/lib/industryNews.ts`): standalone
+  market-wide view — Google News headlines cross-tagged when they name a
+  tracked competitor, next to the competitor-press column. A slimmed pulse
+  module also sits on the Overview. Query is hardcoded per-workspace until
+  workspace settings exist.
+- **Add competitor**: form on `/competitors` → `POST /api/competitors`
+  (org-scoped). New competitors baseline on the next crawl; the UI says so
+  rather than pretending anything happens instantly.
 - **Fetch ladder** (`src/lib/fetchLadder.ts`): plain fetch → challenge detect →
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.

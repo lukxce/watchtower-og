@@ -39,18 +39,19 @@ function addHost(set: Set<string>, raw: string, bare: string) {
   if (h === bare || h.endsWith(`.${bare}`)) set.add(h);
 }
 
-// Judgment layer: a subdomain is only a signal if it hints at something being
-// BUILT or MARKETED. email.x.com is sending infrastructure, not strategy —
-// record it (so the history is complete) but keep it out of the feed.
-// launch.x.com / beta.x.com / pricepilot.x.com are the ones worth surfacing.
-const INFRA_LABEL =
-  /^(e?mail\d*|smtp\d*|mta\d*|mx\d*|pop3?|imap|webmail|exchange|owa|autodiscover|autoconfig|lyncdiscover|msoid|sip|enterpriseregistration|enterpriseenrollment|ns\d*|dns\d*|spf|dkim\d*|_?dmarc|bounces?|unsub(scribe)?|links?|clicks?|track(ing)?|em\d+|u\d+|url\d+|cdn\d*|static\d*|assets?|img|images?|fonts?|media|vpn|remote|sso|okta|auth|login|id|identity|accounts?|status|uptime|www\d*|m|calendar|meet|barracuda|mimecast|zixgateway\d*|selector\d*|k\d+|s\d+|mailer|newsletter|mandrill|sendgrid|postmark|mailgun|krs|gateway|proxy|firewall|mdm|helpdesk-?mail)$/;
+// Judgment layer, allowlist edition. First pass used an infra blocklist and
+// the feed still drowned in cms-de.x.com / sentry.dev.x.com / api-foo.x.com —
+// engineering plumbing, not strategy. A subdomain is only a signal when its
+// name hints at something being BUILT or MARKETED (launch., beta., pricing.,
+// autopilot., agent-api.…). Everything else is recorded but archived, so the
+// history stays complete without burying the feed.
+const NOTABLE =
+  /(^|[.-])(launch|beta|labs?|pilot|autopilot|copilot|agents?|ai|ml|demo|alpha|next|early|new|v\d+|try|get|go|start|onboard(ing)?|shop|store|checkout|pay(ments?)?|price|pricing|billing|plans?|academy|marketplace|events?|summit|webinars?|promo|offers?|campaigns?|lp|landing)([.-]|$)/;
 
-function isInfra(host: string, bare: string): boolean {
-  if (host === bare) return true; // the apex itself isn't a discovery
+function isNotable(host: string, bare: string): boolean {
+  if (host === bare) return false; // the apex itself isn't a discovery
   const sub = host.slice(0, -(bare.length + 1)); // strip ".bare"
-  // classify on the leftmost label; nested infra (link.e.x.com) counts too
-  return sub.split('.').some((label) => INFRA_LABEL.test(label));
+  return NOTABLE.test(sub);
 }
 
 export async function collectSubdomains(comp: Competitor): Promise<string> {
@@ -66,17 +67,17 @@ export async function collectSubdomains(comp: Competitor): Promise<string> {
     return 'FAILED (both CT sources)';
   }
   const items = [...hosts].map((h) => {
-    const infra = isInfra(h, bare);
+    const notable = isNotable(h, bare);
     return {
       externalId: h,
       title: `Subdomain observed: ${h}`,
       url: `https://${h}`,
-      payload: { infra },
-      archive: infra,
+      payload: { notable },
+      archive: !notable,
     };
   });
   const notable = items.filter((i) => !i.archive).length;
   const { added, fresh } = await ingestItems(comp.id, 'subdomains', items);
-  await recordRun(comp.id, 'subdomains', true, added, `${hosts.size} hosts via ${via} (${notable} notable, rest infra)`);
+  await recordRun(comp.id, 'subdomains', true, added, `${hosts.size} hosts via ${via} (${notable} notable, rest archived)`);
   return `+${added} (${fresh} pending) — ${hosts.size} hosts via ${via}, ${notable} notable`;
 }

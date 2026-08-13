@@ -23,7 +23,7 @@ const CATEGORY_BY_CHANNEL: Record<string, string> = {
 // Channel base weight (how consequential this kind of signal usually is).
 const BASE: Record<string, number> = {
   ads_meta: 60, ads_google: 60, ads_linkedin: 58, jobs: 62, sitemap: 55, website: 66,
-  appstore: 58, subdomains: 64, techstack: 48, news: 38, youtube: 34, podcasts: 30,
+  appstore: 58, subdomains: 52, techstack: 48, news: 38, youtube: 34, podcasts: 30,
   reddit: 40, trustpilot: 50, logos: 52, events: 44,
 };
 
@@ -35,7 +35,7 @@ const BUMP: [RegExp, number][] = [
   [/layoff|shuts? down|deprecat|sunset/i, 20],
   [/\b(head of|vp|vice president|chief|director|c[a-z]o)\b/i, 14],
   [/enterprise|agency|holdco/i, 8],
-  [/\b(launch|beta|labs?|pilot|demo|alpha|early|next|v2)\.|ai\.|app\.|staging|preview/i, 16], // pre-launch subdomains
+  [/(launch|beta|labs?|pilot|autopilot|copilot|agents?|demo|alpha|early|next|v\d)[.-]|(^|[.-:\s])ai\.|app\./i, 16], // pre-launch / product-name subdomains
 ];
 const DAMP: [RegExp, number][] = [
   [/no new|repeated|existing positioning|unchanged/i, -22],

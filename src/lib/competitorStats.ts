@@ -1,6 +1,18 @@
 // Shared per-competitor stats used by the Competitors and Compare pages.
 import { getDb } from '@/db/client';
 
+// Parse an ad count out of a collection-run note. Formats seen in the wild:
+//   "23 own ads (of 24 on page)"   (LinkedIn)
+//   "~400-500 ads for x.com via [Advertiser]"   (Google)
+//   "119 active ads"   (Meta)
+// Kept in one place because two pages parsing this differently is exactly how
+// Compare showed 0 LinkedIn ads while the feed displayed LinkedIn ad signals.
+export function adCount(note?: string): string {
+  if (!note) return '—';
+  const m = note.match(/~?([\d,]+(?:-[\d,]+)?)\s*(?:own |active |total )?ads/i);
+  return m ? m[1] : '—';
+}
+
 export interface CompStat {
   id: number;
   slug: string;

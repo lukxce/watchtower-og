@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
-import { GeistSans } from 'geist/font/sans';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { clerkConfigured } from '@/lib/tenant';
 import './globals.css';
+
+// Plus Jakarta Sans — the soft geometric grotesk of the reference dashboards.
+// next/font downloads at build time and self-hosts; no runtime CDN request.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-jakarta',
+});
 
 export const metadata: Metadata = {
   title: 'Watchtower — Verifiable competitive intelligence',
@@ -13,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const body = (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${GeistMono.variable}`}>
       <body>{children}</body>
     </html>
   );

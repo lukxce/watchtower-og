@@ -14,7 +14,7 @@ const catClass = (c: string) => `c-${(c || 'other').toLowerCase()}`;
 const scoreClass = (n: number) => (n >= 70 ? 's-hi' : n >= 45 ? 's-md' : 's-lo');
 
 // gauge ring color by threat level — pastel but legible
-const ring = (n: number) => (n >= 70 ? '#d96a5c' : n >= 55 ? '#c98a35' : n >= 42 ? '#6f9df3' : '#4fae85');
+const ring = (n: number) => (n >= 70 ? '#ef7fae' : n >= 55 ? '#a89bf5' : n >= 42 ? '#93b6f5' : '#7fd0ab');
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 function ago(iso: string): string {
@@ -130,7 +130,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 <span className="kpi-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 5h16M4 12h16M4 19h10" strokeLinecap="round" /></svg></span>
                 <span className="kpi-l">Signals captured</span>
               </div>
-              <span className="kpi-n mono">{totalSignals}</span>
+              <span className="kpi-n">{totalSignals}</span>
               <span className="kpi-s">across all channels</span>
             </div>
             <div className="kpi">
@@ -138,7 +138,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 <span className="kpi-ic b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="3.2" /><path d="M5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6" strokeLinecap="round" /></svg></span>
                 <span className="kpi-l">Competitors tracked</span>
               </div>
-              <span className="kpi-n mono">{compCount}</span>
+              <span className="kpi-n">{compCount}</span>
               <span className="kpi-s">in this workspace</span>
             </div>
             <div className="kpi">
@@ -146,7 +146,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 <span className="kpi-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
                 <span className="kpi-l">Highest threat</span>
               </div>
-              <span className="kpi-n mono">{top?.total ?? '—'}</span>
+              <span className="kpi-n">{top?.total ?? '—'}</span>
               <span className="kpi-s">{top ? top.competitor : 'no data yet'}</span>
             </div>
             <div className="kpi">
@@ -154,7 +154,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 <span className="kpi-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
                 <span className="kpi-l">Last crawl</span>
               </div>
-              <span className="kpi-n mono"><span className="ok">{runStats.ok}</span> / <span className="bad">{runStats.fail}</span></span>
+              <span className="kpi-n"><span className="ok">{runStats.ok}</span> / <span className="bad">{runStats.fail}</span></span>
               <span className="kpi-s">runs ok / failed, honestly logged</span>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                   <div className="tl-group" key={b}>
                     <div className="tl-label"><span>{b}</span></div>
                     {buckets.get(b)!.map((it, i) => (
-                      <div className="card" key={i}>
+                      <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
                         <div className="crow">
                           <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
                           <span className="card-avatar">{initials(it.name)}</span>
