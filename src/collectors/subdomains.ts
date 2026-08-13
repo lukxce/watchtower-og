@@ -45,8 +45,18 @@ function addHost(set: Set<string>, raw: string, bare: string) {
 // name hints at something being BUILT or MARKETED (launch., beta., pricing.,
 // autopilot., agent-api.…). Everything else is recorded but archived, so the
 // history stays complete without burying the feed.
-const NOTABLE =
-  /(^|[.-])(launch|beta|labs?|pilot|autopilot|copilot|agents?|ai|ml|alpha|next|early|new|v\d+|try|get|go|start|onboard(ing)?|shop|store|checkout|price|pricing|plans?|academy|marketplace|events?|summit|webinars?|promo|offers?|campaigns?|lp|landing)([.-]|$)/;
+// BUILDOUT tells — names that hint something new is being built. These are
+// the only hostnames that become customer-visible signals.
+const BUILDOUT =
+  /(^|[.-])(launch|beta|labs?|pilot|autopilot|copilot|agents?|ai|ml|alpha|next|early|new|v\d+)([.-]|$)/;
+
+// WATCH SURFACES — marketing/commerce hostnames (webinars., events., lp.,
+// pricing., academy.…). The hostname itself is OUR detection plumbing, not a
+// customer-facing signal: the customer cares when a NEW webinar or pricing
+// change appears there, not that the hostname exists. Recorded + tagged so
+// future page-watch collectors can crawl them; never surfaced in the feed.
+const WATCH_SURFACE =
+  /(^|[.-])(try|get|go|start|onboard(ing)?|shop|store|checkout|price|pricing|plans?|academy|marketplace|events?|summit|webinars?|promo|offers?|campaigns?|lp|landing)([.-]|$)/;
 
 // Vetos that override an allowlist hit, learned from real false positives:
 // - env markers: autopilot.sandbox / autopilot.prod / agent-api.* are an
@@ -64,11 +74,15 @@ function hasStaleYear(sub: string): boolean {
   return years.some((y) => Number(y) < current);
 }
 
-function isNotable(host: string, bare: string): boolean {
-  if (host === bare) return false; // the apex itself isn't a discovery
+export type SubdomainClass = 'buildout' | 'watch_surface' | 'plumbing';
+
+export function classifySubdomain(host: string, bare: string): SubdomainClass {
+  if (host === bare) return 'plumbing'; // the apex itself isn't a discovery
   const sub = host.slice(0, -(bare.length + 1)); // strip ".bare"
-  if (VETO_ENV.test(sub) || VETO_INFRA.test(sub) || hasStaleYear(sub)) return false;
-  return NOTABLE.test(sub);
+  if (VETO_ENV.test(sub) || VETO_INFRA.test(sub) || hasStaleYear(sub)) return 'plumbing';
+  if (BUILDOUT.test(sub)) return 'buildout';
+  if (WATCH_SURFACE.test(sub)) return 'watch_surface';
+  return 'plumbing';
 }
 
 export async function collectSubdomains(comp: Competitor): Promise<string> {
@@ -84,17 +98,18 @@ export async function collectSubdomains(comp: Competitor): Promise<string> {
     return 'FAILED (both CT sources)';
   }
   const items = [...hosts].map((h) => {
-    const notable = isNotable(h, bare);
+    const cls = classifySubdomain(h, bare);
     return {
       externalId: h,
       title: `Subdomain observed: ${h}`,
       url: `https://${h}`,
-      payload: { notable },
-      archive: !notable,
+      payload: { class: cls },
+      archive: cls !== 'buildout',
     };
   });
-  const notable = items.filter((i) => !i.archive).length;
+  const buildouts = items.filter((i) => !i.archive).length;
+  const surfaces = items.filter((i) => (i.payload as { class: string }).class === 'watch_surface').length;
   const { added, fresh } = await ingestItems(comp.id, 'subdomains', items);
-  await recordRun(comp.id, 'subdomains', true, added, `${hosts.size} hosts via ${via} (${notable} notable, rest archived)`);
-  return `+${added} (${fresh} pending) — ${hosts.size} hosts via ${via}, ${notable} notable`;
+  await recordRun(comp.id, 'subdomains', true, added, `${hosts.size} hosts via ${via} (${buildouts} buildout, ${surfaces} watch-surface, rest plumbing)`);
+  return `+${added} (${fresh} pending) — ${hosts.size} hosts via ${via}, ${buildouts} buildout / ${surfaces} watch-surface`;
 }

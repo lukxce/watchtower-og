@@ -1,22 +1,23 @@
-/* Marketing site — same soft-pastel language as the app: lavender→pink
-   gradient ground, white floating cards, dark ink pill CTAs, violet accent.
-   Namespaced under .mkt to avoid colliding with the app-shell classes. */
+/* Marketing site — "first light" language (see BRAND.md): bone paper,
+   night-indigo ink and CTAs, one amber beacon accent. Namespaced under
+   .mkt to avoid colliding with the app-shell classes. */
 .mkt{
-  --a-bg:#eeeaf6;
-  --a-grad:radial-gradient(1300px 800px at 10% -10%, #e4dbfa 0%, transparent 58%),
-           radial-gradient(1200px 800px at 105% 15%, #fbe0ec 0%, transparent 55%),
-           linear-gradient(150deg,#ece7f7 0%, #f1e8f2 55%, #f7edec 100%);
-  --a-card:#ffffff; --a-card-2:#faf9fc;
-  --a-ink:#191722; --a-mut:#6e6a7c; --a-faint:#9b97a8; --a-line:#e9e6f0; --a-line2:#f1eff6;
-  --a-violet:#7a6cf0; --a-violet-wash:#eeeafd;
-  --a-pink:#ef7fae; --a-pink-wash:#fbe7f0;
-  --a-blue:#6f9df3; --a-blue-wash:#e7effc;
-  --a-mint:#4fae85; --a-mint-wash:#e2f5ec;
-  --a-amber:#c98a35; --a-amber-wash:#faeeda;
-  --a-red:#d96a5c; --a-red-wash:#fbe9e6;
-  --a-dark:#1c1a23; --a-on-dark:#f2f0f7; --a-on-dark-mut:#a49fb5;
-  --a-shadow:0 2px 6px rgba(35,30,60,.04), 0 18px 44px rgba(35,30,60,.07);
-  --a-shadow-lift:0 4px 10px rgba(35,30,60,.06), 0 26px 60px rgba(35,30,60,.11);
+  --a-bg:#faf7f2;
+  --a-grad:radial-gradient(1200px 720px at 10% -8%, #f7ead6 0%, transparent 56%),
+           radial-gradient(1100px 700px at 106% 14%, #ecebf6 0%, transparent 52%),
+           linear-gradient(160deg,#faf7f2 0%, #f7f3ec 60%, #f5f0e9 100%);
+  --a-card:#ffffff; --a-card-2:#faf8f4;
+  --a-ink:#232038; --a-mut:#6b677c; --a-faint:#9a95a8; --a-line:#eae6ef; --a-line2:#f2eff5;
+  --a-violet:#6d64b8; --a-violet-wash:#ecebf7;
+  --a-beacon:#cf7a1f; --a-beacon-soft:#e8a34d; --a-beacon-wash:#f9edda;
+  --a-pink:#c25581; --a-pink-wash:#f7e6ee;
+  --a-blue:#5b87c9; --a-blue-wash:#e7eef9;
+  --a-mint:#4f9d6b; --a-mint-wash:#e4f2e9;
+  --a-amber:#b07013; --a-amber-wash:#f9edda;
+  --a-red:#c25548; --a-red-wash:#f9e7e3;
+  --a-dark:#232038; --a-on-dark:#f4f2ec; --a-on-dark-mut:#a6a1b8;
+  --a-shadow:0 2px 6px rgba(41,34,64,.04), 0 18px 44px rgba(41,34,64,.07);
+  --a-shadow-lift:0 4px 10px rgba(41,34,64,.06), 0 26px 60px rgba(41,34,64,.11);
   color:var(--a-ink); background:var(--a-bg); background-image:var(--a-grad); background-attachment:fixed;
   font-family:var(--sans, var(--font-jakarta), -apple-system, sans-serif);
 }
@@ -30,7 +31,7 @@
 .mkt-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
 .mkt-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;letter-spacing:-.01em}
 .mkt-logo svg{width:20px;height:20px}
-.mkt-logo b{color:var(--a-violet);font-weight:800}
+.mkt-logo b{color:var(--a-beacon);font-weight:800}
 .mkt-links{display:flex;align-items:center;gap:26px}
 .mkt-links a{font-size:14px;color:var(--a-mut);font-weight:600}
 .mkt-links a:hover{color:var(--a-ink)}
@@ -51,9 +52,9 @@
 /* ---------- Hero ---------- */
 .mkt-hero{position:relative;padding:84px 0 0;text-align:center;overflow:hidden}
 .mkt-hero .wrap{position:relative;z-index:1}
-.kicker{font-family:var(--mono, var(--font-geist-mono), monospace);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-violet);font-weight:700;display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;background:var(--a-violet-wash);padding:7px 16px;border-radius:999px}
+.kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-beacon);font-weight:800;display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;background:var(--a-beacon-wash);padding:7px 16px;border-radius:999px}
 h1.mkt-h1{font-size:clamp(38px,5.4vw,64px);font-weight:700;letter-spacing:-.035em;line-height:1.04;margin:0 auto 22px;max-width:17ch;text-wrap:balance}
-h1.mkt-h1 .accent{color:var(--a-violet)}
+h1.mkt-h1 .accent{color:var(--a-beacon)}
 .mkt-dek{font-size:18px;color:var(--a-mut);max-width:54ch;line-height:1.6;margin:0 auto 32px}
 .mkt-hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
 .mkt-hero-note{font-size:12.5px;color:var(--a-faint);font-weight:500}
@@ -85,7 +86,7 @@ h1.mkt-h1 .accent{color:var(--a-violet)}
 .mkt-section{padding:96px 0}
 .mkt-section.tight{padding:64px 0}
 .mkt-section.alt{background:rgba(255,255,255,.5)}
-.mkt-eyebrow{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-violet);font-weight:800;margin-bottom:14px;display:inline-block}
+.mkt-eyebrow{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-beacon);font-weight:800;margin-bottom:14px;display:inline-block}
 .mkt-section h2{font-size:clamp(28px,3.4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin:0 0 16px;text-wrap:balance}
 .mkt-section .lede{font-size:16.5px;color:var(--a-mut);max-width:60ch;line-height:1.65;margin:0 0 12px}
 .mkt-2col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
@@ -129,7 +130,7 @@ h1.mkt-h1 .accent{color:var(--a-violet)}
 .tier{border-radius:22px;padding:30px 28px;display:flex;flex-direction:column;background:var(--a-card);box-shadow:var(--a-shadow)}
 .tier.on{background:var(--a-dark);color:var(--a-on-dark);box-shadow:0 30px 70px rgba(25,23,34,.35)}
 .tier-tag{font-family:var(--mono, monospace);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-violet);font-weight:700;margin-bottom:14px}
-.tier.on .tier-tag{color:#b3a7fa}
+.tier.on .tier-tag{color:var(--a-beacon-soft)}
 .tier h3{font-size:20px;margin:0 0 6px;font-weight:700}
 .tier .price{font-family:var(--mono, monospace);font-size:34px;font-weight:700;letter-spacing:-.01em;margin:6px 0 4px}
 .tier .price span{font-size:14px;color:var(--a-faint);font-weight:500}
@@ -141,13 +142,13 @@ h1.mkt-h1 .accent{color:var(--a-violet)}
 .tier.on li{color:#dcd8e8;border-top-color:rgba(255,255,255,.08)}
 .tier li:first-child{border-top:none}
 .tier li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--a-violet);margin-top:7px;flex:none}
-.tier.on li::before{background:#b3a7fa}
+.tier.on li::before{background:var(--a-beacon-soft)}
 .tier.on .btn-primary{background:#fff;color:var(--a-ink)}
 
 /* CTA band */
 .mkt-cta-band{padding:40px 0 96px}
 .mkt-cta-band .wrap>div,.mkt-cta-inner{background:var(--a-dark);color:var(--a-on-dark);border-radius:28px;padding:72px 28px;text-align:center}
-.mkt-cta-band .kicker{background:rgba(255,255,255,.08);color:#b3a7fa}
+.mkt-cta-band .kicker{background:rgba(255,255,255,.08);color:var(--a-beacon-soft)}
 .mkt-cta-band h2{color:#fff;max-width:22ch;margin-left:auto;margin-right:auto;font-size:clamp(28px,3.4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:14px;text-wrap:balance}
 .mkt-cta-band .lede{color:var(--a-on-dark-mut);margin:0 auto;text-align:center;font-size:16.5px;max-width:50ch}
 .mkt-cta-band .mkt-hero-cta{justify-content:center;margin-top:28px;margin-bottom:0}

@@ -7,6 +7,8 @@ import { CHANNELS } from '@/lib/channels';
 import { requireOrgId } from '@/lib/tenant';
 import { industryNews } from '@/lib/industryNews';
 import { adsRoundup } from '@/lib/adsSummary';
+import { hiringRoundup } from '@/lib/hiringSummary';
+import { interpretSignal } from '@/lib/interpret';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,6 +73,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   if (active !== 'Ads') {
     clauses.push("si.channel NOT IN ('ads_meta','ads_google','ads_linkedin')");
   }
+  // Same for job posts: one hiring-roundup card per competitor beats six
+  // near-identical rows. Full list behind the Hiring filter.
+  if (active !== 'Hiring') {
+    clauses.push("si.channel <> 'jobs'");
+  }
   const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string }>(
     `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
@@ -91,14 +98,21 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
            WHERE c.org_id = $1 ORDER BY cr.id DESC LIMIT 60) last_runs`,
     [orgId],
   ))[0] ?? { ok: '0', fail: '0' };
-  const mix = await db.query<{ category: string | null; n: string }>(
-    `SELECT si.category, COUNT(*)::text n FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
-     WHERE c.org_id = $1 AND si.status IN ('pending','signaled') AND si.category IS NOT NULL
-     GROUP BY si.category ORDER BY COUNT(*) DESC LIMIT 7`,
+  const ads = (await adsRoundup(orgId)).filter((a) => !comp || a.slug === comp);
+  const hiring = (await hiringRoundup(orgId)).filter((h) => !comp || h.slug === comp);
+  const adsMax = Math.max(1, ...ads.map((a) => a.total));
+  interface ShortCard { positioning: string; howToWin: string[] }
+  const cardRows = await db.query<{ name: string; slug: string; content: ShortCard | string }>(
+    `SELECT c.name, c.slug, b.content FROM battlecards b
+     JOIN competitors c ON c.id = b.competitor_id
+     LEFT JOIN threat_scores ts ON ts.competitor_id = c.id
+     WHERE c.org_id = $1 ORDER BY ts.total DESC NULLS LAST LIMIT 3`,
     [orgId],
   );
-  const mixMax = Math.max(1, ...mix.map((m) => Number(m.n)));
-  const ads = (await adsRoundup(orgId)).filter((a) => !comp || a.slug === comp);
+  const shorts = cardRows.map((r) => {
+    const cnt = (typeof r.content === 'string' ? JSON.parse(r.content) : r.content) as ShortCard;
+    return { name: r.name, slug: r.slug, positioning: String(cnt.positioning ?? ''), win: Array.isArray(cnt.howToWin) ? String(cnt.howToWin[0] ?? '') : '' };
+  });
   const pulse = await industryNews(orgId);
   const threat = await computeThreat(orgId);
   const top = threat[0];
@@ -113,8 +127,28 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   const activeCount = CHANNELS.filter((c) => c.status === 'active').length;
   const groups = [...new Set(CHANNELS.map((c) => c.group))];
 
-  const buckets = new Map<(typeof BUCKET_ORDER)[number], typeof items>();
-  for (const it of items) {
+  // Collapse locale duplicates: the same new page published in /de/ /pt/ /ko/…
+  // is one product move, not eight. Keep the first (canonical) row and count.
+  type FeedItem = (typeof items)[number] & { locales?: number };
+  const LOCALE = /^(https?:\/\/[^/]+)\/([a-z]{2}(?:-[a-z]{2})?)\//i;
+  const byPage = new Map<string, FeedItem>();
+  const display: FeedItem[] = [];
+  for (const raw of items as FeedItem[]) {
+    const m = raw.title.match(/^New page published: (\S+)$/);
+    if (m) {
+      const norm = m[1].replace(LOCALE, '$1/');
+      const kept = byPage.get(norm);
+      if (kept) {
+        kept.locales = (kept.locales ?? 1) + 1;
+        continue;
+      }
+      byPage.set(norm, raw);
+    }
+    display.push(raw);
+  }
+
+  const buckets = new Map<(typeof BUCKET_ORDER)[number], FeedItem[]>();
+  for (const it of display) {
     const key = bucketOf(it.published_at ?? it.created_at);
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key)!.push(it);
@@ -208,6 +242,23 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
               ))}
             </div>
 
+            {active !== 'Hiring' && hiring.length > 0 && (
+              <div className="tl-group">
+                <div className="tl-label"><span>Hiring activity</span></div>
+                {hiring.map((h) => (
+                  <a className="card hirecard" key={h.slug} href={`/feed?cat=Hiring${comp ? `&comp=${comp}` : `&comp=${h.slug}`}`}>
+                    <div className="crow">
+                      <span className="badge c-hiring">Hiring</span>
+                      <span className="card-avatar">{initials(h.name)}</span>
+                      <span className="comp">{h.name}</span>
+                      <span className="when">view all →</span>
+                    </div>
+                    <div className="title">{h.read}</div>
+                  </a>
+                ))}
+              </div>
+            )}
+
             {active !== 'Ads' && ads.length > 0 && (
               <div className="tl-group">
                 <div className="tl-label"><span>Ad activity</span></div>
@@ -236,24 +287,31 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 {BUCKET_ORDER.filter((b) => buckets.has(b)).map((b) => (
                   <div className="tl-group" key={b}>
                     <div className="tl-label"><span>{b}</span></div>
-                    {buckets.get(b)!.map((it, i) => (
-                      <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
-                        <div className="crow">
-                          <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
-                          <span className="card-avatar">{initials(it.name)}</span>
-                          <span className="comp">{it.name}</span>
-                          {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
-                          {it.published_at ? (
-                            <span className="when">{ago(it.published_at)}</span>
-                          ) : (
-                            <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
-                              first seen {ago(it.created_at)}
-                            </span>
-                          )}
+                    {buckets.get(b)!.map((it, i) => {
+                      const read = interpretSignal(it.channel, it.title, it.name);
+                      return (
+                        <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
+                          <div className="crow">
+                            <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
+                            <span className="card-avatar">{initials(it.name)}</span>
+                            <span className="comp">{it.name}</span>
+                            {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
+                            {it.published_at ? (
+                              <span className="when">{ago(it.published_at)}</span>
+                            ) : (
+                              <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
+                                first seen {ago(it.created_at)}
+                              </span>
+                            )}
+                          </div>
+                          <div className="title">
+                            {it.url ? <a href={it.url} target="_blank" rel="noreferrer">{read.headline}</a> : read.headline}
+                            {it.locales && it.locales > 1 && <span className="locale-note"> (+{it.locales - 1} locale versions)</span>}
+                          </div>
+                          {read.howWeKnow && <div className="howknow">How we know: {read.howWeKnow}</div>}
                         </div>
-                        <div className="title">{it.url ? <a href={it.url} target="_blank" rel="noreferrer">{it.title}</a> : it.title}</div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ))}
               </div>
@@ -261,40 +319,58 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </div>
 
           <aside className="ov-side">
-            <div className="mod dark">
-              <h3>Ask Watchtower</h3>
-              <p className="mod-ask-t">Question the corpus.</p>
-              <p className="mod-ask-p">
-                “What changed on CreatorIQ&apos;s pricing this quarter?” Answers cite captured signals, never a guess.
-              </p>
-              <a className="mod-ask-a" href="/ask">Open Ask →</a>
-            </div>
-
-            {mix.length > 0 && (
-              <div className="mod">
-                <h3>Signal mix</h3>
-                {mix.map((m) => (
-                  <div className="mix-row" key={m.category}>
-                    <span className="mix-label">{m.category}</span>
-                    <span className="mix-track"><span className={`mix-bar mb-${(m.category ?? 'other').toLowerCase()}`} style={{ width: `${(Number(m.n) / mixMax) * 100}%` }} /></span>
-                    <span className="mix-n mono">{m.n}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
             {pulse.length > 0 && (
               <div className="mod">
                 <h3>Industry pulse</h3>
-                {pulse.map((p, i) => (
+                {pulse.slice(0, 4).map((p, i) => (
                   <a className="pulse-row" key={i} href={p.url} target="_blank" rel="noreferrer">
                     <span className="pulse-t">{p.title}</span>
                     <span className="pulse-s">{p.source}</span>
                   </a>
                 ))}
-                <p className="covnote">Market-wide headlines via Google News, separate from competitor signals.</p>
+                <a className="mod-more" href="/industry">All industry news →</a>
               </div>
             )}
+
+            {shorts.length > 0 && (
+              <div className="mod">
+                <h3>Battlecards at a glance</h3>
+                {shorts.map((sc) => (
+                  <a className="short-bc" key={sc.slug} href="/battlecards">
+                    <div className="short-bc-top">
+                      <span className="cc-avatar sm">{initials(sc.name)}</span>
+                      <span className="comp">{sc.name}</span>
+                    </div>
+                    <p className="short-bc-pos">{sc.positioning.length > 110 ? `${sc.positioning.slice(0, 110)}…` : sc.positioning}</p>
+                    {sc.win && <p className="short-bc-win">How we win: {sc.win}</p>}
+                  </a>
+                ))}
+                <a className="mod-more" href="/battlecards">Full battlecards →</a>
+              </div>
+            )}
+
+            {ads.length > 1 && (
+              <div className="mod">
+                <h3>Ad share of voice</h3>
+                {ads.map((a) => (
+                  <div className="mix-row" key={a.slug}>
+                    <span className="mix-label">{a.name}</span>
+                    <span className="mix-track"><span className="mix-bar" style={{ width: `${(a.total / adsMax) * 100}%` }} /></span>
+                    <span className="mix-n">{a.total}</span>
+                  </div>
+                ))}
+                <p className="covnote">Active creatives we can see across ad libraries. Spend isn&apos;t public; volume is the honest proxy.</p>
+              </div>
+            )}
+
+            <div className="mod dark">
+              <h3>Ask Watchtower</h3>
+              <p className="mod-ask-t">Ask about your competitors.</p>
+              <p className="mod-ask-p">
+                “What changed on CreatorIQ&apos;s pricing this quarter?” Every answer cites the signals it came from.
+              </p>
+              <a className="mod-ask-a" href="/ask">Ask Watchtower →</a>
+            </div>
 
             <div className="mod cov" id="coverage">
               <h3>Channel coverage · {activeCount}/{CHANNELS.length}</h3>
