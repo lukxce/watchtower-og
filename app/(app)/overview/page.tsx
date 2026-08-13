@@ -47,8 +47,8 @@ export default async function Overview() {
 
   // Top signals: the highest-impact single events, ads and jobs excluded
   // (those live as the activity charts below).
-  const topSignals = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; name: string; slug: string; competitor_id: number }>(
-    `SELECT si.channel, si.category, si.score, si.title, si.url, c.name, c.slug, c.id AS competitor_id
+  const topSignals = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; name: string; slug: string; competitor_id: number; stream_item_id: number }>(
+    `SELECT si.channel, si.category, si.score, si.title, si.url, c.name, c.slug, c.id AS competitor_id, si.id AS stream_item_id
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
      WHERE c.org_id = $1 AND si.status IN ('pending','signaled')
        AND si.channel NOT IN ('ads_meta','ads_google','ads_linkedin','jobs')
@@ -61,7 +61,7 @@ export default async function Overview() {
   const topSignalReads = await Promise.all(
     topSignals.map(async (it) => {
       const base = interpretSignal(it.channel, it.title, it.name);
-      return synthesizeSignal(base, it.channel, it.title, it.name, topSignalContext.get(it.competitor_id), feedbackExamples);
+      return synthesizeSignal(base, it.channel, it.title, it.name, topSignalContext.get(it.competitor_id), feedbackExamples, it.stream_item_id);
     }),
   );
   const mentions = await findBrandMentions(orgId);

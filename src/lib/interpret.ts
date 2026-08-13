@@ -23,7 +23,7 @@
 // eligibility scope, same "no forced connections" law, used whenever no key
 // is set or the LLM call fails, so the product never goes silent.
 import type { CompetitorContext } from '@/lib/connect';
-import { llmSynthesize, getFeedbackExamples, type FeedbackExample } from '@/lib/reason';
+import { llmSynthesize, getFeedbackExamples, getCachedReasoning, type FeedbackExample } from '@/lib/reason';
 
 // Same family as connect.ts's MODEL_MOVE — kept local since this one tests a
 // news item's own title rather than classifying it for the context map.
@@ -149,11 +149,13 @@ export function synthesizeSignalRules(base: Interpreted, channel: string, title:
   return { ...base, context: contextPanel(ctx, true, title) };
 }
 
-// The primary entry point every page should call. Tries real reasoning
-// first (Claude, grounded strictly in the retrieved facts + any admin
-// corrections on file), falls back to the deterministic rules above when no
-// key is set or the call fails/returns something malformed — the product
-// degrades honestly instead of going silent, same pattern as score.ts.
+// The primary entry point every page should call. Order: cached reasoning
+// (Claude-in-session, done by hand against the real data when no API key
+// exists to call live — reason.ts's getCachedReasoning) → real reasoning
+// live (Claude, grounded strictly in the retrieved facts + any admin
+// corrections on file) → deterministic rules, the honest last resort. The
+// product degrades gracefully at every step instead of going silent, same
+// pattern as score.ts.
 export async function synthesizeSignal(
   base: Interpreted,
   channel: string,
@@ -161,7 +163,12 @@ export async function synthesizeSignal(
   competitor: string,
   ctx: CompetitorContext | undefined,
   feedback?: FeedbackExample[],
+  streamItemId?: number,
 ): Promise<Interpreted> {
+  if (streamItemId != null) {
+    const cached = await getCachedReasoning(streamItemId);
+    if (cached) return cached;
+  }
   if (ctx && CONTEXT_ELIGIBLE.has(channel)) {
     const examples = feedback ?? (await getFeedbackExamples());
     const llm = await llmSynthesize(base, channel, title, competitor, ctx, examples);

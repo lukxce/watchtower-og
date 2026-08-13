@@ -253,6 +253,21 @@ CREATE TABLE IF NOT EXISTS interpretation_feedback (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_feedback_verdict ON interpretation_feedback(verdict, created_at DESC);
+
+-- Cached reasoning for when there's no ANTHROPIC_API_KEY to call live —
+-- same "Claude-in-session" pattern as battlecards.ts: the reasoning is done
+-- by Claude Code by hand, once, against the real data, and cached per
+-- signal instead of templated. A snapshot, not a live loop — doesn't
+-- reason about signals that show up after it was generated until re-run or
+-- a real key is added (see scripts/reason-cache.ts).
+CREATE TABLE IF NOT EXISTS reasoning_cache (
+  stream_item_id INT PRIMARY KEY REFERENCES stream_items(id),
+  headline TEXT NOT NULL,
+  how_we_know TEXT,
+  context JSONB,
+  generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  generated_by TEXT NOT NULL DEFAULT 'claude-in-session'
+);
 `;
 
 declare global {

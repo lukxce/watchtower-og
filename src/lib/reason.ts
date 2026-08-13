@@ -12,10 +12,27 @@
 // synthesizeSignalRules) when ANTHROPIC_API_KEY isn't set, the call fails, or
 // the response doesn't parse — same honest-degradation pattern as
 // score.ts's llmScore/heuristicScore split.
+//
+// Without a key, getCachedReasoning() is checked first — reasoning done by
+// Claude Code by hand against the real data (scripts/reason-cache.ts), same
+// pattern as battlecards.ts's Claude-in-session generation. A snapshot for
+// the testing period, not a live loop.
 import { getDb } from '@/db/client';
 import { claudeJSON } from '@/lib/claude';
 import type { CompetitorContext } from '@/lib/connect';
 import type { Interpreted } from '@/lib/interpret';
+
+export async function getCachedReasoning(streamItemId: number): Promise<Interpreted | null> {
+  const db = await getDb();
+  const rows = await db.query<{ headline: string; how_we_know: string | null; context: unknown }>(
+    'SELECT headline, how_we_know, context FROM reasoning_cache WHERE stream_item_id = $1',
+    [streamItemId],
+  );
+  const r = rows[0];
+  if (!r) return null;
+  const context = typeof r.context === 'string' ? JSON.parse(r.context) : r.context;
+  return { headline: r.headline, howWeKnow: r.how_we_know ?? undefined, context: context ?? undefined };
+}
 
 export interface FeedbackExample {
   situation: string;

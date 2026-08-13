@@ -58,8 +58,8 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     params.push(comp);
     clauses.push(`c.slug = $${params.length}`);
   }
-  const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string; competitor_id: number }>(
-    `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name, c.id AS competitor_id
+  const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string; competitor_id: number; stream_item_id: number }>(
+    `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name, c.id AS competitor_id, si.id AS stream_item_id
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
      WHERE ${clauses.join(' AND ')}
      ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 60`,
@@ -106,7 +106,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
   const displayWithRead: ReadFeedItem[] = await Promise.all(
     display.map(async (it) => {
       const base = interpretSignal(it.channel, it.title, it.name);
-      const read = await synthesizeSignal(base, it.channel, it.title, it.name, contextMap.get(it.competitor_id), feedbackExamples);
+      const read = await synthesizeSignal(base, it.channel, it.title, it.name, contextMap.get(it.competitor_id), feedbackExamples, it.stream_item_id);
       return { ...it, read };
     }),
   );
