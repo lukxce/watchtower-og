@@ -1,5 +1,7 @@
-// Signal feed dashboard — matches the product design: filter pills, scored
-// signal cards, and a Threat Index rail with circular gauges + WoW deltas.
+// Signal feed dashboard — a threat strip up top (not buried in a side rail),
+// a day-grouped timeline of scored signal cards below it, and channel
+// coverage as a secondary rail. Deliberately not the generic
+// sidebar+list+rail shape: the threat data is the hero, not an afterthought.
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { CHANNELS } from '@/lib/channels';
@@ -13,6 +15,7 @@ const scoreClass = (n: number) => (n >= 70 ? 's-hi' : n >= 45 ? 's-md' : 's-lo')
 
 // gauge ring color by threat level
 const ring = (n: number) => (n >= 70 ? '#B8362A' : n >= 55 ? '#9A5B00' : n >= 42 ? '#4A5BC9' : '#1F7A45');
+const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 function ago(iso: string): string {
   const d = Date.now() - new Date(iso).getTime();
@@ -20,6 +23,21 @@ function ago(iso: string): string {
   if (h < 1) return `${Math.max(1, Math.floor(d / 60000))}m ago`;
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
+}
+
+const BUCKET_ORDER = ['Today', 'Yesterday', 'This week', 'Earlier'] as const;
+function bucketOf(iso: string): (typeof BUCKET_ORDER)[number] {
+  const d = new Date(iso);
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfYesterday = new Date(startOfToday);
+  startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+  const startOfWeek = new Date(startOfToday);
+  startOfWeek.setDate(startOfWeek.getDate() - 7);
+  if (d >= startOfToday) return 'Today';
+  if (d >= startOfYesterday) return 'Yesterday';
+  if (d >= startOfWeek) return 'This week';
+  return 'Earlier';
 }
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ cat?: string; comp?: string }> }) {
@@ -58,6 +76,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   const activeCount = CHANNELS.filter((c) => c.status === 'active').length;
   const groups = [...new Set(CHANNELS.map((c) => c.group))];
 
+  const buckets = new Map<(typeof BUCKET_ORDER)[number], typeof items>();
+  for (const it of items) {
+    const key = bucketOf(it.published_at ?? it.created_at);
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key)!.push(it);
+  }
+
   return (
     <main className="main">
       <section className="feed">
@@ -66,6 +91,29 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           {items.length} signals · {activeComp ? '1 competitor' : `${compCount} competitors`} · ranked by impact. Times are the event
           date where known, else when Watchtower first observed it.
         </p>
+
+        {!activeComp && threat.length > 0 && (
+          <div className="tstrip">
+            {threat.map((t) => (
+              <a className="ttile" key={t.competitor} href={`/feed?comp=${t.slug}`}>
+                <div className="ttile-top">
+                  <span className="ttile-avatar">{initials(t.competitor)}</span>
+                  <span className="ttile-name">{t.competitor}</span>
+                </div>
+                <div className="ttile-gauge" style={{ background: `conic-gradient(${ring(t.total)} ${t.total * 3.6}deg, var(--gr) 0)` }}>
+                  <span>{t.total}</span>
+                </div>
+                {t.delta == null ? (
+                  <div className="tdl flat">baseline</div>
+                ) : t.delta >= 0 ? (
+                  <div className="tdl up">▲ +{t.delta} wk</div>
+                ) : (
+                  <div className="tdl down">▼ {t.delta} wk</div>
+                )}
+              </a>
+            ))}
+          </div>
+        )}
 
         {activeComp && (
           <div className="filterchip">
@@ -88,46 +136,35 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             07:00 crawl). The first run captures each competitor&apos;s current state; changes surface from the next run.
           </div>
         ) : (
-          items.map((it, i) => (
-            <div className="card" key={i}>
-              <div className="crow">
-                <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
-                <span className="comp">{it.name}</span>
-                {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
-                {it.published_at ? (
-                  <span className="when">{ago(it.published_at)}</span>
-                ) : (
-                  <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
-                    first seen {ago(it.created_at)}
-                  </span>
-                )}
+          <div className="timeline">
+            {BUCKET_ORDER.filter((b) => buckets.has(b)).map((b) => (
+              <div className="tl-group" key={b}>
+                <div className="tl-label"><span>{b}</span></div>
+                {buckets.get(b)!.map((it, i) => (
+                  <div className={`card cat-${catClass(it.category ?? 'other').slice(2)}`} key={i}>
+                    <div className="crow">
+                      <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
+                      <span className="card-avatar">{initials(it.name)}</span>
+                      <span className="comp">{it.name}</span>
+                      {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
+                      {it.published_at ? (
+                        <span className="when">{ago(it.published_at)}</span>
+                      ) : (
+                        <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
+                          first seen {ago(it.created_at)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="title">{it.url ? <a href={it.url} target="_blank" rel="noreferrer">{it.title}</a> : it.title}</div>
+                  </div>
+                ))}
               </div>
-              <div className="title">{it.url ? <a href={it.url} target="_blank" rel="noreferrer">{it.title}</a> : it.title}</div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </section>
 
       <aside className="rail">
-        <h3>Threat Index · 30d</h3>
-        {threat.map((t) => (
-          <a className={`trow ${comp === t.slug ? 'on' : ''}`} key={t.competitor} href={comp === t.slug ? '/feed' : `/feed?comp=${t.slug}`}>
-            <div className="gauge" style={{ background: `conic-gradient(${ring(t.total)} ${t.total * 3.6}deg, var(--gr) 0)` }}>
-              <span>{t.total}</span>
-            </div>
-            <div>
-              <div className="tnm">{t.competitor}</div>
-              {t.delta == null ? (
-                <div className="tdl flat">baseline</div>
-              ) : t.delta >= 0 ? (
-                <div className="tdl up">▲ +{t.delta} this week</div>
-              ) : (
-                <div className="tdl down">▼ {t.delta} this week</div>
-              )}
-            </div>
-          </a>
-        ))}
-
         <div className="cov" id="coverage">
           <h3>Channel coverage · {activeCount}/{CHANNELS.length}</h3>
           {groups.map((g) => (

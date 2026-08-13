@@ -24,15 +24,16 @@
 .mkt-links a:hover{color:var(--a-ink)}
 @media(max-width:760px){.mkt-links .mkt-navlink{display:none}}
 .mkt-cta-row{display:flex;align-items:center;gap:18px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;letter-spacing:-.005em;transition:transform .12s ease, opacity .12s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;letter-spacing:-.005em;transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease}
 .btn:active{transform:translateY(1px)}
-.btn-primary{background:var(--a-accent);color:#fff}
-.btn-primary:hover{opacity:.92}
+.btn-primary{background:linear-gradient(155deg,#3d6bff,#0040ff 60%);color:#fff;box-shadow:0 1px 2px rgba(0,64,255,.15), 0 8px 20px rgba(0,64,255,.22)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 2px 4px rgba(0,64,255,.18), 0 12px 28px rgba(0,64,255,.3)}
 .btn-ghost{background:transparent;color:var(--a-ink);border:1px solid var(--a-line)}
-.btn-ghost:hover{border-color:var(--a-faint)}
-.btn-on-navy{background:var(--a-accent);color:#fff}
+.btn-ghost:hover{border-color:var(--a-faint);transform:translateY(-1px)}
+.btn-on-navy{background:linear-gradient(155deg,#3d6bff,#0040ff 60%);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2), 0 10px 24px rgba(0,64,255,.35)}
+.btn-on-navy:hover{transform:translateY(-1px);box-shadow:0 2px 4px rgba(0,0,0,.22), 0 14px 32px rgba(0,64,255,.42)}
 .btn-on-navy-ghost{background:rgba(255,255,255,.06);color:var(--a-on-navy);border:1px solid var(--a-navy-line)}
-.btn-on-navy-ghost:hover{border-color:#454b6e}
+.btn-on-navy-ghost:hover{border-color:#454b6e;transform:translateY(-1px)}
 .btn-lg{padding:13px 24px;font-size:15px;border-radius:10px}
 
 /* ---------- Hero ---------- */
@@ -48,6 +49,19 @@ h1.mkt-h1 .accent{color:var(--a-accent-soft)}
 .mkt-hero-note{font-size:12.5px;color:var(--a-on-navy-mut);font-family:var(--mono, var(--font-geist-mono), monospace)}
 .mkt-hero-device{margin-top:60px;padding-bottom:0;position:relative}
 .mkt-hero-device .wrap{padding:0 28px}
+
+/* real product screenshot, framed */
+.shot-frame{max-width:1160px;margin:0 auto;background:#fff;border-radius:14px 14px 0 0;box-shadow:0 30px 80px rgba(0,0,0,.45);border:1px solid var(--a-navy-line);border-bottom:none;overflow:hidden}
+.shot-bar{display:flex;gap:6px;padding:11px 14px;background:var(--a-panel);border-bottom:1px solid var(--a-line)}
+.shot-bar span{width:9px;height:9px;border-radius:50%;background:var(--a-line)}
+.shot-bar span:nth-child(1){background:#e2635a}
+.shot-bar span:nth-child(2){background:#e0a84a}
+.shot-bar span:nth-child(3){background:#4fae5f}
+.shot-img{display:block;width:100%;height:auto}
+
+/* secondary product shot, on white ground */
+.shot-frame.light{box-shadow:var(--shadow, 0 16px 40px rgba(16,18,30,.08));border:1px solid var(--a-line);border-radius:14px;margin:32px auto 0}
+.shot-frame.light .shot-bar{border-radius:14px 14px 0 0}
 
 /* live-feed hero device */
 .demo-card{max-width:1160px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 30px 80px rgba(0,0,0,.45);border:1px solid var(--a-navy-line);border-bottom:none;overflow:hidden}

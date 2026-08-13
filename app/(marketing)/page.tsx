@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import LiveFeedDemo from './LiveFeedDemo';
 
 export const metadata = {
   title: 'Watchtower — Verifiable competitive intelligence',
@@ -61,7 +60,11 @@ export default function Home() {
         </div>
         <div className="mkt-hero-device">
           <div className="wrap">
-            <LiveFeedDemo />
+            <div className="shot-frame">
+              <div className="shot-bar"><span /><span /><span /></div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/screenshots/feed.png" alt="The Watchtower signal feed: threat-index strip, category-coded signal cards, channel coverage" className="shot-img" />
+            </div>
           </div>
         </div>
       </section>
@@ -173,6 +176,19 @@ export default function Home() {
       </section>
 
       <section className="mkt-section alt">
+        <div className="wrap">
+          <span className="mkt-eyebrow">Positioning</span>
+          <h2>See the whole landscape, not just a list.</h2>
+          <p className="lede">A real market positioning map per workspace, plus how many of the tracked dimensions each competitor actually leads on.</p>
+          <div className="shot-frame light">
+            <div className="shot-bar"><span /><span /><span /></div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/screenshots/competitors.png" alt="Watchtower's Competitors page: a 2x2 market positioning map and per-competitor cards with real computed stats" className="shot-img" />
+          </div>
+        </div>
+      </section>
+
+      <section className="mkt-section">
         <div className="wrap">
           <span className="mkt-eyebrow">Built to be verifiable</span>
           <h2>If we can&apos;t source it, we don&apos;t show it.</h2>
