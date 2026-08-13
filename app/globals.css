@@ -229,6 +229,13 @@ h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em;font-weight:700}
 .locale-note{color:var(--faint);font-size:12.5px;font-weight:500}
 .howknow{margin-top:7px;font-size:12px;color:var(--faint);line-height:1.45;border-top:1px solid var(--line2);padding-top:7px}
 .card.featured .howknow{border-top-color:rgba(21,21,40,.08)}
+.connected{margin-top:9px;padding:10px 12px;border-radius:11px;background:var(--brand-wash);border:1px solid rgba(84,87,214,.16)}
+.connected-tag{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--brand-strong);margin-bottom:5px}
+.connected-item{font-size:12px;color:var(--ink);line-height:1.5;margin-bottom:3px}
+.connected-item:last-child{margin-bottom:0}
+.connected-item a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--brand-soft)}
+.connected-label{font-weight:700;color:var(--brand-strong);margin-right:5px}
+.ovsig .connected{margin-top:8px}
 .empty{color:var(--mut);font-size:13.5px;padding:26px;border:1.5px dashed rgba(21,21,40,.14);border-radius:16px;background:var(--card-2)}
 .empty code{font-family:var(--mono);font-size:12px;color:var(--brand)}
 .filterchip{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);background:var(--card);border-radius:999px;padding:8px 16px;margin-bottom:16px;box-shadow:var(--shadow)}

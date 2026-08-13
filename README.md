@@ -92,6 +92,30 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   invented numbers) — trend depth accumulates honestly from real crawls
   instead. Radar's evidence window is 180 days and blends buildout
   hostnames, hiring clusters, and these real "corporate moves" from news.
+- **Brand mentions** (`/mentions`, `src/lib/mentions.ts`, `src/lib/brand.ts`):
+  a workspace sets its own brand identity (name, domain, aliases — nothing is
+  guessed, `org_settings` table) and Watchtower searches for it across three
+  real, sourced lenses: general news (Google News RSS), a competitor's own
+  already-captured page content (the highest-value kind — the workspace's
+  brand named on a competitor's site), and any already-ingested signal whose
+  title names the brand. Zero results on all three is an honest answer, shown
+  as such, not hidden.
+- **Cross-referencing signal synthesis** (`src/lib/connect.ts` +
+  `synthesizeSignal()` in `src/lib/interpret.ts`): one signal in isolation
+  ("Grin looks to be building something new") is a data point; read next to
+  what's already known about that competitor — a real pricing/business-model
+  move already in the news, the battlecard's authored read — it can become a
+  conclusion. `connect.ts` batches each competitor's real corporate-move news
+  (270-day window), the narrower subset that reads as a GTM/pricing shift,
+  battlecard positioning, and sibling buildout hostnames — one query per
+  source per page load, not per row. `synthesizeSignal()` only upgrades a
+  headline under two narrow, deterministic rules (a fresh buildout hostname
+  next to a real model-shift move, or vice versa) and otherwise falls back to
+  the plain per-signal read — no forced connections (BRAND.md law #3). A
+  "what else we know" panel is attached only for strategic-signal channels
+  (subdomains, news, website, sitemap, appstore, events) with genuinely
+  substantive material — a battlecard blurb glued onto a "WordPress detected"
+  techstack card isn't earned context, it's decoration (BRAND.md law #2).
 - **Fetch ladder** (`src/lib/fetchLadder.ts`): plain fetch → challenge detect →
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.

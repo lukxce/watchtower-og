@@ -222,6 +222,18 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   message TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Workspace's own brand identity — what to watch FOR, not just what to watch.
+-- Nothing here is guessed: a workspace has no mentions module until someone
+-- types their own brand name in. aliases covers short forms/old names a
+-- competitor's copy or the press might use instead of the full name.
+CREATE TABLE IF NOT EXISTS org_settings (
+  org_id TEXT PRIMARY KEY,
+  brand_name TEXT NOT NULL,
+  brand_domain TEXT,
+  aliases JSONB NOT NULL DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 `;
 
 declare global {

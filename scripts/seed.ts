@@ -2,6 +2,7 @@
 // MVP (Meta page IDs, YouTube handle, generic-name query overrides, pinned
 // pages). Idempotent. Run: npm run seed
 import { getDb } from '../src/db/client';
+import { setBrandSettings } from '../src/lib/brand';
 
 // Seeds into a single workspace — 'dev-workspace' locally, or a real Clerk org
 // id via `ORG_ID=org_xxx npm run seed` against a production DATABASE_URL.
@@ -43,6 +44,15 @@ async function main() {
       [ORG_ID, c.slug, c.name, c.domain, c.meta_page_id, c.youtube_handle, c.track_linkedin, JSON.stringify(c.queries), JSON.stringify(c.extra_tier1), JSON.stringify(c.extra_tier2)],
     );
     console.log('seeded', c.name, 'into', ORG_ID);
+  }
+  // Dev workspace only: seed its own brand identity (Hypefy, the workspace's
+  // real product, also tracked reflexively as a 6th "competitor" for demo
+  // parity) so the Mentions module has something real to search for out of
+  // the box. Never do this for a real customer org — their brand can't be
+  // guessed, so a fresh workspace stays unconfigured until the owner sets it.
+  if (ORG_ID === 'dev-workspace') {
+    await setBrandSettings(ORG_ID, 'Hypefy', 'hypefy.ai', []);
+    console.log('seeded brand identity: Hypefy (dev-workspace only)');
   }
   console.log('done.');
   process.exit(0);

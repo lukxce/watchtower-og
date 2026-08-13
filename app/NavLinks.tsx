@@ -11,6 +11,7 @@ const PAGES = [
   { label: 'Battlecards', href: '/battlecards' },
   { label: 'Launch Radar', href: '/radar' },
   { label: 'Industry', href: '/industry' },
+  { label: 'Mentions', href: '/mentions' },
   { label: 'Ask', href: '/ask' },
   { label: 'Newsletters', href: '/newsletters' },
   { label: 'Reports', href: '/reports' },

@@ -25,7 +25,7 @@ const WINDOW_DAYS = 180;
 // partnerships, launches, acquisitions. Same keyword family as the scorer's
 // BUMP list (src/lib/score.ts), kept here narrowly for classification rather
 // than scoring.
-const CORPORATE_MOVE =
+export const CORPORATE_MOVE =
   /funding|raised|series [a-e]|acqui|merger|valuation|partnership|integrat|launch(es|ed)?|introduc|appoint|named|joins? as|chief (executive|technology|strategy|marketing|product) officer|\bC[EOTMS]O\b|vice president|\bVP\b/i;
 
 // Forecast narratives, deliberately conservative. Lessons encoded from real

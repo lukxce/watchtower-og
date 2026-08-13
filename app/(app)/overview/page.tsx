@@ -11,7 +11,9 @@ import { requireOrgId } from '@/lib/tenant';
 import { industryNews } from '@/lib/industryNews';
 import { adsRoundup } from '@/lib/adsSummary';
 import { hiringRoundup } from '@/lib/hiringSummary';
-import { interpretSignal } from '@/lib/interpret';
+import { interpretSignal, synthesizeSignal } from '@/lib/interpret';
+import { getCompetitorContext } from '@/lib/connect';
+import { findBrandMentions } from '@/lib/mentions';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,14 +44,17 @@ export default async function Overview() {
 
   // Top signals: the highest-impact single events, ads and jobs excluded
   // (those live as the activity charts below).
-  const topSignals = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; name: string; slug: string }>(
-    `SELECT si.channel, si.category, si.score, si.title, si.url, c.name, c.slug
+  const topSignals = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; name: string; slug: string; competitor_id: number }>(
+    `SELECT si.channel, si.category, si.score, si.title, si.url, c.name, c.slug, c.id AS competitor_id
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
      WHERE c.org_id = $1 AND si.status IN ('pending','signaled')
        AND si.channel NOT IN ('ads_meta','ads_google','ads_linkedin','jobs')
      ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 4`,
     [orgId],
   );
+  const topSignalContext = await getCompetitorContext(topSignals.map((s) => s.competitor_id));
+  const mentions = await findBrandMentions(orgId);
+  const mentionsTotal = mentions.news.length + mentions.siteMentions.length + mentions.signalMentions.length;
 
   interface CardContent { positioning: string; strengths: string[]; vulnerabilities: string[]; howToWin: string[]; keyQuestion: string }
   const cardRows = await db.query<{ name: string; slug: string; content: CardContent | string }>(
@@ -182,7 +187,8 @@ export default async function Overview() {
               <div className="empty">No signals yet — the first crawl baselines each competitor; changes surface from the next one.</div>
             ) : (
               topSignals.map((it, i) => {
-                const read = interpretSignal(it.channel, it.title, it.name);
+                const base = interpretSignal(it.channel, it.title, it.name);
+                const read = synthesizeSignal(base, it.channel, it.title, topSignalContext.get(it.competitor_id));
                 return (
                   <a className="ovsig" key={i} href={it.url ?? `/feed?comp=${it.slug}`} target={it.url ? '_blank' : undefined} rel="noreferrer">
                     <div className="ovsig-head">
@@ -193,6 +199,14 @@ export default async function Overview() {
                     </div>
                     <div className="ovsig-title">{read.headline}</div>
                     {read.howWeKnow && <div className="ovsig-know">How we know: {read.howWeKnow}</div>}
+                    {read.context && (
+                      <div className="connected">
+                        <span className="connected-tag">What else we know</span>
+                        {read.context.map((c, ci) => (
+                          <div className="connected-item" key={ci}><span className="connected-label">{c.label}</span><span>{c.text}</span></div>
+                        ))}
+                      </div>
+                    )}
                   </a>
                 );
               })
@@ -308,6 +322,39 @@ export default async function Overview() {
           </div>
 
           <div className="mod ovx-w6">
+            <div className="mod-title-row">
+              <h3>Brand mentions</h3>
+              <a className="mod-more" href="/mentions">All →</a>
+            </div>
+            {!mentions.configured ? (
+              <p className="covnote">Set your brand identity on the <a href="/mentions" style={{ color: 'var(--brand)', fontWeight: 700 }}>Mentions page</a> to start tracking where you&apos;re named.</p>
+            ) : mentionsTotal === 0 ? (
+              <p className="covnote">No mentions of {mentions.brandName} found across news, competitor sites, or captured signals right now.</p>
+            ) : (
+              <>
+                {mentions.siteMentions.slice(0, 1).map((s, i) => (
+                  <a className="pulse-row" key={`s${i}`} href={s.url} target="_blank" rel="noreferrer">
+                    <span className="pulse-t"><span className="pulse-mention">on their site</span>&ldquo;…{s.snippet}…&rdquo;</span>
+                    <span className="pulse-s">{s.competitorName}</span>
+                  </a>
+                ))}
+                {mentions.news.slice(0, 2).map((n, i) => (
+                  <a className="pulse-row" key={`n${i}`} href={n.url} target="_blank" rel="noreferrer">
+                    <span className="pulse-t">{n.title}</span>
+                    <span className="pulse-s">{n.source}</span>
+                  </a>
+                ))}
+                {mentions.signalMentions.slice(0, 1).map((s, i) => (
+                  <a className="pulse-row" key={`m${i}`} href={s.url ?? `/feed?comp=${s.competitorSlug}`} target={s.url ? '_blank' : undefined} rel="noreferrer">
+                    <span className="pulse-t">{s.title}</span>
+                    <span className="pulse-s">{s.competitorName} · {s.channel}</span>
+                  </a>
+                ))}
+              </>
+            )}
+          </div>
+
+          <div className="mod ovx-w12">
             <div className="mod-title-row">
               <h3>Coverage</h3>
               <span className="covnote" style={{ margin: 0 }}>{activeCount}/{CHANNELS.length} channels live — the rest light up when a key is added</span>

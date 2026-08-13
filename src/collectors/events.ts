@@ -6,6 +6,10 @@ import { ingestItems, recordRun, type Competitor } from '@/db/queries';
 
 const PATHS = ['/events', '/webinars', '/resources/events', '/resources/webinars', '/events-webinars', '/company/events'];
 const EVENTY = /(webinar|workshop|summit|conference|masterclass|panel|live|fireside|roundtable|meetup|expo|\b202[6-9]\b)/i;
+// Footer/legal boilerplate false-positives: a copyright line ("© 2026 ... Inc.")
+// matches EVENTY on the bare year alone. Exclude anything that reads like
+// site furniture rather than an actual event/webinar title.
+const BOILERPLATE = /copyright|all rights reserved|vat id|\biban\b|privacy policy|terms of (service|use)|cookie/i;
 
 export async function collectEvents(comp: Competitor): Promise<string> {
   const titles = new Set<string>();
@@ -17,7 +21,7 @@ export async function collectEvents(comp: Competitor): Promise<string> {
     const lines = convert(res.html, { wordwrap: false })
       .split('\n')
       .map((l) => l.trim())
-      .filter((l) => l.length >= 12 && l.length <= 120 && EVENTY.test(l));
+      .filter((l) => l.length >= 12 && l.length <= 120 && EVENTY.test(l) && !BOILERPLATE.test(l));
     for (const l of lines.slice(0, 40)) titles.add(l);
   }
   if (!anyOk) {
