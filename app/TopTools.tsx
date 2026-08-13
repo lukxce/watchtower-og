@@ -1,17 +1,20 @@
 'use client';
 import { usePathname } from 'next/navigation';
 
-// Left icon rail: tools and secondary destinations only. The top pill nav
-// owns the core workflow (Overview / Competitors / Battlecards / Radar /
-// Industry) — nothing here duplicates it.
-const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
+// Tool icons in the top bar (right side): secondary destinations that don't
+// deserve a pill. Replaces the old floating left rail.
+const TOOLS: { href: string; label: string; icon: React.ReactNode }[] = [
   {
-    href: '/ask', label: 'Ask Watchtower',
-    icon: <><path d="M4.5 6.5A2.5 2.5 0 0 1 7 4h10a2.5 2.5 0 0 1 2.5 2.5v7A2.5 2.5 0 0 1 17 16H9.5L5.5 19.5v-3.4A2.5 2.5 0 0 1 4.5 13.5Z" strokeLinejoin="round" /><path d="M9 9.5h6M9 12.5h4" strokeLinecap="round" /></>,
+    href: '/radar', label: 'Launch Radar',
+    icon: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><path d="M12 12l5.5-5.5" strokeLinecap="round" /></>,
   },
   {
     href: '/compare', label: 'Compare',
     icon: <><path d="M8 4v16M16 4v16" strokeLinecap="round" /><path d="M4 9h4M4 15h4M16 9h4M16 15h4" strokeLinecap="round" /></>,
+  },
+  {
+    href: '/ask', label: 'Ask Watchtower',
+    icon: <><path d="M4.5 6.5A2.5 2.5 0 0 1 7 4h10a2.5 2.5 0 0 1 2.5 2.5v7A2.5 2.5 0 0 1 17 16H9.5L5.5 19.5v-3.4A2.5 2.5 0 0 1 4.5 13.5Z" strokeLinejoin="round" /><path d="M9 9.5h6M9 12.5h4" strokeLinecap="round" /></>,
   },
   {
     href: '/newsletters', label: 'Newsletters & secret shopper',
@@ -31,16 +34,16 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-export default function IconRail() {
+export default function TopTools() {
   const path = usePathname();
   const isOn = (href: string) => path === href || path.startsWith(href + '/');
   return (
-    <aside className="irail">
-      {ITEMS.map((it) => (
-        <a key={it.href} href={it.href} title={it.label} aria-label={it.label} className={`irail-btn ${isOn(it.href) ? 'on' : ''}`}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">{it.icon}</svg>
+    <div className="top-tools">
+      {TOOLS.map((t) => (
+        <a key={t.href} href={t.href} title={t.label} aria-label={t.label} className={`tool-btn ${isOn(t.href) ? 'on' : ''}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">{t.icon}</svg>
         </a>
       ))}
-    </aside>
+    </div>
   );
 }

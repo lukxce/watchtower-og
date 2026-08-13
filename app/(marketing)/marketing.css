@@ -1,24 +1,22 @@
-/* Marketing site — "first light" language (see BRAND.md): bone paper,
-   night-indigo ink and CTAs, one amber beacon accent. Namespaced under
+/* Marketing site — "signal indigo" system (v5, see BRAND.md): clean cool
+   white, near-black ink, one confident indigo brand hue. Namespaced under
    .mkt to avoid colliding with the app-shell classes. */
 .mkt{
-  --a-bg:#faf7f2;
-  --a-grad:radial-gradient(1200px 720px at 10% -8%, #f7ead6 0%, transparent 56%),
-           radial-gradient(1100px 700px at 106% 14%, #ecebf6 0%, transparent 52%),
-           linear-gradient(160deg,#faf7f2 0%, #f7f3ec 60%, #f5f0e9 100%);
-  --a-card:#ffffff; --a-card-2:#faf8f4;
-  --a-ink:#232038; --a-mut:#6b677c; --a-faint:#9a95a8; --a-line:#eae6ef; --a-line2:#f2eff5;
-  --a-violet:#6d64b8; --a-violet-wash:#ecebf7;
-  --a-beacon:#cf7a1f; --a-beacon-soft:#e8a34d; --a-beacon-wash:#f9edda;
-  --a-pink:#c25581; --a-pink-wash:#f7e6ee;
-  --a-blue:#5b87c9; --a-blue-wash:#e7eef9;
-  --a-mint:#4f9d6b; --a-mint-wash:#e4f2e9;
-  --a-amber:#b07013; --a-amber-wash:#f9edda;
-  --a-red:#c25548; --a-red-wash:#f9e7e3;
-  --a-dark:#232038; --a-on-dark:#f4f2ec; --a-on-dark-mut:#a6a1b8;
-  --a-shadow:0 2px 6px rgba(41,34,64,.04), 0 18px 44px rgba(41,34,64,.07);
-  --a-shadow-lift:0 4px 10px rgba(41,34,64,.06), 0 26px 60px rgba(41,34,64,.11);
-  color:var(--a-ink); background:var(--a-bg); background-image:var(--a-grad); background-attachment:fixed;
+  --a-bg:#f7f7fb;
+  --a-grad:radial-gradient(1000px 520px at 50% -200px, #ececff 0%, transparent 70%);
+  --a-card:#ffffff; --a-card-2:#fafafd;
+  --a-ink:#15151c; --a-mut:#5f6170; --a-faint:#9092a3; --a-line:#e6e7f0; --a-line2:#f0f1f7;
+  --a-violet:#5457d6; --a-violet-wash:#ebebfc;
+  --a-beacon:#5457d6; --a-beacon-soft:#8b8df0; --a-beacon-wash:#ebebfc;
+  --a-pink:#c04b8f; --a-pink-wash:#f9e6f1;
+  --a-blue:#2f7fd1; --a-blue-wash:#e6f0fb;
+  --a-mint:#188a56; --a-mint-wash:#e3f4eb;
+  --a-amber:#b8860f; --a-amber-wash:#f9f0d9;
+  --a-red:#d2484f; --a-red-wash:#fbe7e8;
+  --a-dark:#191a26; --a-on-dark:#f1f1f6; --a-on-dark-mut:#9a9cb2;
+  --a-shadow:0 1px 3px rgba(21,21,40,.05), 0 14px 36px rgba(21,21,40,.06);
+  --a-shadow-lift:0 3px 8px rgba(21,21,40,.07), 0 22px 52px rgba(21,21,40,.10);
+  color:var(--a-ink); background:var(--a-bg); background-image:var(--a-grad); background-repeat:no-repeat;
   font-family:var(--sans, var(--font-jakarta), -apple-system, sans-serif);
 }
 .mkt *{box-sizing:border-box}

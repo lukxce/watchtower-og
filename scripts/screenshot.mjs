@@ -7,6 +7,7 @@ const OUT = 'public/screenshots';
 mkdirSync(OUT, { recursive: true });
 
 const shots = [
+  { path: '/overview', file: 'overview.png', clip: { x: 0, y: 0, width: 1440, height: 900 } },
   { path: '/feed', file: 'feed.png', clip: { x: 0, y: 0, width: 1440, height: 860 } },
   { path: '/competitors', file: 'competitors.png', clip: { x: 0, y: 0, width: 1440, height: 900 } },
   { path: '/battlecards', file: 'battlecards.png', clip: { x: 0, y: 0, width: 1440, height: 880 } },

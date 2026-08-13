@@ -1,6 +1,6 @@
 import { OrganizationSwitcher, UserButton } from '@clerk/nextjs';
 import NavLinks from '../NavLinks';
-import IconRail from '../IconRail';
+import TopTools from '../TopTools';
 import { clerkConfigured } from '@/lib/tenant';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -8,20 +8,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="app">
       <header className="topbar">
         <div className="topbar-in">
-          <a className="brand" href="/feed">
+          <a className="brand" href="/overview">
             <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <line x1="2" y1="21" x2="9" y2="6" stroke="#cf7a1f" strokeWidth="2" strokeLinecap="round" />
-              <line x1="8" y1="21" x2="15" y2="3" stroke="#cf7a1f" strokeWidth="2" strokeLinecap="round" />
-              <line x1="14" y1="21" x2="21" y2="9" stroke="#cf7a1f" strokeWidth="2" strokeLinecap="round" />
-              <line x1="20" y1="21" x2="24" y2="13" stroke="#cf7a1f" strokeWidth="2" strokeLinecap="round" />
+              <line x1="2" y1="21" x2="9" y2="6" stroke="#5457d6" strokeWidth="2" strokeLinecap="round" />
+              <line x1="8" y1="21" x2="15" y2="3" stroke="#5457d6" strokeWidth="2" strokeLinecap="round" />
+              <line x1="14" y1="21" x2="21" y2="9" stroke="#5457d6" strokeWidth="2" strokeLinecap="round" />
+              <line x1="20" y1="21" x2="24" y2="13" stroke="#5457d6" strokeWidth="2" strokeLinecap="round" />
             </svg>
             watch<b>tower</b>
           </a>
           <NavLinks />
           <div className="top-right">
+            <TopTools />
             {clerkConfigured ? (
               <>
-                <OrganizationSwitcher afterSelectOrganizationUrl="/feed" afterCreateOrganizationUrl="/feed" hidePersonal />
+                <OrganizationSwitcher afterSelectOrganizationUrl="/overview" afterCreateOrganizationUrl="/overview" hidePersonal />
                 <UserButton />
               </>
             ) : (
@@ -33,7 +34,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <IconRail />
       {children}
     </div>
   );

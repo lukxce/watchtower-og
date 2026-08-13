@@ -87,7 +87,7 @@ export default function Home() {
             <div className="shot-frame">
               <div className="shot-bar"><span /><span /><span /></div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/screenshots/feed.png" alt="The Watchtower overview: KPI cards, threat gauges, a day-grouped signal timeline, and channel coverage" className="shot-img" />
+              <img src="/screenshots/overview.png" alt="The Watchtower overview: KPI cards, threat gauges, top signals, battlecards, industry pulse, and activity charts" className="shot-img" />
             </div>
           </div>
         </div>

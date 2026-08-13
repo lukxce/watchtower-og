@@ -1,5 +1,5 @@
 export default function Logo({ dark }: { dark?: boolean }) {
-  const stroke = dark ? '#e8a34d' : '#cf7a1f';
+  const stroke = dark ? '#8b8df0' : '#5457d6';
   return (
     <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <line x1="2" y1="21" x2="9" y2="6" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
