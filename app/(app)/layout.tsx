@@ -3,10 +3,18 @@ import { OrganizationSwitcher, UserButton } from '@clerk/nextjs';
 import NavLinks from '../NavLinks';
 import ChannelRail from '../ChannelRail';
 import { clerkConfigured } from '@/lib/tenant';
+import { getViewAsOrg } from '@/lib/adminAuth';
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const viewingAs = await getViewAsOrg();
   return (
     <div className="app">
+      {viewingAs && (
+        <div className="admin-banner">
+          Viewing as workspace <b className="mono">{viewingAs}</b> — this is exactly what that client sees.
+          <a href="/api/admin/view-as?clear=1">Exit view-as</a>
+        </div>
+      )}
       <header className="topbar">
         <div className="topbar-in">
           <a className="brand" href="/overview">

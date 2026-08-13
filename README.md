@@ -116,6 +116,30 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   (subdomains, news, website, sitemap, appstore, events) with genuinely
   substantive material — a battlecard blurb glued onto a "WordPress detected"
   techstack card isn't earned context, it's decoration (BRAND.md law #2).
+- **LLM reasoning layer** (`src/lib/reason.ts`, `synthesizeSignal()` in
+  `interpret.ts`): the actual brain behind cross-referencing is Claude, not a
+  fixed template — it reasons over every real, retrieved fact for a
+  competitor (connect.ts's context: corporate moves, hiring, product-page
+  activity, the battlecard read, sibling buildouts) and decides whether a
+  genuine connection exists, then writes it. Strictly grounded: the prompt
+  hands over the facts as data and forbids stating anything not present in
+  them — same never-fabricate law, a much smarter writer on top of it. Falls
+  back to the deterministic rules (`synthesizeSignalRules`) when
+  `ANTHROPIC_API_KEY` isn't set or the call fails, same honest-degradation
+  pattern as `score.ts`'s `llmScore`/`heuristicScore` split.
+- **Platform-admin cross-tenant console** (`/admin/workspaces`,
+  `src/lib/adminAuth.ts`): the platform owner (not a customer) can see every
+  workspace, "view as" one to see exactly what that client sees (an
+  impersonation cookie that overrides `requireOrgId()`, with a persistent
+  banner while active), and leave a correct/wrong verdict + note on any
+  synthesized signal. Gated by `PLATFORM_ADMIN_EMAILS` when Clerk is
+  configured; always available to the single dev-workspace user locally.
+- **Teaching loop** (`interpretation_feedback` table, `POST /api/feedback`):
+  admin corrections are stored — deliberately not org-scoped for reads — and
+  the most recent 8 "incorrect" ones are pulled into every LLM reasoning call
+  as few-shot guidance, across every workspace. Only the admin's own
+  generalized judgment crosses workspace boundaries this way, never raw
+  customer or competitor data.
 - **Fetch ladder** (`src/lib/fetchLadder.ts`): plain fetch → challenge detect →
   Firecrawl fallback. Degrades honestly without a Firecrawl key.
 - **Threat Index** (`src/lib/threat.ts`): auditable per-dimension composite.

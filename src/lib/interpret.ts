@@ -15,11 +15,15 @@
 // the same connective read (this was a real gap — a competitor with no
 // generated card got zero connection even with a funding round sitting
 // right there; fixed by treating the card as one more input, never a gate).
-// The upgrade only fires under deterministic rules (never "this feels
-// related"); everything else still gets a "what else we know" panel when
-// real material exists, and falls back to the plain base read otherwise —
-// no forced connections, BRAND.md law #3, no false fires.
+//
+// The actual reasoning is done by Claude (reason.ts's llmSynthesize) when
+// ANTHROPIC_API_KEY is configured — a real model deciding whether a
+// connection is genuine and writing the narrative, not string-splicing.
+// synthesizeSignalRules below is the deterministic fallback: same
+// eligibility scope, same "no forced connections" law, used whenever no key
+// is set or the LLM call fails, so the product never goes silent.
 import type { CompetitorContext } from '@/lib/connect';
+import { llmSynthesize, getFeedbackExamples, type FeedbackExample } from '@/lib/reason';
 
 // Same family as connect.ts's MODEL_MOVE — kept local since this one tests a
 // news item's own title rather than classifying it for the context map.
@@ -104,7 +108,7 @@ const CONTEXT_ELIGIBLE = new Set(['subdomains', 'news', 'website', 'sitemap', 'a
 // that, a genuine hiring cluster earns one. The news→subdomains direction
 // mirrors the first tier. No connection found means no upgrade — the base
 // read stands, not a forced one.
-export function synthesizeSignal(base: Interpreted, channel: string, title: string, ctx: CompetitorContext | undefined): Interpreted {
+export function synthesizeSignalRules(base: Interpreted, channel: string, title: string, ctx: CompetitorContext | undefined): Interpreted {
   if (!ctx || !CONTEXT_ELIGIBLE.has(channel)) return base;
 
   if (channel === 'subdomains') {
@@ -143,4 +147,25 @@ export function synthesizeSignal(base: Interpreted, channel: string, title: stri
   // No deterministic connection for this channel — return the base read,
   // still attaching a context panel if there's genuinely enough to show.
   return { ...base, context: contextPanel(ctx, true, title) };
+}
+
+// The primary entry point every page should call. Tries real reasoning
+// first (Claude, grounded strictly in the retrieved facts + any admin
+// corrections on file), falls back to the deterministic rules above when no
+// key is set or the call fails/returns something malformed — the product
+// degrades honestly instead of going silent, same pattern as score.ts.
+export async function synthesizeSignal(
+  base: Interpreted,
+  channel: string,
+  title: string,
+  competitor: string,
+  ctx: CompetitorContext | undefined,
+  feedback?: FeedbackExample[],
+): Promise<Interpreted> {
+  if (ctx && CONTEXT_ELIGIBLE.has(channel)) {
+    const examples = feedback ?? (await getFeedbackExamples());
+    const llm = await llmSynthesize(base, channel, title, competitor, ctx, examples);
+    if (llm) return llm;
+  }
+  return synthesizeSignalRules(base, channel, title, ctx);
 }

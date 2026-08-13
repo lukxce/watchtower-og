@@ -14,6 +14,9 @@ import { hiringRoundup } from '@/lib/hiringSummary';
 import { interpretSignal, synthesizeSignal } from '@/lib/interpret';
 import { getCompetitorContext } from '@/lib/connect';
 import { findBrandMentions } from '@/lib/mentions';
+import { getFeedbackExamples } from '@/lib/reason';
+import { isPlatformAdmin } from '@/lib/adminAuth';
+import FeedbackControl from '../FeedbackControl';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +56,14 @@ export default async function Overview() {
     [orgId],
   );
   const topSignalContext = await getCompetitorContext(topSignals.map((s) => s.competitor_id));
+  const feedbackExamples = await getFeedbackExamples();
+  const platformAdmin = await isPlatformAdmin();
+  const topSignalReads = await Promise.all(
+    topSignals.map(async (it) => {
+      const base = interpretSignal(it.channel, it.title, it.name);
+      return synthesizeSignal(base, it.channel, it.title, it.name, topSignalContext.get(it.competitor_id), feedbackExamples);
+    }),
+  );
   const mentions = await findBrandMentions(orgId);
   const mentionsTotal = mentions.news.length + mentions.siteMentions.length + mentions.signalMentions.length;
 
@@ -187,27 +198,31 @@ export default async function Overview() {
               <div className="empty">No signals yet — the first crawl baselines each competitor; changes surface from the next one.</div>
             ) : (
               topSignals.map((it, i) => {
-                const base = interpretSignal(it.channel, it.title, it.name);
-                const read = synthesizeSignal(base, it.channel, it.title, topSignalContext.get(it.competitor_id));
+                const read = topSignalReads[i];
                 return (
-                  <a className="ovsig" key={i} href={it.url ?? `/feed?comp=${it.slug}`} target={it.url ? '_blank' : undefined} rel="noreferrer">
-                    <div className="ovsig-head">
-                      <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
-                      <span className="card-avatar">{initials(it.name)}</span>
-                      <span className="comp">{it.name}</span>
-                      {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
-                    </div>
-                    <div className="ovsig-title">{read.headline}</div>
-                    {read.howWeKnow && <div className="ovsig-know">How we know: {read.howWeKnow}</div>}
-                    {read.context && (
-                      <div className="connected">
-                        <span className="connected-tag">What else we know</span>
-                        {read.context.map((c, ci) => (
-                          <div className="connected-item" key={ci}><span className="connected-label">{c.label}</span><span>{c.text}</span></div>
-                        ))}
+                  <div key={i}>
+                    <a className="ovsig" href={it.url ?? `/feed?comp=${it.slug}`} target={it.url ? '_blank' : undefined} rel="noreferrer">
+                      <div className="ovsig-head">
+                        <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
+                        <span className="card-avatar">{initials(it.name)}</span>
+                        <span className="comp">{it.name}</span>
+                        {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
                       </div>
+                      <div className="ovsig-title">{read.headline}</div>
+                      {read.howWeKnow && <div className="ovsig-know">How we know: {read.howWeKnow}</div>}
+                      {read.context && (
+                        <div className="connected">
+                          <span className="connected-tag">What else we know</span>
+                          {read.context.map((c, ci) => (
+                            <div className="connected-item" key={ci}><span className="connected-label">{c.label}</span><span>{c.text}</span></div>
+                          ))}
+                        </div>
+                      )}
+                    </a>
+                    {platformAdmin && (
+                      <FeedbackControl competitorName={it.name} channel={it.channel} signalTitle={it.title} headlineShown={read.headline} />
                     )}
-                  </a>
+                  </div>
                 );
               })
             )}

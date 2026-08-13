@@ -6,6 +6,7 @@
 // architecture (empty until that pipeline is built).
 import { getDb } from '@/db/client';
 import { requireOrgId } from '@/lib/tenant';
+import { isPlatformAdmin } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +23,7 @@ const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').s
 
 export default async function Admin() {
   const orgId = await requireOrgId();
+  const platformAdmin = await isPlatformAdmin();
   const db = await getDb();
 
   const competitors = await db.query<{ id: number; slug: string; name: string; domain: string }>(
@@ -70,6 +72,7 @@ export default async function Admin() {
         <p className="sub">
           Workspace <code className="mono">{orgId}</code>. No GUI exists for the underlying Postgres, so this reads
           the tables directly, successes and failures both.
+          {platformAdmin && <> · <a href="/admin/workspaces" style={{ color: 'var(--brand)', fontWeight: 700 }}>All workspaces →</a></>}
         </p>
 
         <div className="astat-row">

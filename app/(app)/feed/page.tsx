@@ -6,8 +6,11 @@
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { requireOrgId } from '@/lib/tenant';
-import { interpretSignal, synthesizeSignal } from '@/lib/interpret';
+import { interpretSignal, synthesizeSignal, type Interpreted } from '@/lib/interpret';
 import { getCompetitorContext } from '@/lib/connect';
+import { getFeedbackExamples } from '@/lib/reason';
+import { isPlatformAdmin } from '@/lib/adminAuth';
+import FeedbackControl from '../FeedbackControl';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,6 +66,8 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     params,
   );
   const contextMap = await getCompetitorContext(items.map((it) => it.competitor_id));
+  const feedbackExamples = await getFeedbackExamples();
+  const platformAdmin = await isPlatformAdmin();
 
   const threat = await computeThreat(orgId);
   const activeComp = comp ? threat.find((t) => t.slug === comp)?.competitor ?? comp : null;
@@ -94,8 +99,20 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     display.push(raw);
   }
 
-  const buckets = new Map<(typeof BUCKET_ORDER)[number], FeedItem[]>();
-  for (const it of display) {
+  // Resolve every card's interpretation up front (LLM reasoning when
+  // configured, deterministic rules otherwise) so the render below stays
+  // synchronous — one batch of concurrent calls, not one await per card.
+  type ReadFeedItem = FeedItem & { read: Interpreted };
+  const displayWithRead: ReadFeedItem[] = await Promise.all(
+    display.map(async (it) => {
+      const base = interpretSignal(it.channel, it.title, it.name);
+      const read = await synthesizeSignal(base, it.channel, it.title, it.name, contextMap.get(it.competitor_id), feedbackExamples);
+      return { ...it, read };
+    }),
+  );
+
+  const buckets = new Map<(typeof BUCKET_ORDER)[number], ReadFeedItem[]>();
+  for (const it of displayWithRead) {
     const key = bucketOf(it.published_at ?? it.created_at);
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key)!.push(it);
@@ -137,8 +154,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
               <div className="tl-group" key={b}>
                 <div className="tl-label"><span>{b}</span></div>
                 {buckets.get(b)!.map((it, i) => {
-                  const base = interpretSignal(it.channel, it.title, it.name);
-                  const read = synthesizeSignal(base, it.channel, it.title, contextMap.get(it.competitor_id));
+                  const read = it.read;
                   return (
                     <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
                       <div className="crow">
@@ -169,6 +185,9 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
                             </div>
                           ))}
                         </div>
+                      )}
+                      {platformAdmin && (
+                        <FeedbackControl competitorName={it.name} channel={it.channel} signalTitle={it.title} headlineShown={read.headline} />
                       )}
                     </div>
                   );

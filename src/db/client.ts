@@ -234,6 +234,25 @@ CREATE TABLE IF NOT EXISTS org_settings (
   aliases JSONB NOT NULL DEFAULT '[]'::jsonb,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Platform-admin corrections on the LLM reasoning layer (src/lib/reason.ts).
+-- Deliberately NOT org-scoped for reads — a correction made while viewing one
+-- workspace is admin judgment about how interpretation SHOULD work, and gets
+-- fed back as few-shot guidance to every workspace's reasoning calls. No raw
+-- customer/competitor data is shared between workspaces this way — only the
+-- admin's own generalized judgment ("this connection was wrong, because X").
+CREATE TABLE IF NOT EXISTS interpretation_feedback (
+  id SERIAL PRIMARY KEY,
+  org_id TEXT NOT NULL,
+  competitor_name TEXT NOT NULL,
+  channel TEXT NOT NULL,
+  signal_title TEXT NOT NULL,
+  headline_shown TEXT NOT NULL,
+  verdict TEXT NOT NULL, -- correct | incorrect
+  note TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_feedback_verdict ON interpretation_feedback(verdict, created_at DESC);
 `;
 
 declare global {
