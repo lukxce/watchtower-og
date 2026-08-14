@@ -9,12 +9,15 @@ Reference implementation: `app/(beta)/overview-beta/glass/` in this repo
 
 ## 1. The one idea
 
-**Everything lives on a single sheet of frosted glass floating over a muted
-scene.** Not a grid of cards — one translucent panel that contains the whole
-interface, divided internally by hairlines. The moment you add white boxes on
-top of the scene, the illusion dies and it becomes another card dashboard.
-Zones that need separation get a *tint change* (a cooler, slightly darker
-glass band) and *hairline dividers* — never borders-plus-shadows-plus-fills.
+**Everything lives on stacked sheets of frosted glass floating over a muted
+scene.** Not a grid of cards — a few large translucent panes (hero pane,
+stats pane, reports pane), each with its own visible rounded corners, rising
+over the backdrop like layered frosted slabs. Inside a pane, zones divide
+with *hairlines* and *tint changes* (a cooler, slightly darker glass) —
+never borders-plus-shadows-plus-fills. The moment you add white boxes on top
+of the scene, the illusion dies and it becomes another card dashboard.
+Fix the scene with `background-attachment: fixed` so the glass visibly
+slides over it on scroll.
 
 ## 2. Scene (the backdrop)
 
@@ -44,7 +47,8 @@ box-shadow: 0 34px 80px rgba(35, 48, 50, .22),
             inset 0 1px 0 rgba(255, 255, 255, .6);
 ```
 
-- One sheet per screen. Radius is generous (28–34px).
+- A few large sheets per screen, stacked with breathing room between them
+  so corners stay visible. Radius is generous (28–34px).
 - The **inset top highlight** is what sells the material — don't skip it.
 - Secondary zone (stats band, footer strip): same sheet, cooler tint —
   `rgba(214, 226, 226, .38)` — separated by a `1px rgba(255,255,255,.5)`
@@ -64,12 +68,17 @@ box-shadow: 0 34px 80px rgba(35, 48, 50, .22),
 | **Highlighter** | `#e0f23c` (fills), `#cfe32c` (strokes/lines) | THE accent. Yellow-green like a text highlighter — not yellow, not lime-green. |
 | Data-neutral | `rgba(255,255,255,.85)` | Bars, tracks, secondary series. |
 | Data-muted | `#8d9a98` | Tertiary series dots. |
+| Coral (hot) | `#c96b5e` | High threat/urgency numbers and statuses. Text-level only. |
+| Sky (info) | `#5f8aa8` | Informational categories/statuses. Text/chip only. |
+| Sand (neutral tag) | `#8a8474` | Low-priority category chips. |
 
-**Highlighter discipline:** one accent, used only where attention is earned —
-the primary CTA, the momentum curve, the highlighted bar/week, gauge fills,
-the notification dot, the logo mark. Everything else stays white/ink/grey.
-Two accents kill this system. Dark text on highlighter buttons, always.
-On-glass "hover surface" is white, not accent.
+**Highlighter discipline:** the highlighter is for *your* energy — the
+primary CTA, the momentum curve, the highlighted bar, gauge fills, the
+notification dot, the logo mark. It is NOT a semantic color: never use it
+to say "high" or "warning" (a highlighted word reads as celebration, not
+danger). Semantics get the muted supporting hues — coral for hot, sky for
+info — at text/chip size only, never as large fills. Dark text on
+highlighter buttons, always. On-glass "hover surface" is white, not accent.
 
 ## 5. Type
 
@@ -90,13 +99,14 @@ On-glass "hover surface" is white, not accent.
   pill with a soft shadow; inactive = bare muted text) · right cluster:
   frosted round icon buttons (34px circle, `rgba(255,255,255,.5)`) — gear,
   bell with an accent dot — then a dark circular avatar.
-- **Icon rail inside the left edge** of the sheet: icons only, 38px round
-  hover targets, divided from content by a hairline. Not a floating box
-  outside the sheet. On mobile it collapses away.
+- **Icon rail:** individual frosted circle buttons fixed to the viewport's
+  left edge (they follow scroll), a soft vertical hairline separating them
+  from content. Never a boxed sidebar. On mobile it collapses away.
 - **Profile row** under the top bar: avatar + micro-label role + bold name,
   the accent pill button, a ghost search circle; greeting on the right plus
   a ghost refresh circle at the far edge.
-- **Tabs strip** between zones: bare text tabs, active = white pill.
+- One page nav (the pill nav) + one filter surface (the rail). Never add a
+  second menu that duplicates either.
 
 ## 7. Chart anatomy (the signature module)
 
@@ -136,14 +146,39 @@ The hero chart is **needle bars + a momentum curve**, not fat bars:
     clamped line of prose max.
 - No card backgrounds inside the band. The dividers are the layout.
 
-## 9. Motion & feel
+## 9. Interactivity (nothing is a screenshot)
+
+A pane that doesn't respond reads as a mockup. Minimum bar:
+
+- **The hero chart is live:** the tooltip flag + crosshair follow the
+  cursor to the nearest period (client component, `mousemove` → nearest-x),
+  defaulting to the peak. `cursor: crosshair` on the plot.
+- Every row, chip, pill, icon button has a hover surface (white lift).
+- Filter chips (per-entity focus) actually refilter the data.
+- The icon rail: **individual frosted circle buttons, fixed to the viewport
+  so they follow scroll**, each highlighting on hover like the bell button,
+  with a soft vertical hairline separating rail from content. Never a
+  boxed sidebar — and never duplicate the same filters as a second menu
+  elsewhere on the page (one filter surface, one page nav, that's it).
+
+## 10. Voice & gamification (optional layer)
+
+The system carries a light game framing well because the material already
+feels like a control panel. Rules: rename the *labels*, never distort the
+*numbers*. Examples from the reference build (a competitive-intel tower):
+channels live → "Scouts deployed 15/26"; feed highlights → "Scout reports";
+competitor summaries → "Briefings"; industry news → "Beyond the walls";
+greeting sub-line reports what the scouts brought back this week. The data
+stays verifiable; only the vocabulary plays.
+
+## 11. Motion & feel
 
 - Hovers brighten to white surfaces (`background: #fff` on pills/rows),
-  never scale.
+  never scale (small translate lifts are fine).
 - The live/notification dot may pulse; nothing else animates persistently.
 - `prefers-reduced-motion`: kill all of it.
 
-## 10. Don'ts (each learned the hard way)
+## 12. Don'ts (each learned the hard way)
 
 - ✗ White cards floating on the scene — glass sheet or nothing.
 - ✗ Warm/yellow accent (`#f0e657`-ish) — it must read *highlighter*.
@@ -154,7 +189,7 @@ The hero chart is **needle bars + a momentum curve**, not fat bars:
   this system — the sheet owns its whole screen.
 - ✗ More than one accent color, or accent used on large fills.
 
-## 11. Porting checklist
+## 13. Porting checklist
 
 1. Scene gradient (cool, muted, darker than sheet) →
 2. One sheet, glass recipe, radius 30 →
