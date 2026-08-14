@@ -29,8 +29,8 @@ const STORY = [
   },
   {
     n: '02',
-    title: 'The tower remembers',
-    body: 'Already on file: GRIN’s own press from January 27, 2026 — instant self-serve access, month-to-month billing, the enterprise-only model over.',
+    title: 'Context, already on file',
+    body: 'GRIN’s own press from January 27, 2026 was sitting in the workspace — instant self-serve access, month-to-month billing, the enterprise-only model over.',
     cite: 'source: GRIN press release, Jan 27 2026',
   },
   {
@@ -99,31 +99,23 @@ export default function Home() {
   return (
     <>
       <section className="nw-hero" id="product">
-        <div className="nw-glow" aria-hidden="true" />
-        <svg className="nw-marks" viewBox="0 0 26 26" aria-hidden="true">
-          <line x1="2" y1="21" x2="9" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="8" y1="21" x2="15" y2="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="14" y1="21" x2="21" y2="9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="20" y1="21" x2="24" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
         <div className="wrap nw-grid">
           <div className="nw-copy">
-            <span className="nw-kicker"><span className="nw-beacon" />The tower is always watching</span>
-            <h1 className="nw-h1">While you slept, your market moved.</h1>
+            <span className="nw-kicker"><span className="nw-beacon" />Competitive intelligence for operators</span>
+            <h1 className="nw-h1">While you slept, <span className="accent">your market moved.</span></h1>
             <p className="nw-dek">
-              Watchtower stands the watch — every pricing change, launch, hire, ad blitz and funding round across your
-              competitors, read <em>together</em> and turned into your next move. Every fact cited.
+              Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your
+              competitors — reads them <em>together</em>, and hands you the next move. Every fact cited.
             </p>
             <div className="nw-cta">
-              <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
-              <Link href="#brain" className="btn btn-on-navy-ghost btn-lg">How the brain works ↓</Link>
+              <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
+              <Link href="#brain" className="btn btn-ghost btn-lg">How the brain works ↓</Link>
             </div>
             <p className="nw-note">Self-serve from $99/mo · no demo call · signals within the hour</p>
           </div>
           <div className="nw-log" aria-label="A real morning of Watchtower signals">
             <div className="nw-log-head">
-              <span className="nw-log-dot" />
-              <span className="mono">the watch log</span>
+              <span className="mono">this morning&apos;s signals</span>
               <span className="nw-live"><span />live</span>
             </div>
             {LOG.map((l, i) => (
@@ -141,7 +133,7 @@ export default function Home() {
       <section className="mkt-section" id="brain">
         <div className="wrap">
           <span className="mkt-eyebrow">How the brain works</span>
-          <h2>One hostname appeared. The tower told the whole story.</h2>
+          <h2>One hostname appeared. Watchtower told the whole story.</h2>
           <p className="lede">
             A true sequence, from a live workspace. This is the difference between forwarding detections and doing
             intelligence: signals are read <em>together</em>, per competitor — and only claimed when the facts confirm it.
