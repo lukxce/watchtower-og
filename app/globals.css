@@ -11,7 +11,7 @@
     linear-gradient(160deg,#9fb5b2 0%,#96b0b0 52%,#9cb3b0 100%);
   --card:rgba(222,236,228,.55); --card-2:rgba(255,255,255,.45);
   --ink:#142522; --mut:#404d4a; --faint:#5b6a66; --line:rgba(255,255,255,.55); --line2:rgba(255,255,255,.4);
-  --brand:#6b7f16; --brand-strong:#556610; --brand-soft:#e2f463; --brand-wash:rgba(226,244,99,.3);
+  --brand:#1e6f5c; --brand-strong:#155343; --brand-soft:#7fc4ae; --brand-wash:rgba(30,111,92,.12);
   --hl:#eafd35;
   --pos:#3f8f68; --pos-wash:rgba(63,143,104,.14);
   --neg:#c25446; --neg-wash:rgba(194,84,70,.14);
@@ -29,7 +29,11 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:var(--bg);background-image:var(--bg-grad);background-repeat:no-repeat;background-attachment:fixed;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+/* The scene lives on a fixed pseudo-element, NOT background-attachment:fixed
+   — attachment:fixed + backdrop-filter forces full-page repaints on every
+   scroll in Chromium (janky enough to swallow first clicks). */
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bg-grad);background-color:var(--bg);pointer-events:none}
 a{color:inherit;text-decoration:none}
 .mono{font-family:var(--mono)}
 
@@ -620,13 +624,15 @@ details.bundle[open] summary{color:var(--brand-strong);border-color:var(--brand-
 .app{background:transparent}
 .main{background:transparent}
 
-/* chrome: frosted top bar, white active pill */
-.topbar{background:rgba(222,236,228,.55);backdrop-filter:blur(26px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.5)}
+/* chrome: FLOATING frosted pill bar, not a full-width line */
+.topbar{position:sticky;top:14px;z-index:50;background:transparent;border-bottom:none;padding:0 26px;backdrop-filter:none}
+.topbar-in{background:rgba(228,240,234,.62);backdrop-filter:blur(24px) saturate(140%);border:1px solid rgba(255,255,255,.55);border-radius:999px;box-shadow:0 14px 34px rgba(16,30,28,.18), inset 0 1px 0 rgba(255,255,255,.6);height:56px;padding:0 10px 0 20px;max-width:1500px}
 .tnav a.on{background:#fff;color:var(--ink);box-shadow:0 5px 14px rgba(16,30,28,.15)}
 .tnav a:hover{background:rgba(255,255,255,.5);color:var(--ink)}
 .tnav-menu{background:#fff;border:none}
 .brand b{color:var(--brand)}
-.ws-chip{background:rgba(255,255,255,.5);border-color:rgba(255,255,255,.6)}
+.ws-chip{background:rgba(255,255,255,.55);border-color:transparent}
+.side-rail{top:96px}
 
 /* signals rail: floating frosted circles with hover label pills */
 .side-rail{background:transparent;border:none;box-shadow:none;gap:10px;align-items:center;width:70px;padding:0;margin-left:26px}
@@ -638,30 +644,38 @@ details.bundle[open] summary{color:var(--brand-strong);border-color:var(--brand-
 .side-item span{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%) translateX(-6px);background:var(--ink);color:#eef6ee;font-size:11.5px;font-weight:700;white-space:nowrap;padding:7px 13px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s}
 .side-item:hover span{opacity:1;transform:translateY(-50%) translateX(0)}
 
-/* frosted sheets everywhere a white card used to be */
+/* frosted sheets everywhere a white card used to be — NO outline borders,
+   the material is the inset highlight + shadow, never a white line */
 .card,.mod,.bc,.empty,.addcomp-form,.onb-form,.onb-rec,.soon,.posmap-wrap,.tblwrap,.contact-info{
-  background:linear-gradient(155deg, rgba(196,220,214,.32) 0%, rgba(214,232,216,.30) 100%), rgba(218,234,226,.46);
+  background:linear-gradient(155deg, rgba(255,255,255,.34) 0%, rgba(222,238,230,.26) 55%, rgba(214,232,222,.3) 100%), rgba(226,240,233,.44);
   backdrop-filter:blur(28px) saturate(140%);
-  border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 20px 50px rgba(16,30,28,.18), inset 0 1px 0 rgba(255,255,255,.6);
+  border:none;
+  box-shadow:0 20px 50px rgba(16,30,28,.16), inset 0 1px 0 rgba(255,255,255,.55);
 }
-.card.featured{border:1px solid rgba(255,255,255,.7)}
-.card.fc-pricing,.card.fc-product{background:linear-gradient(140deg, rgba(226,244,99,.35), rgba(201,220,124,.28)), rgba(222,236,228,.5)}
-.card.fc-news,.card.fc-hiring{background:linear-gradient(140deg, rgba(79,128,163,.18), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
-.card.fc-ads{background:linear-gradient(140deg, rgba(194,84,70,.16), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
-.card.fc-customers,.card.fc-other,.card.fc-community,.card.fc-marketing,.card.fc-positioning,.card.fc-funding,.card.fc-reviews{background:linear-gradient(140deg, rgba(255,255,255,.4), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
+.card.featured{box-shadow:0 24px 56px rgba(16,30,28,.2), inset 0 1px 0 rgba(255,255,255,.65)}
+.card.fc-pricing,.card.fc-product{background:linear-gradient(140deg, rgba(234,253,53,.28), rgba(255,255,255,.3)), rgba(226,240,233,.46)}
+.card.fc-news,.card.fc-hiring{background:linear-gradient(140deg, rgba(61,123,181,.14), rgba(255,255,255,.3)), rgba(226,240,233,.46)}
+.card.fc-ads{background:linear-gradient(140deg, rgba(212,89,63,.13), rgba(255,255,255,.3)), rgba(226,240,233,.46)}
+.card.fc-customers,.card.fc-other,.card.fc-community,.card.fc-marketing,.card.fc-positioning,.card.fc-funding,.card.fc-reviews{background:linear-gradient(140deg, rgba(255,255,255,.42), rgba(222,238,230,.3)), rgba(226,240,233,.46)}
 .mod.dark,.mini.dark{background:var(--dark);backdrop-filter:none;border:none}
 
-/* category badges: solid colored chips, the signal's identity */
-.badge{color:#fff;font-weight:800}
-.c-pricing{background:#7d941f;color:#fff}
-.c-product{background:#3f8f68;color:#fff}
-.c-hiring{background:#4f80a3;color:#fff}
-.c-ads{background:#c25446;color:#fff}
-.c-news{background:#837d6b;color:#fff}
-.c-reviews{background:#8a5fa8;color:#fff}
-.c-funding{background:#a3701f;color:#fff}
-.c-community,.c-marketing,.c-positioning,.c-other,.c-customers{background:#6e7d78;color:#fff}
+/* category chips: tinted glass with strong colored text — never muddy
+   solid fills */
+.badge{font-weight:800;border:none}
+.c-pricing{background:rgba(112,140,18,.16);color:#5d7410}
+.c-product{background:rgba(47,153,104,.15);color:#20805a}
+.c-hiring{background:rgba(61,123,181,.14);color:#2f6ba3}
+.c-ads{background:rgba(212,89,63,.14);color:#b44a32}
+.c-news{background:rgba(122,115,96,.16);color:#6b644f}
+.c-reviews{background:rgba(154,95,201,.14);color:#7e4bb0}
+.c-funding{background:rgba(192,138,31,.16);color:#9a6d13}
+.c-community,.c-marketing,.c-positioning,.c-other,.c-customers{background:rgba(110,125,120,.15);color:#4f5e59}
+
+/* page titles: glass-system scale, not defaults */
+.feed h1{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.08}
+.feed .sub{font-size:14px;line-height:1.6}
+.ov-hello{letter-spacing:-.03em}
+.admin-h{font-size:17px;letter-spacing:-.015em}
 
 /* highlighter CTAs */
 .addcomp-btn{background:var(--hl);color:var(--ink);box-shadow:0 10px 24px rgba(170,190,20,.45)}

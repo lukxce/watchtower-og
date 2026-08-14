@@ -162,7 +162,7 @@
 .gx-radarline{font-size:12.5px;color:var(--mutd);line-height:1.6;margin:2px 0 12px}
 .gx-evidence{margin:0 0 14px;padding-left:16px}
 .gx-evidence li{font-size:11.5px;color:var(--mutd);line-height:1.55;margin-bottom:5px}
-.gx-evidence li::marker{color:var(--olive)}
+.gx-evidence li::marker{color:#20805a}
 .gx-minicta{display:inline-block;font-size:12px;font-weight:800;color:var(--ink);background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:8px 16px;transition:background .13s}
 .gx-minicta:hover{background:#fff}
 .gx-bnote{font-size:11px;color:var(--fainter);font-weight:700;margin:0;line-height:1.5}
@@ -189,14 +189,14 @@
 @media(max-width:960px){.gx-rcol.wide{border-right:none}}
 .gx-report{display:flex;align-items:baseline;gap:12px;padding:10px 10px;margin:0 -10px;border-radius:13px;border-top:1px solid rgba(255,255,255,.45);transition:background .13s}
 .gx-report:hover{background:rgba(255,255,255,.5)}
-.gx-cat{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:800;border-radius:7px;padding:4.5px 10px;flex-shrink:0;color:#fff}
-.ct-coral{background:var(--coral)}
-.ct-sky{background:var(--sky)}
-.ct-sand{background:var(--sand)}
-.ct-olive{background:var(--olive)}
-.ct-green{background:var(--green)}
-.ct-violet{background:var(--violet)}
-.ct-amber{background:var(--amber)}
+.gx-cat{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:800;border-radius:7px;padding:4.5px 10px;flex-shrink:0}
+.ct-coral{background:rgba(212,89,63,.14);color:#b44a32}
+.ct-sky{background:rgba(61,123,181,.14);color:#2f6ba3}
+.ct-sand{background:rgba(122,115,96,.16);color:#6b644f}
+.ct-olive{background:rgba(112,140,18,.16);color:#5d7410}
+.ct-green{background:rgba(47,153,104,.15);color:#20805a}
+.ct-violet{background:rgba(154,95,201,.14);color:#7e4bb0}
+.ct-amber{background:rgba(192,138,31,.16);color:#9a6d13}
 .gx-report-name{font-size:13px;font-weight:800;flex-shrink:0}
 .gx-report-text{font-size:13px;color:var(--mutd);line-height:1.55;min-width:0;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .gx-report-text em{font-style:normal;color:var(--fainter)}

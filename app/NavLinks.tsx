@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -36,17 +37,17 @@ export default function NavLinks() {
   return (
     <nav className="tnav">
       {PAGES.map((n) => (
-        <a key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
+        <Link key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
           {n.label}
-        </a>
+        </Link>
       ))}
       <details className="tnav-more" ref={ref}>
         <summary className={moreOn ? 'on' : ''}>More ▾</summary>
         <div className="tnav-menu">
           {MORE.map((n) => (
-            <a key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
+            <Link key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
               {n.label}
-            </a>
+            </Link>
           ))}
         </div>
       </details>

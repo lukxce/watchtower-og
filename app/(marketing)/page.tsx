@@ -1,48 +1,48 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Watchtower — While you slept, your market moved.',
+  title: 'Watchtower · While you slept, your market moved.',
   description:
-    'Watchtower stands the watch: every pricing change, launch, hire, ad blitz and funding round across your competitors — read together and turned into your next move. Every fact cited. From $99/mo.',
+    'Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your competitors. The Keeper reads them together and hands you the next move. Every fact cited. From $99/mo.',
 };
 
 // The watch log in the hero is real output, not lorem: every line below is a
 // genuine signal type this product produced against real competitors, worded
 // exactly the way the feed words it.
 const LOG: { t: string; text: string; tag: string; cls: string }[] = [
-  { t: '02:14', text: 'cert log — new hostname: launch.grin.co', tag: 'buildout', cls: 'lg-p' },
-  { t: '06:00', text: 'the daily watch begins — 6 competitors · 22 channels', tag: 'crawl', cls: 'lg-m' },
-  { t: '06:07', text: 'grin.co/pricing changed — self-serve tiers are live', tag: 'pricing', cls: 'lg-p' },
-  { t: '06:11', text: 'Upfluence: 66 new ads observed — 43 Google · 23 LinkedIn', tag: 'ads', cls: 'lg-g' },
-  { t: '06:48', text: 'CreatorIQ: 25 open roles — enterprise CS cluster', tag: 'hiring', cls: 'lg-g' },
-  { t: '07:02', text: 'Hypefy raises $7.2M Series A — covered by 5 outlets', tag: 'news', cls: 'lg-m' },
-  { t: '07:30', text: 'the Keeper updated a briefing — “Grin: mid-transition, tearing out the old model”', tag: 'the keeper', cls: 'lg-b' },
-  { t: '07:31', text: 'battlecard refreshed — how you win, updated', tag: 'battlecard', cls: 'lg-b' },
+  { t: '02:14', text: 'cert log · new hostname: launch.grin.co', tag: 'buildout', cls: 'lg-p' },
+  { t: '06:00', text: 'the daily watch begins · 6 competitors · 22 channels', tag: 'crawl', cls: 'lg-m' },
+  { t: '06:07', text: 'grin.co/pricing changed · self-serve tiers are live', tag: 'pricing', cls: 'lg-p' },
+  { t: '06:11', text: 'Upfluence: 66 new ads observed · 43 Google · 23 LinkedIn', tag: 'ads', cls: 'lg-g' },
+  { t: '06:48', text: 'CreatorIQ: 25 open roles · enterprise CS cluster', tag: 'hiring', cls: 'lg-g' },
+  { t: '07:02', text: 'Hypefy raises $7.2M Series A · covered by 5 outlets', tag: 'news', cls: 'lg-m' },
+  { t: '07:30', text: 'the Keeper updated a briefing · “Grin: mid-transition, tearing out the old model”', tag: 'the keeper', cls: 'lg-b' },
+  { t: '07:31', text: 'battlecard refreshed · how you win, updated', tag: 'battlecard', cls: 'lg-b' },
 ];
 
 const STORY = [
   {
     n: '01',
     title: 'A hostname appears',
-    body: 'One quiet ping on the public certificate log: launch.grin.co. Most tools would forward it to you raw — or miss it entirely.',
+    body: 'One quiet ping on the public certificate log: launch.grin.co. Most tools would forward it to you raw, or miss it entirely.',
     cite: 'source: crt.sh, cited in-product',
   },
   {
     n: '02',
     title: 'Context, already on file',
-    body: 'GRIN’s own press from January 27, 2026 was sitting in the workspace — instant self-serve access, month-to-month billing, the enterprise-only model over.',
+    body: 'GRIN’s own press from January 27, 2026 was sitting in the workspace: instant self-serve access, month-to-month billing, the enterprise-only model over.',
     cite: 'source: GRIN press release, Jan 27 2026',
   },
   {
     n: '03',
     title: 'The Keeper connects them',
-    body: 'The Keeper writes the briefing: “Grin is mid-transition: tearing out the old model.” Confident — not because an AI guessed, but because their own announcement confirms what the hostname implies.',
+    body: 'The Keeper writes the briefing: “Grin is mid-transition, tearing out the old model.” Confident, and not because an AI guessed. Their own announcement confirms what the hostname implies.',
     cite: 'one read per competitor, every fact dated',
   },
   {
     n: '04',
     title: 'Your team moves',
-    body: 'The battlecard updates itself: migration friction for their Classic customers, proven “GRIN alternatives” search demand — and literally how you win.',
+    body: 'The battlecard updates itself: migration friction for their Classic customers, proven “GRIN alternatives” search demand, and literally how you win.',
     cite: 'personalized to your company, not abstract advice',
   },
 ];
@@ -65,7 +65,7 @@ const WATCH = [
   },
   {
     title: 'Ads & campaigns',
-    body: 'Sixty-six new ads is one bundled card with the platform and format mix — not sixty-six alerts. Which platforms, aimed at whom, where the money points.',
+    body: 'Sixty-six new ads is one bundled card with the platform and format mix, not sixty-six alerts. Which platforms, aimed at whom, where the money points.',
     icon: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></>,
   },
   {
@@ -87,7 +87,7 @@ const ENGINE = [
   },
   {
     title: 'Read by the Keeper.',
-    body: 'Every competitor gets one whole-picture briefing — moves, buildouts, and hiring read together by the Keeper — not a pile of disconnected alerts.',
+    body: 'Every competitor gets one whole-picture briefing: moves, buildouts, and hiring, read together by the Keeper. Not a pile of disconnected alerts.',
   },
   {
     title: 'Sourced, always.',
@@ -104,7 +104,7 @@ export default function Home() {
           <h1 className="mkt-h1">While you slept, <span className="accent">your market moved.</span></h1>
           <p className="mkt-dek">
             Your scouts track every pricing change, launch, hire, ad blitz and funding round across your
-            competitors. The Keeper reads them together — and hands you the next move. Every fact cited.
+            competitors. The Keeper reads them together and hands you the next move. Every fact cited.
           </p>
           <div className="mkt-hero-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
@@ -138,10 +138,10 @@ export default function Home() {
       <section className="mkt-section" id="brain">
         <div className="wrap">
           <span className="mkt-eyebrow">How the brain works</span>
-          <h2>One hostname appeared. The Keeper told the whole story.</h2>
+          <h2>One hostname appeared. Watchtower told the whole story.</h2>
           <p className="lede">
             A true sequence, from a live workspace. This is the difference between forwarding detections and doing
-            intelligence: signals are read <em>together</em>, per competitor — and only claimed when the facts confirm it.
+            intelligence: signals are read <em>together</em>, per competitor, and only claimed when the facts confirm it.
           </p>
           <div className="story-strip">
             {STORY.map((s) => (
@@ -154,7 +154,7 @@ export default function Home() {
             ))}
           </div>
           <p className="story-note">
-            Where a connection is only timing — a funding round followed by new hostnames — the read says exactly that,
+            Where a connection is only timing, like a funding round followed by new hostnames, the read says exactly that
             instead of overclaiming. No false fires is a product law here, not a slogan.
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function Home() {
         <div className="wrap">
           <span className="mkt-eyebrow">22 channels on the watch</span>
           <h2>If they ship it, price it, post it, or hire for it, you&apos;ll know.</h2>
-          <p className="lede">Everything a competitor does in public, watched daily — their site, their ads, their job board, their reviews, their press.</p>
+          <p className="lede">Everything a competitor does in public, watched daily: their site, their ads, their job board, their reviews, their press.</p>
           <div className="mkt-grid">
             {WATCH.map((f) => (
               <div className="mkt-feature" key={f.title}>
@@ -187,7 +187,7 @@ export default function Home() {
               <h2>Ten seconds to the state of your market.</h2>
               <p className="lede">
                 The watch runs daily. By the time you open it: one chart of real, dated market activity, the bundled
-                highlights that matter, a read per competitor, and a battlecard that says — literally — how{' '}
+                highlights that matter, a read per competitor, and a battlecard that literally says how{' '}
                 <em>your</em> company wins.
               </p>
               <p className="lede">
@@ -206,7 +206,7 @@ export default function Home() {
                   <span className="nw-tag mono">{l.tag}</span>
                 </div>
               ))}
-              <p className="nw-log-note">Real signal types from a live workspace — worded exactly as the feed words them.</p>
+              <p className="nw-log-note">Real signal types from a live workspace, worded exactly as the feed words them.</p>
             </div>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function Home() {
           <div className="mkt-cta-inner">
             <span className="kicker">Get started</span>
             <h2>Stop being the last to know.</h2>
-            <p className="lede">Tell us who you are, pick your competitors — or let the tower recommend them — and watch real, sourced signals appear inside an hour.</p>
+            <p className="lede">Tell us who you are and pick your competitors, or let the Keeper recommend them. Real, sourced signals appear inside an hour.</p>
             <div className="mkt-hero-cta">
               <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
               <Link href="/contact" className="btn btn-on-navy-ghost btn-lg">Talk to us</Link>

@@ -2,12 +2,12 @@
    white, near-black ink, one confident indigo brand hue. Namespaced under
    .mkt to avoid colliding with the app-shell classes. */
 .mkt{
-  --a-bg:#e9efe9;
-  --a-grad:radial-gradient(1000px 520px at 50% -200px, #dcebd9 0%, transparent 70%);
-  --a-card:#ffffff; --a-card-2:#f2f6f0;
+  --a-bg:#f3f5f1;
+  --a-grad:radial-gradient(900px 480px at 18% -160px, rgba(226,244,99,.30) 0%, transparent 65%), radial-gradient(1000px 560px at 85% -180px, rgba(173,196,186,.5) 0%, transparent 70%);
+  --a-card:rgba(255,255,255,.6); --a-card-2:#f2f6f0;
   --a-ink:#142522; --a-mut:#404d4a; --a-faint:#5b6a66; --a-line:#d5ded6; --a-line2:#e2eae2;
-  --a-violet:#6b7f16; --a-violet-wash:#eef6d2;
-  --a-beacon:#6b7f16; --a-beacon-soft:#e2f463; --a-beacon-wash:#eef6d2;
+  --a-violet:#1e6f5c; --a-violet-wash:#eef6d2;
+  --a-beacon:#1e6f5c; --a-beacon-soft:#e2f463; --a-beacon-wash:#eef6d2;
   --a-pink:#c25446; --a-pink-wash:#f5e4e0;
   --a-blue:#4f80a3; --a-blue-wash:#e4edf3;
   --a-mint:#3f8f68; --a-mint-wash:#e6f0e9;
@@ -52,7 +52,7 @@
 .mkt-hero .wrap{position:relative;z-index:1}
 .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-beacon);font-weight:800;display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;background:var(--a-beacon-wash);padding:7px 16px;border-radius:999px}
 h1.mkt-h1{font-size:clamp(38px,5.4vw,64px);font-weight:700;letter-spacing:-.035em;line-height:1.04;margin:0 auto 22px;max-width:17ch;text-wrap:balance}
-h1.mkt-h1 .accent{color:var(--a-beacon)}
+h1.mkt-h1 .accent{color:var(--a-ink);background:linear-gradient(120deg, rgba(234,253,53,.9), rgba(226,244,99,.5));border-radius:12px;padding:0 12px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .mkt-dek{font-size:18px;color:var(--a-mut);max-width:54ch;line-height:1.6;margin:0 auto 32px}
 .mkt-hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
 .mkt-hero-note{font-size:12.5px;color:var(--a-faint);font-weight:500}
@@ -245,13 +245,13 @@ h1.nw-h1 .accent{color:var(--a-beacon)}
 @media(max-width:640px){.story-strip{grid-template-columns:1fr}}
 .story-step{position:relative;background:var(--a-card);border-radius:20px;padding:26px 24px 22px;box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
 .story-step:hover{transform:translateY(-3px);box-shadow:var(--a-shadow-lift)}
-.story-step:nth-child(3){background:linear-gradient(140deg,#ecebfc,#f6ecf6);border:1px solid rgba(84,87,214,.14)}
+.story-step:nth-child(3){background:linear-gradient(140deg, rgba(234,253,53,.4), rgba(255,255,255,.55))}
 .story-n{display:inline-flex;font-size:11px;font-weight:700;color:var(--a-violet);background:var(--a-violet-wash);border-radius:8px;padding:4px 9px;margin-bottom:14px}
 .story-step:nth-child(3) .story-n{background:#fff}
 .story-step h4{font-size:16px;font-weight:800;letter-spacing:-.015em;margin:0 0 8px}
 .story-step p{font-size:13px;color:var(--a-mut);line-height:1.6;margin:0 0 14px}
 .story-cite{display:block;font-size:10px;color:var(--a-faint);border-top:1px solid var(--a-line2);padding-top:10px}
-.story-step:nth-child(3) .story-cite{border-top-color:rgba(84,87,214,.15)}
+.story-step:nth-child(3) .story-cite{border-top-color:rgba(20,37,34,.12)}
 .story-note{font-size:13px;color:var(--a-faint);margin-top:22px;max-width:70ch;line-height:1.6}
 
 @media (prefers-reduced-motion: reduce){
@@ -259,3 +259,20 @@ h1.nw-h1 .accent{color:var(--a-beacon)}
   .nw-beacon,.nw-live span{animation:none}
   .nw-line{animation:none;opacity:1;transform:none}
 }
+
+
+/* ---------- GLASS PASS: frosted white cards, highlighter CTAs ---------- */
+.mkt-feature,.engine-card,.tier,.blog-item,.post-body,.contact-grid form,.contact-info,.story-step,.nw-log,.trust-card{
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(22px) saturate(130%);
+  -webkit-backdrop-filter:blur(22px) saturate(130%);
+  border:none;
+  box-shadow:0 16px 40px rgba(20,37,34,.10), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.story-step:nth-child(3){background:linear-gradient(140deg, rgba(234,253,53,.42), rgba(255,255,255,.5))}
+.tier.on{background:var(--a-dark);backdrop-filter:none;box-shadow:0 30px 70px rgba(20,37,34,.35)}
+.mkt a.btn-primary,.btn-primary{background:#eafd35;color:#142522;box-shadow:0 10px 26px rgba(170,190,20,.42)}
+.btn-primary:hover{box-shadow:0 12px 30px rgba(170,190,20,.5)}
+.tier.on .btn-primary{background:#eafd35;color:#142522}
+.kicker{color:#1e6f5c;background:rgba(234,253,53,.35)}
+.mkt-eyebrow{color:#1e6f5c}
