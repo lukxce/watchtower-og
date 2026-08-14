@@ -16,7 +16,7 @@ const LOG: { t: string; text: string; tag: string; cls: string }[] = [
   { t: '06:11', text: 'Upfluence: 66 new ads observed — 43 Google · 23 LinkedIn', tag: 'ads', cls: 'lg-g' },
   { t: '06:48', text: 'CreatorIQ: 25 open roles — enterprise CS cluster', tag: 'hiring', cls: 'lg-g' },
   { t: '07:02', text: 'Hypefy raises $7.2M Series A — covered by 5 outlets', tag: 'news', cls: 'lg-m' },
-  { t: '07:30', text: 'read updated — “Grin: mid-transition, tearing out the old model”', tag: 'the read', cls: 'lg-b' },
+  { t: '07:30', text: 'the Keeper updated a briefing — “Grin: mid-transition, tearing out the old model”', tag: 'the keeper', cls: 'lg-b' },
   { t: '07:31', text: 'battlecard refreshed — how you win, updated', tag: 'battlecard', cls: 'lg-b' },
 ];
 
@@ -35,8 +35,8 @@ const STORY = [
   },
   {
     n: '03',
-    title: 'The read connects them',
-    body: '“Grin is mid-transition: tearing out the old model.” Confident — not because an AI guessed, but because their own announcement confirms what the hostname implies.',
+    title: 'The Keeper connects them',
+    body: 'The Keeper writes the briefing: “Grin is mid-transition: tearing out the old model.” Confident — not because an AI guessed, but because their own announcement confirms what the hostname implies.',
     cite: 'one read per competitor, every fact dated',
   },
   {
@@ -86,8 +86,8 @@ const ENGINE = [
     body: 'Ten ads on the same day is one thing that happened. The same story in five outlets is one story. You read what mattered, not what was detected.',
   },
   {
-    title: 'Read, not just logged.',
-    body: 'Every competitor gets one whole-picture read — moves, buildouts, and hiring considered together — not a pile of disconnected alerts.',
+    title: 'Read by the Keeper.',
+    body: 'Every competitor gets one whole-picture briefing — moves, buildouts, and hiring read together by the Keeper — not a pile of disconnected alerts.',
   },
   {
     title: 'Sourced, always.',
@@ -100,11 +100,11 @@ export default function Home() {
     <>
       <section className="mkt-hero" id="product">
         <div className="wrap">
-          <span className="kicker"><span className="nw-beacon" />Competitive intelligence for operators</span>
+          <span className="kicker"><span className="nw-beacon" />Scouts gather. The Tower sees. The Keeper reads.</span>
           <h1 className="mkt-h1">While you slept, <span className="accent">your market moved.</span></h1>
           <p className="mkt-dek">
-            Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your
-            competitors — reads them together, and hands you the next move. Every fact cited.
+            Your scouts track every pricing change, launch, hire, ad blitz and funding round across your
+            competitors. The Keeper reads them together — and hands you the next move. Every fact cited.
           </p>
           <div className="mkt-hero-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
@@ -138,7 +138,7 @@ export default function Home() {
       <section className="mkt-section" id="brain">
         <div className="wrap">
           <span className="mkt-eyebrow">How the brain works</span>
-          <h2>One hostname appeared. Watchtower told the whole story.</h2>
+          <h2>One hostname appeared. The Keeper told the whole story.</h2>
           <p className="lede">
             A true sequence, from a live workspace. This is the difference between forwarding detections and doing
             intelligence: signals are read <em>together</em>, per competitor — and only claimed when the facts confirm it.

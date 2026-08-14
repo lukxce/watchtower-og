@@ -2,8 +2,8 @@ import { Soon } from '@/lib/soon';
 export default function Page() {
   return (
     <Soon
-      title="Ask"
-      blurb="Natural-language questions over the entire intelligence corpus."
+      title="Ask the Keeper"
+      blurb="Scouts gather. The Tower sees. The Keeper reads — ask it anything about your market."
       needs="needs the Claude RAG layer (ANTHROPIC_API_KEY) + embeddings"
       bullets={[
         '“What has CreatorIQ changed on pricing this quarter?” · “Who is hiring in DACH?”',

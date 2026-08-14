@@ -2,18 +2,18 @@
    white, near-black ink, one confident indigo brand hue. Namespaced under
    .mkt to avoid colliding with the app-shell classes. */
 .mkt{
-  --a-bg:#f7f7fb;
-  --a-grad:radial-gradient(1000px 520px at 50% -200px, #ececff 0%, transparent 70%);
-  --a-card:#ffffff; --a-card-2:#fafafd;
-  --a-ink:#15151c; --a-mut:#5f6170; --a-faint:#9092a3; --a-line:#e6e7f0; --a-line2:#f0f1f7;
-  --a-violet:#5457d6; --a-violet-wash:#ebebfc;
-  --a-beacon:#5457d6; --a-beacon-soft:#8b8df0; --a-beacon-wash:#ebebfc;
-  --a-pink:#c04b8f; --a-pink-wash:#f9e6f1;
-  --a-blue:#2f7fd1; --a-blue-wash:#e6f0fb;
-  --a-mint:#188a56; --a-mint-wash:#e3f4eb;
-  --a-amber:#b8860f; --a-amber-wash:#f9f0d9;
-  --a-red:#d2484f; --a-red-wash:#fbe7e8;
-  --a-dark:#191a26; --a-on-dark:#f1f1f6; --a-on-dark-mut:#9a9cb2;
+  --a-bg:#e9efe9;
+  --a-grad:radial-gradient(1000px 520px at 50% -200px, #dcebd9 0%, transparent 70%);
+  --a-card:#ffffff; --a-card-2:#f2f6f0;
+  --a-ink:#142522; --a-mut:#404d4a; --a-faint:#5b6a66; --a-line:#d5ded6; --a-line2:#e2eae2;
+  --a-violet:#6b7f16; --a-violet-wash:#eef6d2;
+  --a-beacon:#6b7f16; --a-beacon-soft:#e2f463; --a-beacon-wash:#eef6d2;
+  --a-pink:#c25446; --a-pink-wash:#f5e4e0;
+  --a-blue:#4f80a3; --a-blue-wash:#e4edf3;
+  --a-mint:#3f8f68; --a-mint-wash:#e6f0e9;
+  --a-amber:#a3701f; --a-amber-wash:#f2ecd8;
+  --a-red:#c25446; --a-red-wash:#f5e4e0;
+  --a-dark:#142522; --a-on-dark:#eef6ee; --a-on-dark-mut:#9fb0a8;
   --a-shadow:0 1px 3px rgba(21,21,40,.05), 0 14px 36px rgba(21,21,40,.06);
   --a-shadow-lift:0 3px 8px rgba(21,21,40,.07), 0 22px 52px rgba(21,21,40,.10);
   color:var(--a-ink); background:var(--a-bg); background-image:var(--a-grad); background-repeat:no-repeat;
@@ -209,7 +209,7 @@ h1.mkt-h1 .accent{color:var(--a-beacon)}
 .nw-hero{position:relative;overflow:hidden;background:
   radial-gradient(820px 460px at 12% -8%, rgba(139,141,240,.20) 0%, transparent 62%),
   radial-gradient(700px 420px at 92% 4%, rgba(224,169,205,.22) 0%, transparent 58%),
-  linear-gradient(165deg,#f7f7fb 0%,#f2f0fa 50%,#f7eff6 100%);
+  linear-gradient(165deg,#e9efe9 0%,#f2f0fa 50%,#f7eff6 100%);
   color:var(--a-ink);padding:88px 0 96px}
 .nw-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
 @media(max-width:960px){.nw-grid{grid-template-columns:1fr;gap:44px}}

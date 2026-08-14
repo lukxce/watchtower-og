@@ -1,32 +1,35 @@
-/* Watchtower app — "signal indigo" brand system (v5).
-   The sellable pattern the category leaders use: ONE confident saturated hue
-   family (ours: indigo #5457d6), true near-black ink, clean cool-white
-   ground, uniform-saturation data colors. No beige, no multi-hue gradients.
-   Layout language: white floating cards (16-18px radii), dark contrast
-   modules, top pill nav + top-right tool icons. */
+/* Watchtower app — THE GLASS SYSTEM (see DESIGN-GLASS.md).
+   Neutral grey-teal scene, teal-green frosted sheets, highlighter #eafd35
+   accent, ink #142522. Lore: scouts gather, the Tower sees, the Keeper
+   reads. Palette from the reference template:
+   eafd35 · e2f463 · c9dc7c · 142522 · 404d4a · adc4ba · b1c6a2 · 96b0b0. */
 :root{
-  --bg:#f7f7fb;
-  --bg-grad:radial-gradient(900px 460px at 50% -180px, #ececff 0%, transparent 70%);
-  --card:#ffffff; --card-2:#fafafd;
-  --ink:#15151c; --mut:#5f6170; --faint:#9092a3; --line:#e6e7f0; --line2:#f0f1f7;
-  --brand:#5457d6; --brand-strong:#4245c4; --brand-soft:#8b8df0; --brand-wash:#ebebfc;
-  --pos:#188a56; --pos-wash:#e3f4eb;
-  --neg:#d2484f; --neg-wash:#fbe7e8;
-  --warn:#b8860f; --warn-wash:#f9f0d9;
-  --info:#2f7fd1; --info-wash:#e6f0fb;
-  --berry:#c04b8f; --berry-wash:#f9e6f1;
+  --bg:#96b0b0;
+  --bg-grad:
+    radial-gradient(1100px 640px at 80% -14%, #adc4ba 0%, transparent 58%),
+    radial-gradient(800px 560px at 0% 100%, #8aa3a3 0%, transparent 55%),
+    linear-gradient(160deg,#9fb5b2 0%,#96b0b0 52%,#9cb3b0 100%);
+  --card:rgba(222,236,228,.55); --card-2:rgba(255,255,255,.45);
+  --ink:#142522; --mut:#404d4a; --faint:#5b6a66; --line:rgba(255,255,255,.55); --line2:rgba(255,255,255,.4);
+  --brand:#6b7f16; --brand-strong:#556610; --brand-soft:#e2f463; --brand-wash:rgba(226,244,99,.3);
+  --hl:#eafd35;
+  --pos:#3f8f68; --pos-wash:rgba(63,143,104,.14);
+  --neg:#c25446; --neg-wash:rgba(194,84,70,.14);
+  --warn:#a3701f; --warn-wash:rgba(163,112,31,.14);
+  --info:#4f80a3; --info-wash:rgba(79,128,163,.14);
+  --berry:#8a5fa8; --berry-wash:rgba(138,95,168,.14);
   --accent:var(--brand);
-  --up:var(--neg); --down:var(--pos); --gr:#e9e9f2;
-  --dark:#191a26; --dark-2:#232435; --on-dark:#f1f1f6; --on-dark-mut:#9a9cb2;
+  --up:var(--neg); --down:var(--pos); --gr:rgba(255,255,255,.5);
+  --dark:#142522; --dark-2:#1d332e; --on-dark:#eef6ee; --on-dark-mut:#9fb0a8;
   --sans:var(--font-jakarta), -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   --mono:var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --shadow:0 1px 3px rgba(21,21,40,.05), 0 14px 36px rgba(21,21,40,.06);
-  --shadow-lift:0 3px 8px rgba(21,21,40,.07), 0 22px 52px rgba(21,21,40,.10);
+  --shadow:0 8px 24px rgba(16,30,28,.14);
+  --shadow-lift:0 14px 38px rgba(16,30,28,.2);
   --r:18px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:var(--bg);background-image:var(--bg-grad);background-repeat:no-repeat;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);background-image:var(--bg-grad);background-repeat:no-repeat;background-attachment:fixed;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 .mono{font-family:var(--mono)}
 
@@ -609,6 +612,71 @@ details.bundle[open] summary{color:var(--brand-strong);border-color:var(--brand-
 .beta-fab a.on{background:#fff;color:#15151c}
 .beta-fab-live{width:auto !important;padding:0 12px;border-radius:999px !important;background:rgba(255,255,255,.12);color:#fff !important;font-size:10.5px !important}
 
+/* ============================================================
+   GLASS ROLLOUT — app-wide overrides (cascade-final, see
+   DESIGN-GLASS.md). Frosted surfaces, glass chrome, colored
+   category badges, highlighter CTAs.
+   ============================================================ */
+.app{background:transparent}
+.main{background:transparent}
+
+/* chrome: frosted top bar, white active pill */
+.topbar{background:rgba(222,236,228,.55);backdrop-filter:blur(26px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.5)}
+.tnav a.on{background:#fff;color:var(--ink);box-shadow:0 5px 14px rgba(16,30,28,.15)}
+.tnav a:hover{background:rgba(255,255,255,.5);color:var(--ink)}
+.tnav-menu{background:#fff;border:none}
+.brand b{color:var(--brand)}
+.ws-chip{background:rgba(255,255,255,.5);border-color:rgba(255,255,255,.6)}
+
+/* signals rail: floating frosted circles with hover label pills */
+.side-rail{background:transparent;border:none;box-shadow:none;gap:10px;align-items:center;width:70px;padding:0;margin-left:26px}
+.rail-label{writing-mode:vertical-rl;transform:rotate(180deg);padding:0 0 6px;font-size:9px;letter-spacing:.12em;color:var(--mut);opacity:.8}
+.rail-label::after{display:none}
+.side-item{position:relative;width:46px;height:46px;border-radius:50%;justify-content:center;gap:0;background:rgba(232,242,238,.55);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.6);box-shadow:0 8px 20px rgba(16,30,28,.16);color:var(--mut);transition:background .14s,color .14s,transform .14s}
+.side-item:hover{background:#fff;color:var(--ink);transform:translateX(3px)}
+.side-item.on{background:var(--ink);color:#eef6ee}
+.side-item span{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%) translateX(-6px);background:var(--ink);color:#eef6ee;font-size:11.5px;font-weight:700;white-space:nowrap;padding:7px 13px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s}
+.side-item:hover span{opacity:1;transform:translateY(-50%) translateX(0)}
+
+/* frosted sheets everywhere a white card used to be */
+.card,.mod,.bc,.empty,.addcomp-form,.onb-form,.onb-rec,.soon,.posmap-wrap,.tblwrap,.contact-info{
+  background:linear-gradient(155deg, rgba(196,220,214,.32) 0%, rgba(214,232,216,.30) 100%), rgba(218,234,226,.46);
+  backdrop-filter:blur(28px) saturate(140%);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 20px 50px rgba(16,30,28,.18), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.card.featured{border:1px solid rgba(255,255,255,.7)}
+.card.fc-pricing,.card.fc-product{background:linear-gradient(140deg, rgba(226,244,99,.35), rgba(201,220,124,.28)), rgba(222,236,228,.5)}
+.card.fc-news,.card.fc-hiring{background:linear-gradient(140deg, rgba(79,128,163,.18), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
+.card.fc-ads{background:linear-gradient(140deg, rgba(194,84,70,.16), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
+.card.fc-customers,.card.fc-other,.card.fc-community,.card.fc-marketing,.card.fc-positioning,.card.fc-funding,.card.fc-reviews{background:linear-gradient(140deg, rgba(255,255,255,.4), rgba(214,232,216,.3)), rgba(222,236,228,.5)}
+.mod.dark,.mini.dark{background:var(--dark);backdrop-filter:none;border:none}
+
+/* category badges: solid colored chips, the signal's identity */
+.badge{color:#fff;font-weight:800}
+.c-pricing{background:#7d941f;color:#fff}
+.c-product{background:#3f8f68;color:#fff}
+.c-hiring{background:#4f80a3;color:#fff}
+.c-ads{background:#c25446;color:#fff}
+.c-news{background:#837d6b;color:#fff}
+.c-reviews{background:#8a5fa8;color:#fff}
+.c-funding{background:#a3701f;color:#fff}
+.c-community,.c-marketing,.c-positioning,.c-other,.c-customers{background:#6e7d78;color:#fff}
+
+/* highlighter CTAs */
+.addcomp-btn{background:var(--hl);color:var(--ink);box-shadow:0 10px 24px rgba(170,190,20,.45)}
+.addcomp-btn:hover{box-shadow:0 12px 28px rgba(170,190,20,.5)}
+.pill.on{background:var(--ink)}
+.mod-ask-a{background:var(--hl);color:var(--ink)}
+
+/* battlecard read panel on glass */
+.bc-read{background:linear-gradient(135deg, rgba(226,244,99,.32), rgba(255,255,255,.4));border:1px solid rgba(255,255,255,.65)}
+.bc-read-tag,.bc-read-hook{color:var(--ink)}
+.bc-read-chip{background:rgba(255,255,255,.6)}
+.bc-read-chip b{color:var(--brand-strong)}
+
+.beta-fab{background:rgba(20,37,34,.9)}
+
 @media (prefers-reduced-motion: reduce){
-  .card,.compcard,.ttile,.bc,.ovsig,.ovbc,.mini{transition:none}
+  .card,.compcard,.ttile,.bc,.ovsig,.ovbc,.mini,.side-item,.side-item span{transition:none}
 }

@@ -1,386 +1,235 @@
-// Overview — a dashboard, not a document. One big real activity chart
-// (filterable per competitor, tooltips per week), the bundled highlights
-// that actually matter ("10 new ads observed", "covered by 5 outlets"), the
-// Threat score list, coverage, your own mentions as a mini chart, a line of
-// industry pulse, an ask box — and a right rail carrying each competitor
-// read's one-line hook into its battlecard. Deep reasoning lives on
-// /battlecards; single events live on /feed.
-import { getDb } from '@/db/client';
-import { computeThreat } from '@/lib/threat';
-import { CHANNELS } from '@/lib/channels';
+// Overview — the Glass system, now the real page (chrome comes from the
+// app layout; this page is just the sheets). Lore: scouts gather, the
+// Tower sees, the KEEPER reads — the Keeper is the AI.
+// Sheet 1: profile + hero chart (interactive) + focus chips.
+// Sheet 2: Ask the Keeper (hero, with suggested questions) + competitor
+//          ratings (each row opens its briefing) + biggest-threat
+//          spotlight + launch radar (evidence, not slogans).
+// Sheet 3: Scout reports (bundled) + Beyond the walls.
+// Sheet 4 (slim): scouts deployed + mentions.
 import { requireOrgId } from '@/lib/tenant';
-import { getCompetitorReads } from '@/lib/reason';
-import { computeRadar } from '@/lib/radar';
-import { bundleRows, type BundleRow } from '@/lib/bundle';
-import { findBrandMentions } from '@/lib/mentions';
-import { industryNews } from '@/lib/industryNews';
+import { getBrandSettings } from '@/lib/brand';
+import { getOverviewData, initials, ago } from '@/lib/overviewData';
+import GlassChart from './GlassChart';
+import './overview.css';
 
 export const dynamic = 'force-dynamic';
 
-const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-const catClass = (c: string) => `c-${(c || 'other').toLowerCase()}`;
-
-function greeting(): string {
-  const h = new Date().getHours();
-  if (h < 5) return 'Working late';
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
-}
-
-function bucketOf(category: string | null): 'product' | 'gtm' | 'market' {
-  if (category === 'Product' || category === 'Pricing') return 'product';
-  if (category === 'Ads' || category === 'Hiring' || category === 'Marketing') return 'gtm';
-  return 'market';
-}
-
-function ago(iso: string): string {
-  const d = Date.now() - new Date(iso).getTime();
-  const h = Math.floor(d / 3600000);
-  if (h < 24) return `${Math.max(1, h)}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
-
-const WEEKS = 26;
+const CAT_CLS: Record<string, string> = {
+  Ads: 'ct-coral', Hiring: 'ct-sky', News: 'ct-sand', Pricing: 'ct-olive',
+  Product: 'ct-green', Reviews: 'ct-violet', Funding: 'ct-amber', Positioning: 'ct-olive',
+};
+const SUGGESTIONS = [
+  'What changed on pricing this quarter?',
+  'Who is hiring for AI roles?',
+  'Which competitor is closest to a launch?',
+];
 
 export default async function Overview({ searchParams }: { searchParams: Promise<{ focus?: string }> }) {
   const { focus } = await searchParams;
   const orgId = await requireOrgId();
-  const db = await getDb();
+  const d = await getOverviewData(orgId, focus);
+  const brand = await getBrandSettings(orgId);
+  const me = brand.configured ? brand.brandName : 'Workspace';
 
-  const threat = await computeThreat(orgId);
-  const focusComp = focus ? threat.find((t) => t.slug === focus) : null;
-
-  // Real weekly event volume — DATED events only, plotted on when they
-  // happened (a first-crawl baseline of undated signals would otherwise
-  // fake a spike on crawl week). Optional per-competitor focus.
-  const chartParams: unknown[] = [orgId];
-  let chartFocusClause = '';
-  if (focusComp) {
-    chartParams.push(focusComp.slug);
-    chartFocusClause = ` AND c.slug = $${chartParams.length}`;
-  }
-  const weekRows = await db.query<{ wk: string; category: string | null; n: number }>(
-    `SELECT date_trunc('week', si.published_at)::date::text AS wk, si.category, COUNT(*)::int AS n
-     FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
-     WHERE c.org_id = $1 AND si.status IN ('pending','signaled')
-       AND si.published_at IS NOT NULL AND si.published_at >= now() - interval '${WEEKS * 7} days'${chartFocusClause}
-     GROUP BY 1, 2`,
-    chartParams,
-  );
-
-  const now = new Date();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
-  const localKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const weeks: { key: string; label: string; nice: string; product: number; gtm: number; market: number }[] = [];
-  for (let i = WEEKS - 1; i >= 0; i--) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() - i * 7);
-    weeks.push({
-      key: localKey(d),
-      label: d.toLocaleDateString('en-US', { month: 'short' }),
-      nice: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      product: 0,
-      gtm: 0,
-      market: 0,
-    });
-  }
-  const byKey = new Map(weeks.map((w) => [w.key, w]));
-  for (const r of weekRows) {
-    const w = byKey.get(r.wk);
-    if (w) w[bucketOf(r.category)] += r.n;
-  }
-  const maxWeek = Math.max(1, ...weeks.map((w) => w.product + w.gtm + w.market));
-  const thisWeek = weeks[weeks.length - 1];
-  const thisWeekTotal = thisWeek.product + thisWeek.gtm + thisWeek.market;
-  const chartTotal = weeks.reduce((s, w) => s + w.product + w.gtm + w.market, 0);
-
-  const monthTicks: { idx: number; label: string }[] = [];
-  let lastMonth = '';
-  weeks.forEach((w, idx) => {
-    if (w.label !== lastMonth) {
-      monthTicks.push({ idx, label: w.label });
-      lastMonth = w.label;
-    }
-  });
-
-  // Highlights: bundle the last 60 days of signals, keep what matters —
-  // multi-item bundles (an ad blitz, a PR push) and high-impact singles.
-  const hlRows = await db.query<BundleRow>(
-    `SELECT si.id, si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name, c.slug
-     FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
-     WHERE c.org_id = $1 AND si.status IN ('pending','signaled')
-       AND COALESCE(si.published_at, si.created_at) >= now() - interval '60 days'
-     ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 400`,
-    [orgId],
-  );
-  const highlights = bundleRows(hlRows)
-    .filter((b) => b.rows.length >= 2 || b.score >= 80)
-    .sort((a, b) => b.rows.length * 12 + b.score - (a.rows.length * 12 + a.score))
-    .slice(0, 5);
-
-  const reads = await getCompetitorReads(orgId);
-  const radar = await computeRadar(orgId);
-  const topRadar = radar[0];
-  const mentions = await findBrandMentions(orgId);
-  const pulse = await industryNews(orgId, 3);
-
-  // Mentions mini chart: news + signal mentions of the workspace's own
-  // brand by week, last 12 weeks (directional — capped RSS source).
-  const M_WEEKS = 12;
-  const mWeeks: { key: string; n: number }[] = [];
-  for (let i = M_WEEKS - 1; i >= 0; i--) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() - i * 7);
-    mWeeks.push({ key: localKey(d), n: 0 });
-  }
-  const mByKey = new Map(mWeeks.map((w) => [w.key, w]));
-  const mentionDates = [
-    ...mentions.news.map((n) => n.publishedAt).filter(Boolean) as string[],
-    ...mentions.signalMentions.map((s) => s.at),
-  ];
-  for (const iso of mentionDates) {
-    const d = new Date(iso);
-    const wd = new Date(d);
-    wd.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-    const w = mByKey.get(localKey(wd));
-    if (w) w.n++;
-  }
-  const mMax = Math.max(1, ...mWeeks.map((w) => w.n));
-  const mTotal = mWeeks.reduce((s, w) => s + w.n, 0);
-
-  const compCount = threat.length;
-  const battlecardCount = Number(
-    (await db.query<{ n: string }>(
-      'SELECT COUNT(*)::text n FROM battlecards b JOIN competitors c ON c.id = b.competitor_id WHERE c.org_id = $1',
-      [orgId],
-    ))[0]?.n ?? 0,
-  );
-  const activeChannels = CHANNELS.filter((c) => c.status === 'active').length;
-
-  const railCards = threat
-    .filter((t) => reads.has(t.slug))
-    .slice(0, 3)
-    .map((t, i) => ({ ...t, read: reads.get(t.slug)!, g: `g${(i % 3) + 1}` }));
-
-  const CW = 660;
-  const CH = 190;
-  const BW = 16;
-  const GAP = (CW - WEEKS * BW) / (WEEKS + 1);
+  const totals = d.weeks.map((w) => w.product + w.gtm + w.market);
+  const avgLast = Math.round(totals.slice(-4).reduce((a, b) => a + b, 0) / 4);
+  const gtmTotal = d.weeks.reduce((s, w) => s + w.gtm, 0);
+  const marketTotal = d.weeks.reduce((s, w) => s + w.market, 0);
+  const productTotal = d.weeks.reduce((s, w) => s + w.product, 0);
+  const heat = (n: number) => (n >= 70 ? 'heat-hot' : n >= 50 ? 'heat-warm' : 'heat-cool');
+  const top = d.railCards[0];
 
   return (
-    <main className="main">
-      <section className="feed dashwrap">
-        <header className="ov-head">
-          <h1 className="ov-hello">{greeting()}<span>. The state of your market.</span></h1>
-        </header>
+    <main className="main gxo">
+      <div className="gx-scene">
+        {/* ---------- sheet 1: the tower ---------- */}
+        <section className="gx-sheet">
+          <div className="gx-profile">
+            <div className="gx-me">
+              <span className="gx-avatar lg">{initials(me)}</span>
+              <div>
+                <small>Watch commander</small>
+                <b>{me}</b>
+              </div>
+              <a className="gx-lime" href="/battlecards">Add competitor</a>
+            </div>
+            <div className="gx-hey">
+              <b>Hey, {me}! 👋</b>
+              <span>{d.thisWeekTotal > 0 ? `Your scouts brought back ${d.thisWeekTotal} report${d.thisWeekTotal === 1 ? '' : 's'} this week` : 'The scouts are out — quiet week so far'}</span>
+            </div>
+            <a className="gx-icb ghost round-lg" href="/overview" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" strokeLinecap="round" strokeLinejoin="round" /></svg></a>
+          </div>
 
-        <div className="dash">
-          <div className="dash-main">
-            <div className="dcard">
-              <div className="dhead">
-                <div>
-                  <h3>Market activity{focusComp ? ` — ${focusComp.competitor}` : ''}</h3>
-                  <p className="dsub">{chartTotal} dated events · last 6 months · plotted on when they happened, not when we found them</p>
-                </div>
-                <div className="dlegend">
-                  <span><i className="li p" />Product &amp; pricing</span>
-                  <span><i className="li g" />GTM — ads &amp; hiring</span>
-                  <span><i className="li m" />Market &amp; news</span>
-                </div>
+          <div className="gx-body">
+            <div className="gx-info">
+              <div className="gx-info-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg>
               </div>
-              <div className="chart-chip-wrap">
-                <div className="up-chip">
-                  <b>+{thisWeekTotal}</b>
-                  <span>events this week</span>
-                </div>
+              <h2>All signals{d.focusComp ? ` — ${d.focusComp.competitor}` : ''}</h2>
+              <p>Everything that happened across your {d.compCount} competitors — dated, bundled, cited. <a href="/battlecards">Need context?</a></p>
+              <div className="gx-big">{d.chartTotal}</div>
+              <div className="gx-leg">
+                <div className="gx-leg-row"><i className="lg-dash" /><span>Momentum, 4-wk</span><b>{avgLast} /wk</b></div>
+                <div className="gx-leg-row"><i className="lg-dot w" /><span>GTM — ads &amp; hiring</span><b>{gtmTotal}</b></div>
+                <div className="gx-leg-row"><i className="lg-dot m" /><span>Market &amp; news</span><b>{marketTotal}</b></div>
+                <div className="gx-leg-row"><i className="lg-dot f" /><span>Product &amp; pricing</span><b>{productTotal}</b></div>
               </div>
-              <svg viewBox={`0 0 ${CW} 224`} className="wchart" aria-label="Weekly verified events">
-                <defs>
-                  <linearGradient id="gp" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8b8df0" /><stop offset="100%" stopColor="#5457d6" />
-                  </linearGradient>
-                  <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#e0a9cd" /><stop offset="100%" stopColor="#c04b8f" />
-                  </linearGradient>
-                  <linearGradient id="gm" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#e6e7f5" /><stop offset="100%" stopColor="#c9cbe6" />
-                  </linearGradient>
-                </defs>
-                {weeks.map((w, i) => {
-                  const x = GAP + i * (BW + GAP);
-                  const total = w.product + w.gtm + w.market;
-                  const tip = `Week of ${w.nice} — ${total} event${total === 1 ? '' : 's'}: ${w.product} product, ${w.gtm} GTM, ${w.market} market`;
-                  if (total === 0) {
-                    return (
-                      <g key={w.key}><title>{tip}</title><rect x={x} y={CH - 3} width={BW} height={3} rx={1.5} fill="#ececf4" /></g>
-                    );
-                  }
-                  const hP = (w.product / maxWeek) * (CH - 10);
-                  const hG = (w.gtm / maxWeek) * (CH - 10);
-                  const hM = (w.market / maxWeek) * (CH - 10);
-                  let y = CH;
-                  const segs: React.ReactNode[] = [];
-                  if (w.market > 0) { y -= hM; segs.push(<rect key="m" x={x} y={y} width={BW} height={hM} rx={3} fill="url(#gm)" />); }
-                  if (w.gtm > 0) { y -= hG; segs.push(<rect key="g" x={x} y={y} width={BW} height={hG} rx={3} fill="url(#gg)" />); }
-                  if (w.product > 0) { y -= hP; segs.push(<rect key="p" x={x} y={y} width={BW} height={hP} rx={3} fill="url(#gp)" />); }
-                  return <g key={w.key}><title>{tip}</title>{segs}</g>;
-                })}
-                {monthTicks.map((t) => (
-                  <text key={t.idx} x={GAP + t.idx * (BW + GAP)} y={214} className="wchart-tick">{t.label}</text>
-                ))}
-              </svg>
-              <div className="chart-chips">
-                <a href="/overview" className={`cchip ${!focusComp ? 'on' : ''}`}>All</a>
-                {threat.map((t) => (
-                  <a key={t.slug} href={`/overview?focus=${t.slug}`} className={`cchip ${focusComp?.slug === t.slug ? 'on' : ''}`} title={t.competitor}>
-                    <span className="cchip-av">{initials(t.competitor)}</span>{t.competitor}
+            </div>
+
+            <div className="gx-chartwrap">
+              <div className="gx-chart-meta"><span>last 6 months · hover to inspect</span></div>
+              <GlassChart weeks={d.weeks} maxWeek={d.maxWeek} monthTicks={d.monthTicks} />
+              <div className="gx-chips">
+                <a href="/overview" className={!d.focusComp ? 'on' : ''}>All</a>
+                {d.threat.map((t) => (
+                  <a key={t.slug} href={`/overview?focus=${t.slug}`} className={d.focusComp?.slug === t.slug ? 'on' : ''}>
+                    <span className="gx-chip-av">{initials(t.competitor)}</span>{t.competitor}
                   </a>
                 ))}
               </div>
             </div>
+          </div>
+        </section>
 
-            {highlights.length > 0 && (
-              <div className="dcard">
-                <div className="dhead">
-                  <h3>Highlights</h3>
-                  <a className="mod-more" href="/feed">Full feed →</a>
-                </div>
-                {highlights.map((h, i) => (
-                  <a className="hl-row" key={i} href={`/feed?comp=${h.slug}`}>
-                    <span className={`badge ${catClass(h.category)}`}>{h.category}</span>
-                    <span className="hl-name">{h.name}</span>
-                    <span className="hl-text">{h.headline}{h.sub ? <span className="hl-sub"> — {h.sub}</span> : null}</span>
-                    <span className="hl-when">{ago(h.when)}</span>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            <div className="dash-row">
-              <div className="dcard">
-                <div className="dhead">
-                  <h3>Threat Index</h3>
-                  <a className="mod-more" href="/battlecards">Compare →</a>
-                </div>
-                {threat.map((t) => (
-                  <a className="sc-row" key={t.slug} href={`/feed?comp=${t.slug}`}>
-                    <span className="sc-avatar">{initials(t.competitor)}</span>
-                    <span className="sc-name">{t.competitor}</span>
-                    <span className="sc-track"><span className="sc-bar" style={{ width: `${t.total}%` }} /></span>
-                    <span className="sc-n">{t.total}</span>
-                  </a>
-                ))}
-              </div>
-              <div className="dcard">
-                <div className="dhead">
-                  <h3>Coverage</h3>
-                  <a className="mod-more" href="/admin">Detail →</a>
-                </div>
-                <div className="prog-row">
-                  <span className="prog-l">Channels live</span>
-                  <span className="prog-track"><span className="prog-bar pb1" style={{ width: `${(activeChannels / CHANNELS.length) * 100}%` }} /></span>
-                  <span className="prog-n">{activeChannels}/{CHANNELS.length}</span>
-                </div>
-                <div className="prog-row">
-                  <span className="prog-l">Battlecards ready</span>
-                  <span className="prog-track"><span className="prog-bar pb2" style={{ width: `${compCount ? (battlecardCount / compCount) * 100 : 0}%` }} /></span>
-                  <span className="prog-n">{battlecardCount}/{compCount}</span>
-                </div>
-                <div className="prog-row">
-                  <span className="prog-l">Reads current</span>
-                  <span className="prog-track"><span className="prog-bar pb3" style={{ width: `${compCount ? (reads.size / compCount) * 100 : 0}%` }} /></span>
-                  <span className="prog-n">{reads.size}/{compCount}</span>
-                </div>
-                <p className="dnote">Gated channels light up when a key is added.</p>
-              </div>
+        {/* ---------- sheet 2: the keeper + the war table ---------- */}
+        <section className="gx-sheet cool">
+          <div className="gx-askhero">
+            <div className="gx-askhero-copy">
+              <h3>Ask the Keeper</h3>
+              <p>Scouts gather. The Tower sees. The Keeper reads — and cites every signal.</p>
             </div>
-
-            <div className="dash-row r2">
-              <div className="dcard">
-                <div className="dhead">
-                  <h3>{mentions.configured ? `Mentions of ${mentions.brandName}` : 'Your mentions'}</h3>
-                  <a className="mod-more" href="/mentions">All →</a>
-                </div>
-                {!mentions.configured ? (
-                  <p className="covnote">Set your brand identity on the <a href="/mentions" style={{ color: 'var(--brand)', fontWeight: 700 }}>Mentions page</a> to start tracking where you&apos;re named.</p>
-                ) : (
-                  <>
-                    <svg viewBox="0 0 280 74" className="mchart" aria-label="Brand mentions by week">
-                      <defs>
-                        <linearGradient id="gpm" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#8b8df0" /><stop offset="100%" stopColor="#5457d6" />
-                        </linearGradient>
-                      </defs>
-                      {mWeeks.map((w, i) => {
-                        const bw = 16;
-                        const gap = (280 - M_WEEKS * bw) / (M_WEEKS + 1);
-                        const h = w.n === 0 ? 3 : Math.max(6, (w.n / mMax) * 60);
-                        return (
-                          <g key={w.key}><title>{`Week of ${w.key}: ${w.n} mention${w.n === 1 ? '' : 's'}`}</title>
-                            <rect x={gap + i * (bw + gap)} y={66 - h} width={bw} height={h} rx={3} fill={w.n === 0 ? '#ececf4' : 'url(#gpm)'} />
-                          </g>
-                        );
-                      })}
-                    </svg>
-                    <p className="dnote">{mTotal} mention{mTotal === 1 ? '' : 's'} in news and captured signals, last 12 weeks — directional, from public sources.</p>
-                  </>
-                )}
-              </div>
-              <div className="dcard">
-                <div className="dhead">
-                  <h3>Industry pulse</h3>
-                  <a className="mod-more" href="/industry">All →</a>
-                </div>
-                {pulse.length === 0 ? (
-                  <p className="covnote">Headlines unavailable right now — back on the next load.</p>
-                ) : (
-                  pulse.map((p, i) => (
-                    <a className="pulse-row" key={i} href={p.url} target="_blank" rel="noreferrer">
-                      <span className="pulse-t">{p.title}</span>
-                      <span className="pulse-s">{p.source}</span>
-                    </a>
-                  ))
-                )}
+            <div className="gx-askhero-main">
+              <form className="gx-askhero-form" action="/ask" method="get">
+                <input name="q" placeholder="Ask anything about your market…" maxLength={300} />
+                <button type="submit">Ask <span>↑</span></button>
+              </form>
+              <div className="gx-askhero-sugs">
+                {SUGGESTIONS.map((s) => (
+                  <a key={s} href={`/ask?q=${encodeURIComponent(s)}`}>{s}</a>
+                ))}
               </div>
             </div>
           </div>
 
-          <aside className="dash-side">
-            <form className="ask-mini" action="/ask" method="get">
-              <span className="mini-tag">Ask Watchtower</span>
-              <input name="q" placeholder="What changed on CreatorIQ's pricing?" maxLength={300} />
-            </form>
-            <div className="dhead side">
-              <h3>The reads</h3>
-              <a className="mod-more" href="/battlecards">All →</a>
+          <div className="gx-band three">
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Competitor ratings</h4><a href="/battlecards">All briefings ↗</a></div>
+              <div className="gx-bsub">Tap a competitor for the Keeper&apos;s briefing</div>
+              <div className="gx-thead"><span>Competitor</span><span>Threat</span><span>Product</span></div>
+              {d.threat.slice(0, 5).map((t) => (
+                <a className="gx-trow" key={t.slug} href={`/battlecards#${t.slug}`}>
+                  <span className="gx-avatar sm">{initials(t.competitor)}</span>
+                  <span className="gx-trow-name">{t.competitor}<small>{t.delta == null ? 'baseline' : t.delta > 0 ? `▲ +${t.delta} this week` : t.delta < 0 ? `▼ ${t.delta} this week` : 'no change'}</small></span>
+                  <b className={heat(t.total)}>{t.total}</b>
+                  <em>{t.dims.product ?? '—'}</em>
+                </a>
+              ))}
             </div>
-            {railCards.map((c) => (
-              <a className={`mini ${c.g}`} key={c.slug} href="/battlecards">
-                <div className="mini-top">
-                  <span className="mini-avatar">{initials(c.competitor)}</span>
-                  <span className="mini-threat">Threat {c.total}</span>
+
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Biggest threat</h4>{top && <a href={`/battlecards#${top.slug}`}>Open briefing ↗</a>}</div>
+              {top ? (
+                <a className="gx-spot" href={`/battlecards#${top.slug}`}>
+                  <div className="gx-spot-top">
+                    <span className="gx-avatar">{initials(top.competitor)}</span>
+                    <div className="gx-spot-name"><b>{top.competitor}</b><small>{top.delta == null ? 'baseline' : top.delta > 0 ? `▲ +${top.delta} this week` : 'holding'}</small></div>
+                    <span className={`gx-spot-score ${heat(top.total)}`}>{top.total}</span>
+                  </div>
+                  <p className="gx-spot-hook">{top.read.hook}</p>
+                  <p className="gx-spot-body">{top.read.narrative}</p>
+                </a>
+              ) : (
+                <p className="gx-bnote">No briefings yet — run the battlecards generation.</p>
+              )}
+            </div>
+
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Launch radar</h4><a href="/radar">↗</a></div>
+              {d.topRadar ? (
+                <>
+                  <div className="gx-bsub">{d.topRadar.competitor} <span className={`gx-conf conf-${d.topRadar.confidence.toLowerCase()}`}>{d.topRadar.confidence}</span></div>
+                  <p className="gx-radarline">{d.topRadar.headline}</p>
+                  <ul className="gx-evidence">
+                    {d.topRadar.evidence.slice(0, 3).map((e, i) => <li key={i}>{e}</li>)}
+                  </ul>
+                  <a className="gx-minicta" href="/radar">Full forecast</a>
+                </>
+              ) : (
+                <>
+                  <div className="gx-bsub">All quiet</div>
+                  <p className="gx-radarline">Nothing clears the evidence bar right now — a single hostname or a lone job post doesn&apos;t count. When multiple signal types line up, it shows here.</p>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ---------- sheet 3: scout reports + beyond the walls ---------- */}
+        <section className="gx-sheet cool">
+          <div className="gx-reports">
+            <div className="gx-rcol wide">
+              <div className="gx-bhead"><h4>Scout reports</h4><a href="/feed">Full feed ↗</a></div>
+              <div className="gx-bsub">The bundled things that mattered, last 60 days</div>
+              {d.highlights.map((h, i) => (
+                <a className="gx-report" key={i} href={`/feed?comp=${h.slug}`}>
+                  <span className={`gx-cat ${CAT_CLS[h.category] ?? 'ct-sand'}`}>{h.category}</span>
+                  <span className="gx-report-name">{h.name}</span>
+                  <span className="gx-report-text">{h.headline}{h.sub ? <em> — {h.sub}</em> : null}</span>
+                  <span className="gx-report-when">{ago(h.when)}</span>
+                </a>
+              ))}
+              {d.highlights.length === 0 && <p className="gx-bnote">No bundled reports yet — the scouts report after the next watch.</p>}
+            </div>
+
+            <div className="gx-rcol">
+              <div className="gx-bhead"><h4>Beyond the walls</h4><a href="/industry">All ↗</a></div>
+              <div className="gx-bsub">The market around your set</div>
+              {d.pulse.map((p, i) => (
+                <a className="gx-pulse" key={i} href={p.url} target="_blank" rel="noreferrer">
+                  <span>{p.title}</span>
+                  <small>{p.source}</small>
+                </a>
+              ))}
+              {d.pulse.length === 0 && <p className="gx-bnote">Headlines unavailable right now — back on the next load.</p>}
+            </div>
+          </div>
+        </section>
+
+        {/* ---------- sheet 4 (slim): the watch itself ---------- */}
+        <section className="gx-sheet cool slim">
+          <div className="gx-band duo">
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Scouts deployed</h4><a href="/admin">Detail ↗</a></div>
+              <div className="gx-watchrow">
+                <svg viewBox="0 0 120 62" className="gx-gauge">
+                  <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-bg" />
+                  <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-fg"
+                    strokeDasharray={`${(d.activeChannels / d.totalChannels) * 151} 151`} />
+                </svg>
+                <div>
+                  <div className="gx-gauge-n">{d.activeChannels}<i>/{d.totalChannels}</i></div>
+                  <p className="gx-bnote">channels on the watch — gated ones light up when a key is added</p>
                 </div>
-                <span className="mini-name">{c.competitor}</span>
-                <span className="mini-hook">{c.read.hook}</span>
-                <span className="mini-cta">Open battlecard →</span>
-              </a>
-            ))}
-            {topRadar && (
-              <a className="mini dark" href="/radar">
-                <div className="mini-top">
-                  <span className="mini-tag">Launch Radar</span>
-                  <span className={`mini-conf c-${topRadar.confidence.toLowerCase()}`}>{topRadar.confidence}</span>
+              </div>
+            </div>
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Mentions of {me}</h4><a href="/mentions">All ↗</a></div>
+              <div className="gx-watchrow">
+                <div className="gx-mbars slim">
+                  {d.mWeeks.map((w) => (
+                    <span key={w.key} style={{ height: `${w.n === 0 ? 12 : Math.max(18, (w.n / d.mMax) * 100)}%` }} className={w.n > 0 ? 'on' : ''} />
+                  ))}
                 </div>
-                <span className="mini-hook light">{topRadar.headline}</span>
-                <span className="mini-cta">See the evidence →</span>
-              </a>
-            )}
-          </aside>
-        </div>
-      </section>
+                <div>
+                  <div className="gx-gauge-n">{d.mTotal}</div>
+                  <p className="gx-bnote">in news &amp; captured signals, last 12 weeks</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
