@@ -1,38 +1,17 @@
-// LLM reasoning layer — the actual "brain" behind synthesizeSignal. Claude
-// reasons over the real, retrieved facts for a competitor (connect.ts's
-// CompetitorContext: real corporate moves, hiring, product changes, the
-// battlecard read if one exists, sibling buildouts) and writes the connected
-// narrative, instead of a fixed regex/template splicing two strings
-// together. This is strictly grounded, not free generation: the prompt hands
-// over every fact as data and forbids stating anything not present in it —
-// same "never fabricate" law as everywhere else in this product, just with a
-// much smarter writer sitting on top of the facts.
+// The brain — ONE whole-picture read per competitor, not per-signal
+// commentary. (Per-signal synthesis was tried and rejected: it buried the
+// feed in text and reasoned about each signal in isolation.) A read
+// considers everything on file together — corporate moves, buildout
+// hostnames, hiring, product changes, the battlecard — and says what's
+// actually happening at that company. Reads render on Battlecards and
+// Competitors; the Feed stays plain signals.
 //
-// Falls back to null (caller degrades to the deterministic rule-based
-// synthesizeSignalRules) when ANTHROPIC_API_KEY isn't set, the call fails, or
-// the response doesn't parse — same honest-degradation pattern as
-// score.ts's llmScore/heuristicScore split.
-//
-// Without a key, getCachedReasoning() is checked first — reasoning done by
-// Claude Code by hand against the real data (scripts/reason-cache.ts), same
-// pattern as battlecards.ts's Claude-in-session generation. A snapshot for
-// the testing period, not a live loop.
+// Two generation paths, same as battlecards: Claude-in-session by hand
+// (scripts/reads.ts, no API key needed) or live via llmCompetitorRead when
+// ANTHROPIC_API_KEY is set. Both land in competitor_reasoning.
 import { getDb } from '@/db/client';
 import { claudeJSON } from '@/lib/claude';
 import type { CompetitorContext } from '@/lib/connect';
-import type { Interpreted } from '@/lib/interpret';
-
-export async function getCachedReasoning(streamItemId: number): Promise<Interpreted | null> {
-  const db = await getDb();
-  const rows = await db.query<{ headline: string; how_we_know: string | null; context: unknown }>(
-    'SELECT headline, how_we_know, context FROM reasoning_cache WHERE stream_item_id = $1',
-    [streamItemId],
-  );
-  const r = rows[0];
-  if (!r) return null;
-  const context = typeof r.context === 'string' ? JSON.parse(r.context) : r.context;
-  return { headline: r.headline, howWeKnow: r.how_we_know ?? undefined, context: context ?? undefined };
-}
 
 export interface FeedbackExample {
   situation: string;
@@ -40,11 +19,9 @@ export interface FeedbackExample {
   note: string | null;
 }
 
-// Recent admin corrections, across every workspace — this is the "teach you"
-// loop: an admin marks a shown headline wrong (with an optional note) while
-// viewing any workspace, and that judgment generalizes to how reasoning
-// behaves for every workspace going forward. No customer/competitor data
-// crosses workspaces this way, only the admin's own generalized correction.
+// Recent admin corrections, across every workspace — the "teach it" loop.
+// Only the admin's own generalized judgment crosses workspace boundaries,
+// never raw customer/competitor data.
 const FEEDBACK_LIMIT = 8;
 export async function getFeedbackExamples(): Promise<FeedbackExample[]> {
   const db = await getDb();
@@ -60,50 +37,67 @@ export async function getFeedbackExamples(): Promise<FeedbackExample[]> {
   }));
 }
 
-const SYSTEM = `You are the reasoning layer inside Watchtower, a competitive-intelligence product. Your one job: given a single new signal about a competitor plus every real, dated fact already on file about that competitor, decide whether they genuinely connect — and if so, write the plain-language conclusion a busy operator would want.
+export interface CompetitorRead {
+  hook: string;
+  narrative: string;
+  evidence: { label: string; text: string }[];
+  generatedAt: string;
+}
+
+export async function getCompetitorReads(orgId: string): Promise<Map<string, CompetitorRead>> {
+  const db = await getDb();
+  const rows = await db.query<{ slug: string; hook: string; narrative: string; evidence: unknown; generated_at: string }>(
+    `SELECT c.slug, r.hook, r.narrative, r.evidence, r.generated_at
+     FROM competitor_reasoning r JOIN competitors c ON c.id = r.competitor_id WHERE c.org_id = $1`,
+    [orgId],
+  );
+  const map = new Map<string, CompetitorRead>();
+  for (const r of rows) {
+    const evidence = typeof r.evidence === 'string' ? JSON.parse(r.evidence) : r.evidence;
+    map.set(r.slug, { hook: r.hook, narrative: r.narrative, evidence: evidence ?? [], generatedAt: r.generated_at });
+  }
+  return map;
+}
+
+const SYSTEM = `You are the intelligence analyst inside Watchtower, a competitive-intelligence product. Given EVERYTHING on file about one competitor — corporate moves, new buildout hostnames, hiring, product-page changes, the authored battlecard — write the single read a busy operator needs: what is actually happening at this company, considered as a whole.
 
 Hard rules, non-negotiable:
-- You may ONLY state facts present in the JSON you're given. Never invent a number, date, name, or event.
-- A connection must be REAL and SPECIFIC — a shared theme, a timeline that lines up, an explicit narrative link. "They're both active" is not a connection.
-- If nothing genuinely connects, say so — return the base headline essentially unchanged rather than forcing a link. A false connection is worse than no connection (this product's core promise is "no false fires").
-- Write like an operator briefing a colleague, not like an AI — short, direct, no hedging filler, no "it's worth noting."
-- "howWeKnow" must cite the actual sources (hostnames, dates, headline text) from the data — never a vague "based on analysis" type line.
-- If corrections from a human reviewer are provided, treat them as binding judgment: don't repeat a mistake they flagged.
+- Only state facts present in the JSON. Never invent a number, date, name, or event.
+- Reason about the WHOLE picture — how the facts fit together — not one signal at a time.
+- Where the facts confirm each other (their own press + a matching hostname), be confident. Where the link is only timing, say so honestly. No false fires.
+- Operator voice: short, direct, no hedging filler. 3–4 sentences maximum.
+- If corrections from a human reviewer are provided, treat them as binding judgment.
 
-Reply ONLY with JSON: {"headline": string, "howWeKnow": string, "context": [{"label": string, "text": string}]} — context is optional connected material worth surfacing (omit or empty array if nothing substantive), max 3 items.`;
+Reply ONLY with JSON: {"hook": string (max 8 words, the one-line takeaway), "narrative": string (the read, 3-4 sentences), "evidence": [{"label": string, "text": string}] (max 3, the dated facts that carry the read)}.`;
 
-export async function llmSynthesize(
-  base: Interpreted,
-  channel: string,
-  title: string,
+// Live path — used when ANTHROPIC_API_KEY is set (e.g. the daily cron
+// regenerating reads after each crawl). Returns null without a key so the
+// cached in-session reads simply stay current until the next hand refresh.
+export async function llmCompetitorRead(
   competitor: string,
   ctx: CompetitorContext,
   feedback: FeedbackExample[],
-): Promise<Interpreted | null> {
+): Promise<{ hook: string; narrative: string; evidence: { label: string; text: string }[] } | null> {
   const payload = {
-    signal: { competitor, channel, rawTitle: title, baseHeadline: base.headline },
-    knownContext: {
-      recentCorporateMoves: ctx.moves.slice(0, 6).map((m) => ({ title: m.title, date: m.date, url: m.url })),
+    competitor,
+    onFile: {
+      corporateMoves: ctx.moves.slice(0, 8).map((m) => ({ title: m.title, date: m.date })),
       modelOrPricingShiftMoves: ctx.modelMoves.map((m) => m.title),
-      hiringClusterSize: ctx.hireCluster,
+      buildoutHostnames: ctx.siblingBuildouts,
+      technicalRolesOpen: ctx.hireCluster,
       productPageChanges: ctx.productChanges,
-      siblingBuildoutHostnames: ctx.siblingBuildouts,
       battlecardPositioning: ctx.positioning ?? null,
     },
     priorCorrectionsFromReviewer: feedback,
   };
-  const result = await claudeJSON<{ headline?: string; howWeKnow?: string; context?: { label?: string; text?: string }[] }>(
+  const result = await claudeJSON<{ hook?: string; narrative?: string; evidence?: { label?: string; text?: string }[] }>(
     SYSTEM,
     JSON.stringify(payload),
-    600,
+    700,
   );
-  if (!result || typeof result.headline !== 'string' || !result.headline.trim()) return null;
-  const context = (result.context ?? [])
-    .filter((c): c is { label: string; text: string } => !!c.label && !!c.text)
+  if (!result || !result.hook?.trim() || !result.narrative?.trim()) return null;
+  const evidence = (result.evidence ?? [])
+    .filter((e): e is { label: string; text: string } => !!e.label && !!e.text)
     .slice(0, 3);
-  return {
-    headline: result.headline.trim(),
-    howWeKnow: typeof result.howWeKnow === 'string' && result.howWeKnow.trim() ? result.howWeKnow.trim() : base.howWeKnow,
-    context: context.length ? context : undefined,
-  };
+  return { hook: result.hook.trim(), narrative: result.narrative.trim(), evidence };
 }

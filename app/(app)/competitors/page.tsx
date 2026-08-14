@@ -5,6 +5,7 @@ import { competitorStats, leadCounts, adCount } from '@/lib/competitorStats';
 import { computeThreat } from '@/lib/threat';
 import { positionOf } from '@/lib/positioning';
 import { requireOrgId } from '@/lib/tenant';
+import { getCompetitorReads } from '@/lib/reason';
 import AddCompetitor from './AddCompetitor';
 
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,7 @@ function ago(iso: string): string {
 export default async function Competitors() {
   const orgId = await requireOrgId();
   const stats = await competitorStats(orgId);
+  const reads = await getCompetitorReads(orgId);
   const threat = await computeThreat(orgId);
   const leads = leadCounts(stats);
   const dimCount = 5;
@@ -111,19 +113,27 @@ export default async function Competitors() {
           </table>
         </div>
 
-        <h3 className="admin-h">What&apos;s latest</h3>
+        <h3 className="admin-h">The read on each</h3>
+        <p className="pos-note">Every signal on file — moves, buildouts, hiring — considered together per competitor. Full version on the <a href="/battlecards" style={{ color: 'var(--brand)', fontWeight: 700 }}>battlecards</a>.</p>
         <div className="lb-list">
-          {stats.map((c) => (
-            <a className="lb-row" key={c.slug} href={`/feed?comp=${c.slug}`}>
-              <span className="lb-avatar">{initials(c.name)}</span>
-              <span className="lb-name">{c.name}</span>
-              {c.latestSignal ? (
-                <span className="latest-line">{c.latestSignal.title} <span className="latest-ago">· {ago(c.latestSignal.createdAt)}</span></span>
-              ) : (
-                <span className="latest-line muted">no signals captured yet</span>
-              )}
-            </a>
-          ))}
+          {stats.map((c) => {
+            const read = reads.get(c.slug);
+            return (
+              <a className="lb-row reads" key={c.slug} href="/battlecards">
+                <span className="lb-avatar">{initials(c.name)}</span>
+                <div className="lb-read-col">
+                  <span className="lb-name">{c.name}{read && <span className="lb-hook">— {read.hook}</span>}</span>
+                  {read ? (
+                    <span className="lb-read">{read.narrative}</span>
+                  ) : c.latestSignal ? (
+                    <span className="latest-line">{c.latestSignal.title} <span className="latest-ago">· {ago(c.latestSignal.createdAt)}</span></span>
+                  ) : (
+                    <span className="latest-line muted">no signals captured yet</span>
+                  )}
+                </div>
+              </a>
+            );
+          })}
         </div>
       </section>
     </main>

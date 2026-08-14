@@ -6,11 +6,7 @@
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { requireOrgId } from '@/lib/tenant';
-import { interpretSignal, synthesizeSignal, type Interpreted } from '@/lib/interpret';
-import { getCompetitorContext } from '@/lib/connect';
-import { getFeedbackExamples } from '@/lib/reason';
-import { isPlatformAdmin } from '@/lib/adminAuth';
-import FeedbackControl from '../FeedbackControl';
+import { interpretSignal } from '@/lib/interpret';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,16 +54,13 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     params.push(comp);
     clauses.push(`c.slug = $${params.length}`);
   }
-  const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string; competitor_id: number; stream_item_id: number }>(
-    `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name, c.id AS competitor_id, si.id AS stream_item_id
+  const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string }>(
+    `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
      WHERE ${clauses.join(' AND ')}
      ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 60`,
     params,
   );
-  const contextMap = await getCompetitorContext(items.map((it) => it.competitor_id));
-  const feedbackExamples = await getFeedbackExamples();
-  const platformAdmin = await isPlatformAdmin();
 
   const threat = await computeThreat(orgId);
   const activeComp = comp ? threat.find((t) => t.slug === comp)?.competitor ?? comp : null;
@@ -99,20 +92,8 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     display.push(raw);
   }
 
-  // Resolve every card's interpretation up front (LLM reasoning when
-  // configured, deterministic rules otherwise) so the render below stays
-  // synchronous — one batch of concurrent calls, not one await per card.
-  type ReadFeedItem = FeedItem & { read: Interpreted };
-  const displayWithRead: ReadFeedItem[] = await Promise.all(
-    display.map(async (it) => {
-      const base = interpretSignal(it.channel, it.title, it.name);
-      const read = await synthesizeSignal(base, it.channel, it.title, it.name, contextMap.get(it.competitor_id), feedbackExamples, it.stream_item_id);
-      return { ...it, read };
-    }),
-  );
-
-  const buckets = new Map<(typeof BUCKET_ORDER)[number], ReadFeedItem[]>();
-  for (const it of displayWithRead) {
+  const buckets = new Map<(typeof BUCKET_ORDER)[number], FeedItem[]>();
+  for (const it of display) {
     const key = bucketOf(it.published_at ?? it.created_at);
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key)!.push(it);
@@ -154,7 +135,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
               <div className="tl-group" key={b}>
                 <div className="tl-label"><span>{b}</span></div>
                 {buckets.get(b)!.map((it, i) => {
-                  const read = it.read;
+                  const read = interpretSignal(it.channel, it.title, it.name);
                   return (
                     <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
                       <div className="crow">
@@ -175,20 +156,6 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
                         {it.locales && it.locales > 1 && <span className="locale-note"> (+{it.locales - 1} locale versions)</span>}
                       </div>
                       {read.howWeKnow && <div className="howknow">How we know: {read.howWeKnow}</div>}
-                      {read.context && (
-                        <div className="connected">
-                          <span className="connected-tag">What else we know</span>
-                          {read.context.map((c, ci) => (
-                            <div className="connected-item" key={ci}>
-                              <span className="connected-label">{c.label}</span>
-                              {c.url ? <a href={c.url} target="_blank" rel="noreferrer">{c.text}</a> : <span>{c.text}</span>}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      {platformAdmin && (
-                        <FeedbackControl competitorName={it.name} channel={it.channel} signalTitle={it.title} headlineShown={read.headline} />
-                      )}
                     </div>
                   );
                 })}

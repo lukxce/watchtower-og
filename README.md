@@ -116,17 +116,24 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   (subdomains, news, website, sitemap, appstore, events) with genuinely
   substantive material — a battlecard blurb glued onto a "WordPress detected"
   techstack card isn't earned context, it's decoration (BRAND.md law #2).
-- **LLM reasoning layer** (`src/lib/reason.ts`, `synthesizeSignal()` in
-  `interpret.ts`): the actual brain behind cross-referencing is Claude, not a
-  fixed template — it reasons over every real, retrieved fact for a
-  competitor (connect.ts's context: corporate moves, hiring, product-page
-  activity, the battlecard read, sibling buildouts) and decides whether a
-  genuine connection exists, then writes it. Strictly grounded: the prompt
-  hands over the facts as data and forbids stating anything not present in
-  them — same never-fabricate law, a much smarter writer on top of it. Falls
-  back to the deterministic rules (`synthesizeSignalRules`) when
-  `ANTHROPIC_API_KEY` isn't set or the call fails, same honest-degradation
-  pattern as `score.ts`'s `llmScore`/`heuristicScore` split.
+- **Competitor reads — where the reasoning lives** (`src/lib/reason.ts`,
+  `competitor_reasoning` table, `npm run reads`): ONE whole-picture read per
+  competitor — every corporate move, buildout hostname, hiring pattern, and
+  the battlecard considered together — rendered on Battlecards ("The read",
+  with dated evidence chips) and Competitors. The Feed deliberately stays
+  plain signals: per-signal commentary was tried and rejected (it buried the
+  feed in text and reasoned about signals in isolation). Reads are authored
+  Claude-in-session (`scripts/reads.ts`, no API key needed — same pattern as
+  battlecards) or generated live via `llmCompetitorRead` when
+  `ANTHROPIC_API_KEY` is set; both are strictly grounded in retrieved facts,
+  confident where a competitor's own press confirms the link, honest where
+  the link is timing alone.
+- **Overview = dashboard, not document**: greeting, one big Market-activity
+  chart (real weekly DATED events, last 6 months — plotted on when they
+  happened, never on crawl date, so a first-crawl baseline can't fake a
+  spike), Threat Index score list, coverage progress bars, and a right rail
+  of gradient cards carrying each read's one-line hook into its battlecard,
+  plus the top Launch Radar call. No prose modules.
 - **Platform-admin cross-tenant console** (`/admin/workspaces`,
   `src/lib/adminAuth.ts`): the platform owner (not a customer) can see every
   workspace, "view as" one to see exactly what that client sees (an

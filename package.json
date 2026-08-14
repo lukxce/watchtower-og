@@ -12,7 +12,7 @@
     "populate": "tsx scripts/populate.ts",
     "backfill": "tsx scripts/backfill-history.ts",
     "battlecards": "tsx scripts/battlecards.ts",
-    "reason-cache": "tsx scripts/reason-cache.ts",
+    "reads": "tsx scripts/reads.ts",
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {
