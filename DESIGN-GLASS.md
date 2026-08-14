@@ -1,9 +1,10 @@
 # The Glass System
 
-A reusable dashboard design language — cool grey-green scene, one continuous
-frosted sheet, highlighter yellow-green accent, airy editorial type.
-Reference implementation: `app/(beta)/overview-beta/glass/` in this repo
-(Watchtower). Written so it can be lifted onto any product.
+A reusable dashboard design language — **neutral cool-grey scene, teal-green
+frosted sheets** (two tones, always), highlighter yellow-green accent, airy
+editorial type at generous scale. Reference implementation (v5):
+`app/(beta)/overview-beta/glass/` in this repo (Watchtower). Written so it
+can be lifted onto any product.
 
 ---
 
@@ -21,56 +22,67 @@ slides over it on scroll.
 
 ## 2. Scene (the backdrop)
 
-The glass only reads as glass if there is something behind it to blur.
+The glass only reads as glass if there is something behind it to blur — and
+it only reads as *two tones* if the scene is a different color family than
+the sheets. **Scene = neutral cool grey. Glass = teal-green.** Never let
+them converge into one sage wash.
 
 ```css
 background:
-  radial-gradient(1000px 620px at 78% -12%, #c8d2d0 0%, transparent 60%),
-  radial-gradient(760px 540px at 2% 100%, #a9b6b4 0%, transparent 55%),
-  linear-gradient(162deg, #b7c1bf 0%, #aeb9b7 52%, #b4bfbc 100%);
+  radial-gradient(1100px 640px at 80% -14%, #b3bcba 0%, transparent 58%),
+  radial-gradient(800px 560px at 0% 100%, #969fa0 0%, transparent 55%),
+  linear-gradient(160deg, #a7aeae 0%, #9da6a5 52%, #a4acaa 100%);
+background-attachment: fixed; /* glass slides over it on scroll */
 ```
 
-- Temperature: **cool** grey-green (toward slate/teal, never warm sage or
-  beige). If it looks like a spa, cool it down.
 - Low contrast, no pure white and no saturated color in the scene itself.
 - A photo or abstract render also works (the originals use a room photo) as
-  long as it's desaturated and darker than the sheet.
+  long as it's desaturated, grey-leaning and darker than the sheet.
 
 ## 3. The sheet (glass recipe)
 
 ```css
-background: rgba(240, 246, 244, .42);
-backdrop-filter: blur(30px) saturate(135%);
-border: 1px solid rgba(255, 255, 255, .55);
+background:
+  linear-gradient(155deg, rgba(206,228,230,.30) 0%,   /* bluish cast, top-left */
+                          rgba(214,236,224,.18) 45%,
+                          rgba(222,238,228,.30) 100%), /* greener, bottom */
+  rgba(224, 238, 232, .46);
+backdrop-filter: blur(32px) saturate(140%);
+border: 1px solid rgba(255, 255, 255, .6);
 border-radius: 30px;
-box-shadow: 0 34px 80px rgba(35, 48, 50, .22),
-            inset 0 1px 0 rgba(255, 255, 255, .6);
+box-shadow: 0 36px 80px rgba(28, 40, 42, .24),
+            inset 0 1px 0 rgba(255, 255, 255, .65);
 ```
 
 - A few large sheets per screen, stacked with breathing room between them
   so corners stay visible. Radius is generous (28–34px).
+- The internal gradient matters: a faint **bluish cast top-left drifting
+  greener toward the bottom** keeps the pane from reading as one flat tint.
 - The **inset top highlight** is what sells the material — don't skip it.
-- Secondary zone (stats band, footer strip): same sheet, cooler tint —
-  `rgba(214, 226, 226, .38)` — separated by a `1px rgba(255,255,255,.5)`
-  hairline. Columns inside it divide with the same hairline, right border
+- Secondary sheets (stats band, reports) use a slightly lighter, more
+  neutral tint — `rgba(228,240,236,.42)` over a calmer gradient. Columns
+  inside divide with `1px rgba(255,255,255,.5)` hairlines, right border
   only, none on the last column.
-- Interior sub-surfaces (icon-rail hover, tooltip, active pill) are
-  `#fff` or near-white — white is reserved for *small* raised elements,
-  never large containers.
+- Interior sub-surfaces (rail hover, tooltip, active pill) are `#fff` or
+  near-white — white is reserved for *small* raised elements, never large
+  containers.
+- **Use the width.** Content canvas up to ~1500px; don't leave a dead
+  gutter between the rail and the right edge of the screen.
 
 ## 4. Color
 
 | Role | Value | Rules |
 |---|---|---|
-| Ink | `#20272a` | Cool near-black. All headings, key numbers. |
-| Muted | `#576462` | Body copy, labels. |
-| Faint | `#6d7a78` / `#7d8a88` | Micro-labels, ticks, ranges. |
+| Ink | `#1f2629` | Cool near-black. All headings, key numbers. |
+| Muted | `#4d5a58` | Body copy, labels. |
+| Faint | `#5f6c6a` / `#6f7c7a` | Micro-labels, ticks, ranges. |
 | **Highlighter** | `#e0f23c` (fills), `#cfe32c` (strokes/lines) | THE accent. Yellow-green like a text highlighter — not yellow, not lime-green. |
-| Data-neutral | `rgba(255,255,255,.85)` | Bars, tracks, secondary series. |
-| Data-muted | `#8d9a98` | Tertiary series dots. |
-| Coral (hot) | `#c96b5e` | High threat/urgency numbers and statuses. Text-level only. |
-| Sky (info) | `#5f8aa8` | Informational categories/statuses. Text/chip only. |
-| Sand (neutral tag) | `#8a8474` | Low-priority category chips. |
+| Data-neutral | `rgba(255,255,255,.88)` | Bars, tracks, secondary series. |
+| Data-muted | `#8a9795` | Tertiary series dots. |
+| Coral (hot) | `#c25446` | High threat/urgency numbers and statuses. Text/chip level only. |
+| Amber (warm) | `#a3701f` | Mid threat, "medium" statuses. Real amber — never a muddy brown. |
+| Sky (info) | `#4f80a3` | Informational categories/statuses. Text/chip only. |
+| Sand (neutral tag) | `#837d6b` | Low-priority category chips. |
 
 **Highlighter discipline:** the highlighter is for *your* energy — the
 primary CTA, the momentum curve, the highlighted bar, gauge fills, the
@@ -80,17 +92,24 @@ danger). Semantics get the muted supporting hues — coral for hot, sky for
 info — at text/chip size only, never as large fills. Dark text on
 highlighter buttons, always. On-glass "hover surface" is white, not accent.
 
-## 5. Type
+## 5. Type (err generous — smushed kills this system)
 
 - One geometric sans (this repo: Plus Jakarta Sans) — the *weights* do the
   design work, not multiple families.
-- **Hero numerals: large and LIGHT.** 56–64px at weight 400, tight
-  letter-spacing (−.04em). The thin big number is the signature. Never bold
-  the hero number.
-- Headings: 15–17px / 800. Body: 11–12px / 500–600, muted color.
-- Micro-labels: 9–10px, 700, uppercase, letter-spacing .04–.06em, faint.
+- **Hero numerals: large and LIGHT.** ~74px at weight 400, tight
+  letter-spacing (−.045em). The thin big number is the signature. Never
+  bold the hero number.
+- Greeting: 24px / 800 + 13.5px muted sub. Section sub-titles: 16px / 800.
+  Module headers: 12px / 700 muted. Table/list rows: 13–13.5px / 700 with
+  10px sub-labels. Body copy: 12.5–13px / 500–600.
+- Micro-labels: 10px, 700, uppercase, letter-spacing .04–.06em, faint.
+- Padding is part of the type: band columns ~34px horizontal, rows 9–11px
+  vertical, legends 5.5px per row. When in doubt, add air — the fastest
+  way to ruin this look is cramming ("everything looks smushed" is the
+  failure mode).
 - Greeting is a UI element: bold short line + muted sub ("Hey, {name}! 👋 /
-  Explore your …"), right-aligned opposite the profile block.
+  your scouts brought back N reports…"), right-aligned opposite the
+  profile block.
 
 ## 6. Chrome (the sheet's own navigation)
 
@@ -99,9 +118,13 @@ highlighter buttons, always. On-glass "hover surface" is white, not accent.
   pill with a soft shadow; inactive = bare muted text) · right cluster:
   frosted round icon buttons (34px circle, `rgba(255,255,255,.5)`) — gear,
   bell with an accent dot — then a dark circular avatar.
-- **Icon rail:** individual frosted circle buttons fixed to the viewport's
-  left edge (they follow scroll), a soft vertical hairline separating them
-  from content. Never a boxed sidebar. On mobile it collapses away.
+- **Icon rail:** individual frosted circle buttons (~46px) fixed to the
+  viewport's left edge (they follow scroll), a soft vertical hairline
+  separating them from content. The rail must explain itself: a small
+  vertical caption above it (e.g. "SCOUTS"), a divider between the
+  "all" button and the rest, and a dark label pill that slides out on
+  hover (`::after { content: attr(data-label) }`). Never a boxed sidebar.
+  On mobile it collapses away.
 - **Profile row** under the top bar: avatar + micro-label role + bold name,
   the accent pill button, a ghost search circle; greeting on the right plus
   a ghost refresh circle at the far edge.
@@ -170,6 +193,11 @@ channels live → "Scouts deployed 15/26"; feed highlights → "Scout reports";
 competitor summaries → "Briefings"; industry news → "Beyond the walls";
 greeting sub-line reports what the scouts brought back this week. The data
 stays verifiable; only the vocabulary plays.
+
+**The AI is "the Tower."** Always with the article, capital T — a character,
+not a building. Scouts gather; the Tower reads. Every AI surface names
+itself from this: "Ask the Tower," "the Tower's read," "the Tower connected
+these." Don't invent a separate assistant name on top of it.
 
 ## 11. Motion & feel
 
