@@ -127,13 +127,13 @@ export async function getOverviewData(orgId: string, focus?: string): Promise<Ov
   const highlights = bundleRows(hlRows)
     .filter((b) => b.rows.length >= 2 || b.score >= 80)
     .sort((a, b) => b.rows.length * 12 + b.score - (a.rows.length * 12 + a.score))
-    .slice(0, 5);
+    .slice(0, 8);
 
   const reads = await getCompetitorReads(orgId);
   const radar = await computeRadar(orgId);
   const topRadar = radar[0];
   const mentions = await findBrandMentions(orgId);
-  const pulse = await industryNews(orgId, 3);
+  const pulse = await industryNews(orgId, 5);
 
   const mWeeks: { key: string; n: number }[] = [];
   for (let i = M_WEEKS - 1; i >= 0; i--) {

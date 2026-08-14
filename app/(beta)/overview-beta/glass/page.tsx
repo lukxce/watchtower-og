@@ -1,16 +1,15 @@
-// Design test — "Glass", round 4. Fixes from user review of v3:
-// - INTERACTIVE chart (GlassChart client component — flag follows cursor)
-//   + competitor focus chips wired to the server query, like the live page.
-// - Stacked frosted sheets with visible rounded corners (not one giant
-//   slab): hero sheet → "The watch" stats sheet → "Scout reports" sheet.
-// - Redundant bottom tabs removed — the left rail IS the signal filter,
-//   now individual frosted circle buttons, fixed so they follow scroll,
-//   separated from content by a hairline, hover-highlight like the bell.
-// - Highlighter reserved for what's earned; supporting muted hues (coral /
-//   sky / sand) carry threat heat, categories and statuses.
-// - Everything the live Overview has is back: highlights, reads, radar,
-//   mentions, industry pulse, ask box — reframed in watch/scout language
-//   (scouts deployed, reports, briefings) since we're gamifying the tower.
+// Design test — "Glass", round 6. User fixes on v5:
+// - The template's ACTUAL palette (eafd35 highlighter, e2f463/c9dc7c
+//   supporting greens, 142522 ink, 404d4a secondary, adc4ba/96b0b0 scene).
+// - Full menu restored (More dropdown with Ask/Newsletters/Reports/Alerts/
+//   Admin), not a trimmed nav.
+// - The rail filters SIGNALS — scouts are the collectors, not the labels:
+//   "Pricing", "Ads", "News"… caption stays SIGNALS. Scout language lives
+//   in module titles ("Scout reports"), where it belongs.
+// - Priority re-order: Ask the Tower is a prominent hero row; Briefings,
+//   Threat and Radar right under it; Scout reports + Beyond the walls next
+//   (denser: 8 reports, 5 headlines); Scouts deployed + Mentions demoted
+//   to a slim bottom band. No more empty-for-no-reason space.
 import { requireOrgId } from '@/lib/tenant';
 import { getBrandSettings } from '@/lib/brand';
 import { getOverviewData, initials, ago } from '@/lib/overviewData';
@@ -28,13 +27,20 @@ const NAV = [
   { label: 'Industry', href: '/industry' },
   { label: 'Mentions', href: '/mentions' },
 ];
+const MORE = [
+  { label: 'Ask', href: '/ask' },
+  { label: 'Newsletters', href: '/newsletters' },
+  { label: 'Reports', href: '/reports' },
+  { label: 'Alerts', href: '/alerts' },
+  { label: 'Admin', href: '/admin' },
+];
 const RAIL = [
   { title: 'All signals', href: '/feed', d: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z' },
-  { title: 'Pricing scout', href: '/feed?cat=Pricing', d: 'M12 3.5v17M16 7.2c-.8-1.3-2.3-2-4-2-2.3 0-4 1.2-4 3 0 3.9 8 2.1 8 6 0 1.9-1.8 3.1-4 3.1-1.9 0-3.4-.8-4.2-2.2' },
-  { title: 'Product scout', href: '/feed?cat=Product', d: 'M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z' },
-  { title: 'Hiring scout', href: '/feed?cat=Hiring', d: 'M12 11a3.2 3.2 0 1 0 0-6.4A3.2 3.2 0 0 0 12 11ZM5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6' },
-  { title: 'Ads scout', href: '/feed?cat=Ads', d: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z' },
-  { title: 'News scout', href: '/feed?cat=News', d: 'M4 5h16v14H4zM8 9.5h8M8 13h5' },
+  { title: 'Pricing', href: '/feed?cat=Pricing', d: 'M12 3.5v17M16 7.2c-.8-1.3-2.3-2-4-2-2.3 0-4 1.2-4 3 0 3.9 8 2.1 8 6 0 1.9-1.8 3.1-4 3.1-1.9 0-3.4-.8-4.2-2.2' },
+  { title: 'Product', href: '/feed?cat=Product', d: 'M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z' },
+  { title: 'Hiring', href: '/feed?cat=Hiring', d: 'M12 11a3.2 3.2 0 1 0 0-6.4A3.2 3.2 0 0 0 12 11ZM5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6' },
+  { title: 'Ads', href: '/feed?cat=Ads', d: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z' },
+  { title: 'News', href: '/feed?cat=News', d: 'M4 5h16v14H4zM8 9.5h8M8 13h5' },
 ];
 const CAT_CLS: Record<string, string> = { Ads: 'ct-coral', Hiring: 'ct-sky', News: 'ct-sand', Pricing: 'ct-lime', Product: 'ct-lime' };
 
@@ -56,8 +62,8 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
     <main className="gx">
       <BetaSwitcher active="glass" />
 
-      <aside className="gx-rail" aria-label="Signal scouts">
-        <span className="gx-rail-cap">Scouts</span>
+      <aside className="gx-rail" aria-label="Filter by signal type">
+        <span className="gx-rail-cap">Signals</span>
         {RAIL.slice(0, 1).map((r) => (
           <a key={r.title} href={r.href} data-label={r.title}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={r.d} /></svg>
@@ -82,6 +88,12 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
             </a>
             <nav className="gx-nav">
               {NAV.map((n) => <a key={n.label} href={n.href} className={n.on ? 'on' : ''}>{n.label}</a>)}
+              <details className="gx-more">
+                <summary>More ▾</summary>
+                <div className="gx-more-menu">
+                  {MORE.map((n) => <a key={n.label} href={n.href}>{n.label}</a>)}
+                </div>
+              </details>
             </nav>
             <div className="gx-topright">
               <button className="gx-icb" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3" /><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2Z" strokeLinejoin="round" /></svg></button>
@@ -138,14 +150,25 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
           </div>
         </section>
 
-        {/* ---------- sheet 2: the watch ---------- */}
+        {/* ---------- sheet 2: ask the tower + the war table ---------- */}
         <section className="gx-sheet cool">
-          <div className="gx-band">
+          <div className="gx-askhero">
+            <div className="gx-askhero-copy">
+              <h3>Ask the Tower</h3>
+              <p>Scouts gather. The Tower reads. Every answer cites the signals it came from.</p>
+            </div>
+            <form className="gx-askhero-form" action="/ask" method="get">
+              <input name="q" placeholder="What changed on CreatorIQ's pricing this quarter?" maxLength={300} />
+              <button type="submit">Ask <span>↑</span></button>
+            </form>
+          </div>
+
+          <div className="gx-band three">
             <div className="gx-bcol">
               <div className="gx-bhead"><h4>Threat performance</h4><a href="/battlecards">↗</a></div>
               <div className="gx-bsub">Competitor ratings</div>
               <div className="gx-thead"><span>Competitor</span><span>Threat</span><span>Product</span></div>
-              {d.threat.slice(0, 4).map((t) => (
+              {d.threat.slice(0, 5).map((t) => (
                 <a className="gx-trow" key={t.slug} href={`/feed?comp=${t.slug}`}>
                   <span className="gx-avatar sm">{initials(t.competitor)}</span>
                   <span className="gx-trow-name">{t.competitor}<small>{t.delta == null ? 'baseline' : t.delta > 0 ? `▲ +${t.delta} this week` : t.delta < 0 ? `▼ ${t.delta} this week` : 'no change'}</small></span>
@@ -155,27 +178,16 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
               ))}
             </div>
 
-            <div className="gx-bcol center">
-              <div className="gx-bhead"><h4>Scouts deployed</h4></div>
-              <div className="gx-gauge-n">{d.activeChannels}<i>/{d.totalChannels}</i></div>
-              <svg viewBox="0 0 120 62" className="gx-gauge">
-                <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-bg" />
-                <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-fg"
-                  strokeDasharray={`${(d.activeChannels / d.totalChannels) * 151} 151`} />
-              </svg>
-              <p className="gx-bnote">channels on the watch</p>
-              <div className="gx-bfoot"><span>Briefings ready</span><b>{d.reads.size}/{d.compCount}</b></div>
-            </div>
-
             <div className="gx-bcol">
-              <div className="gx-bhead"><h4>Mentions over time</h4><a href="/mentions">↗</a></div>
-              <div className="gx-bleg"><span><i className="lg-dot l" />{me}</span><span><i className="lg-dot m" />weekly</span></div>
-              <div className="gx-mbars">
-                {d.mWeeks.map((w) => (
-                  <span key={w.key} style={{ height: `${w.n === 0 ? 10 : Math.max(16, (w.n / d.mMax) * 100)}%` }} className={w.n > 0 ? 'on' : ''} />
-                ))}
-              </div>
-              <div className="gx-mrange"><span>{d.mWeeks[0]?.key.slice(5)}</span><span>{d.mWeeks[d.mWeeks.length - 1]?.key.slice(5)}</span></div>
+              <div className="gx-bhead"><h4>Briefings</h4><a href="/battlecards">All ↗</a></div>
+              <div className="gx-bsub">The Tower&apos;s read on each</div>
+              {d.railCards.map((c) => (
+                <a className="gx-brief" key={c.slug} href="/battlecards">
+                  <span className="gx-avatar sm">{initials(c.competitor)}</span>
+                  <span className="gx-brief-body"><b>{c.competitor}</b><span>{c.read.hook}</span></span>
+                  <em className={heat(c.total)}>{c.total}</em>
+                </a>
+              ))}
             </div>
 
             <div className="gx-bcol">
@@ -193,17 +205,18 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
                 </div>
               </div>
               {d.topRadar && <p className="gx-radarline">{d.topRadar.headline}</p>}
+              <a className="gx-minicta" href="/radar">See the evidence</a>
             </div>
           </div>
         </section>
 
-        {/* ---------- sheet 3: scout reports ---------- */}
+        {/* ---------- sheet 3: scout reports + beyond the walls ---------- */}
         <section className="gx-sheet cool">
           <div className="gx-reports">
             <div className="gx-rcol wide">
               <div className="gx-bhead"><h4>Scout reports</h4><a href="/feed">Full feed ↗</a></div>
               <div className="gx-bsub">The bundled things that mattered, last 60 days</div>
-              {d.highlights.slice(0, 5).map((h, i) => (
+              {d.highlights.map((h, i) => (
                 <a className="gx-report" key={i} href={`/feed?comp=${h.slug}`}>
                   <span className={`gx-cat ${CAT_CLS[h.category] ?? 'ct-sand'}`}>{h.category}</span>
                   <span className="gx-report-name">{h.name}</span>
@@ -215,30 +228,49 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
             </div>
 
             <div className="gx-rcol">
-              <form className="gx-ask" action="/ask" method="get">
-                <label>Ask the tower</label>
-                <div className="gx-ask-row">
-                  <input name="q" placeholder="What changed on CreatorIQ's pricing?" maxLength={300} />
-                  <button type="submit" aria-label="Ask">↑</button>
-                </div>
-              </form>
-
-              <div className="gx-bhead" style={{ marginTop: 22 }}><h4>Briefings</h4><a href="/battlecards">All ↗</a></div>
-              {d.railCards.map((c) => (
-                <a className="gx-brief" key={c.slug} href="/battlecards">
-                  <span className="gx-avatar sm">{initials(c.competitor)}</span>
-                  <span className="gx-brief-body"><b>{c.competitor}</b><span>{c.read.hook}</span></span>
-                  <em className={heat(c.total)}>{c.total}</em>
-                </a>
-              ))}
-
-              <div className="gx-bhead" style={{ marginTop: 22 }}><h4>Beyond the walls</h4><a href="/industry">All ↗</a></div>
+              <div className="gx-bhead"><h4>Beyond the walls</h4><a href="/industry">All ↗</a></div>
+              <div className="gx-bsub">The market around your set</div>
               {d.pulse.map((p, i) => (
                 <a className="gx-pulse" key={i} href={p.url} target="_blank" rel="noreferrer">
                   <span>{p.title}</span>
                   <small>{p.source}</small>
                 </a>
               ))}
+              {d.pulse.length === 0 && <p className="gx-bnote">Headlines unavailable right now — back on the next load.</p>}
+            </div>
+          </div>
+        </section>
+
+        {/* ---------- sheet 4 (slim): the watch itself ---------- */}
+        <section className="gx-sheet cool slim">
+          <div className="gx-band duo">
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Scouts deployed</h4><a href="/admin">Detail ↗</a></div>
+              <div className="gx-watchrow">
+                <svg viewBox="0 0 120 62" className="gx-gauge">
+                  <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-bg" />
+                  <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-fg"
+                    strokeDasharray={`${(d.activeChannels / d.totalChannels) * 151} 151`} />
+                </svg>
+                <div>
+                  <div className="gx-gauge-n">{d.activeChannels}<i>/{d.totalChannels}</i></div>
+                  <p className="gx-bnote">channels on the watch — gated ones light up when a key is added</p>
+                </div>
+              </div>
+            </div>
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Mentions of {me}</h4><a href="/mentions">All ↗</a></div>
+              <div className="gx-watchrow">
+                <div className="gx-mbars slim">
+                  {d.mWeeks.map((w) => (
+                    <span key={w.key} style={{ height: `${w.n === 0 ? 12 : Math.max(18, (w.n / d.mMax) * 100)}%` }} className={w.n > 0 ? 'on' : ''} />
+                  ))}
+                </div>
+                <div>
+                  <div className="gx-gauge-n">{d.mTotal}</div>
+                  <p className="gx-bnote">in news &amp; captured signals, last 12 weeks</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
