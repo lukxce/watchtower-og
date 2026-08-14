@@ -6,7 +6,9 @@ import { usePathname, useSearchParams } from 'next/navigation';
 // "what changed on pricing" etc. Top nav owns full page navigation instead.
 const CHANNELS: { label: string; cat?: string; icon: React.ReactNode }[] = [
   { label: 'All', icon: <><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></> },
-  { label: 'Pricing', cat: 'Pricing', icon: <path d="M12 3v18M7 7.5c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5-2.2 2.5-5 2.5-5 1.1-5 2.5 2.2 2.5 5 2.5 5 1.1 5 2.5" strokeLinecap="round" /> },
+  // A plain, unmistakable dollar sign — the old hand-drawn "$" path read as
+  // a caduceus/syringe at 18px, which is not what pricing means.
+  { label: 'Pricing', cat: 'Pricing', icon: <><path d="M12 3.5v17" strokeLinecap="round" /><path d="M16 7.2c-.8-1.3-2.3-2-4-2-2.3 0-4 1.2-4 3 0 3.9 8 2.1 8 6 0 1.9-1.8 3.1-4 3.1-1.9 0-3.4-.8-4.2-2.2" strokeLinecap="round" /></> },
   { label: 'Product', cat: 'Product', icon: <><path d="M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z" strokeLinejoin="round" /><path d="M9 15l-1.5 4M15 9l4-1.5" strokeLinecap="round" /></> },
   { label: 'Hiring', cat: 'Hiring', icon: <><circle cx="12" cy="8" r="3.2" /><path d="M5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6" strokeLinecap="round" /></> },
   { label: 'Ads', cat: 'Ads', icon: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></> },
@@ -31,6 +33,7 @@ export default function ChannelRail() {
 
   return (
     <aside className="side-rail">
+      <span className="rail-label">Signals</span>
       {CHANNELS.map((c) => (
         <a key={c.label} href={href(c.cat)} title={c.label} className={`side-item ${isOn(c.cat) ? 'on' : ''}`}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">{c.icon}</svg>
