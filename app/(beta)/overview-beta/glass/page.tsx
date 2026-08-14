@@ -1,11 +1,14 @@
-// Design test 1/4 — "Glass", faithful to the sage/glass call-stats
-// reference: muted grey-green scene, one large translucent panel with its
-// own pill nav + profile, airy thin bars with a highlighted week and a
-// white tooltip flag, yellow accent buttons, white stat sub-cards below.
-// Own chrome — no app topbar/rail. Real data via getOverviewData.
+// Design test — "Glass", round 3, faithful to the Rinesk references:
+// cool grey-green scene, ONE continuous glass sheet (icon column inside the
+// panel's left edge, pill nav, profile row with highlighter-green button,
+// right-aligned greeting + refresh), the reference chart anatomy (needle
+// bars + smooth highlighter momentum curve + tinted tooltip card + y-ticks
+// right + month labels above), value-row legend, then a COOLER frosted
+// bottom band split by hairline dividers — no white boxes anywhere.
+// Real data via getOverviewData.
 import { requireOrgId } from '@/lib/tenant';
 import { getBrandSettings } from '@/lib/brand';
-import { getOverviewData, greeting, initials, ago } from '@/lib/overviewData';
+import { getOverviewData, greeting, initials } from '@/lib/overviewData';
 import BetaSwitcher from '../BetaSwitcher';
 import './glass.css';
 
@@ -25,115 +28,150 @@ const RAIL = [
   { title: 'Product', href: '/feed?cat=Product', d: 'M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z' },
   { title: 'Hiring', href: '/feed?cat=Hiring', d: 'M12 11a3.2 3.2 0 1 0 0-6.4A3.2 3.2 0 0 0 12 11ZM5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6' },
   { title: 'Ads', href: '/feed?cat=Ads', d: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z' },
-  { title: 'News', href: '/feed?cat=News', d: 'M4 5h16v14H4zM8 9.5h8M8 13h5' },
 ];
+
+// Smooth Catmull-Rom → cubic bézier path through points.
+function smoothPath(pts: [number, number][]): string {
+  if (pts.length < 2) return '';
+  let dPath = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    dPath += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2[0]} ${p2[1]}`;
+  }
+  return dPath;
+}
 
 export default async function GlassBeta() {
   const orgId = await requireOrgId();
-  const [d, brand] = [await getOverviewData(orgId), await getBrandSettings(orgId)];
+  const d = await getOverviewData(orgId);
+  const brand = await getBrandSettings(orgId);
   const me = brand.configured ? brand.brandName : 'Workspace';
 
-  // chart geometry — thin airy bars, one highlighted week with a flag
-  const CW = 760, CH = 210, BW = 13, GAP = (CW - 26 * BW) / 27;
-  let hiIdx = 0;
-  d.weeks.forEach((w, i) => {
-    if (w.product + w.gtm + w.market > (d.weeks[hiIdx].product + d.weeks[hiIdx].gtm + d.weeks[hiIdx].market)) hiIdx = i;
+  const totals = d.weeks.map((w) => w.product + w.gtm + w.market);
+  const gtmTotal = d.weeks.reduce((s, w) => s + w.gtm, 0);
+  const marketTotal = d.weeks.reduce((s, w) => s + w.market, 0);
+  const productTotal = d.weeks.reduce((s, w) => s + w.product, 0);
+
+  // momentum: 4-week moving average
+  const avg = totals.map((_, i) => {
+    const s = totals.slice(Math.max(0, i - 3), i + 1);
+    return s.reduce((a, b) => a + b, 0) / s.length;
   });
+
+  // chart geometry — needle bars + curve, ticks right, labels above
+  const CW = 700, CH = 190, TOP = 64, NEEDLE = 4.5;
+  const GAP = (CW - 30 - d.weeks.length * NEEDLE) / (d.weeks.length + 1);
+  const bx = (i: number) => GAP + i * (NEEDLE + GAP);
+  const by = (v: number) => TOP + (CH - TOP) * (1 - v / d.maxWeek);
+  const curvePts: [number, number][] = avg.map((v, i) => [bx(i) + NEEDLE / 2, by(v)]);
+  const curve = smoothPath(curvePts);
+  const area = `${curve} L ${curvePts[curvePts.length - 1][0]} ${CH} L ${curvePts[0][0]} ${CH} Z`;
+
+  let hiIdx = 0;
+  totals.forEach((v, i) => { if (v > totals[hiIdx]) hiIdx = i; });
   const hi = d.weeks[hiIdx];
-  const hiTotal = hi.product + hi.gtm + hi.market;
-  const hiX = GAP + hiIdx * (BW + GAP);
-  const flagX = Math.min(Math.max(hiX - 70, 4), CW - 160);
+  const flagX = Math.min(Math.max(bx(hiIdx) - 62, 4), CW - 175);
 
   return (
     <main className="gx">
       <BetaSwitcher active="glass" />
-
-      <aside className="gx-rail">
-        {RAIL.map((r) => (
-          <a key={r.title} href={r.href} title={r.title}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={r.d} /></svg>
-          </a>
-        ))}
-      </aside>
-
       <div className="gx-scene">
-        <section className="gx-panel">
-          <header className="gx-top">
-            <a className="gx-logo" href="/overview">
-              <svg viewBox="0 0 26 26"><line x1="2" y1="21" x2="9" y2="6" /><line x1="8" y1="21" x2="15" y2="3" /><line x1="14" y1="21" x2="21" y2="9" /><line x1="20" y1="21" x2="24" y2="13" /></svg>
-              watchtower
-            </a>
-            <nav className="gx-nav">
-              {NAV.map((n) => <a key={n.label} href={n.href} className={n.on ? 'on' : ''}>{n.label}</a>)}
-            </nav>
-            <div className="gx-topright">
-              <button className="gx-iconbtn" aria-label="Notifications">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M12 4a5.5 5.5 0 0 0-5.5 5.5c0 4-1.8 5.5-1.8 5.5h14.6s-1.8-1.5-1.8-5.5A5.5 5.5 0 0 0 12 4Z" strokeLinejoin="round" /><path d="M10.3 18.5a1.8 1.8 0 0 0 3.4 0" strokeLinecap="round" /></svg>
-                <i />
-              </button>
-              <span className="gx-avatar">{initials(me)}</span>
-            </div>
-          </header>
+        <section className="gx-sheet">
+          <div className="gx-cols">
+            <aside className="gx-rail">
+              {RAIL.map((r) => (
+                <a key={r.title} href={r.href} title={r.title}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={r.d} /></svg>
+                </a>
+              ))}
+            </aside>
 
-          <div className="gx-profile">
-            <div className="gx-me">
-              <span className="gx-avatar lg">{initials(me)}</span>
-              <div>
-                <small>Watch commander</small>
-                <b>{me}</b>
-              </div>
-              <a className="gx-yellow" href="/battlecards">+ Add competitor</a>
-            </div>
-            <div className="gx-hey">
-              <b>Hey! 👋</b>
-              <span>Explore your market&apos;s history</span>
-            </div>
-          </div>
+            <div className="gx-content">
+              <header className="gx-top">
+                <a className="gx-logo" href="/overview">
+                  <span className="gx-logo-mark" />
+                  watchtower
+                </a>
+                <nav className="gx-nav">
+                  {NAV.map((n) => <a key={n.label} href={n.href} className={n.on ? 'on' : ''}>{n.label}</a>)}
+                </nav>
+                <div className="gx-topright">
+                  <button className="gx-icb" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3" /><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2Z" strokeLinejoin="round" /></svg></button>
+                  <button className="gx-icb" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 4a5.5 5.5 0 0 0-5.5 5.5c0 4-1.8 5.5-1.8 5.5h14.6s-1.8-1.5-1.8-5.5A5.5 5.5 0 0 0 12 4Z" strokeLinejoin="round" /></svg><i /></button>
+                  <span className="gx-avatar">{initials(me)}</span>
+                </div>
+              </header>
 
-          <div className="gx-body">
-            <div className="gx-info">
-              <div className="gx-info-ic">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg>
+              <div className="gx-profile">
+                <div className="gx-me">
+                  <span className="gx-avatar lg">{initials(me)}</span>
+                  <div>
+                    <small>Watch commander</small>
+                    <b>{me}</b>
+                  </div>
+                  <a className="gx-lime" href="/battlecards">Add competitor</a>
+                  <button className="gx-icb ghost" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-3.8-3.8" strokeLinecap="round" /></svg></button>
+                </div>
+                <div className="gx-hey">
+                  <b>Hey, {me}! 👋</b>
+                  <span>Explore your market&apos;s history</span>
+                </div>
+                <a className="gx-icb ghost round-lg" href="/overview-beta/glass" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" strokeLinecap="round" strokeLinejoin="round" /></svg></a>
               </div>
-              <h2>All signals</h2>
-              <p>Everything that happened across your {d.compCount} competitors — dated, deduped, bundled. Need context? Open the reads.</p>
-              <div className="gx-big">{d.chartTotal}</div>
-              <div className="gx-legend">
-                <span><i className="lp" />{d.weeks.reduce((s, w) => s + w.product, 0)} product &amp; pricing</span>
-                <span><i className="lg" />{d.weeks.reduce((s, w) => s + w.gtm, 0)} GTM — ads &amp; hiring</span>
-                <span><i className="lm" />{d.weeks.reduce((s, w) => s + w.market, 0)} market &amp; news</span>
-              </div>
-            </div>
 
-            <div className="gx-chartwrap">
-              <svg viewBox={`0 0 ${CW} ${CH + 76}`} className="gx-chart">
-                {[0.25, 0.5, 0.75, 1].map((f) => (
-                  <text key={f} x={CW - 2} y={64 + (CH - 6) * (1 - f)} className="gx-ytick">{Math.round(d.maxWeek * f)}</text>
-                ))}
-                {d.weeks.map((w, i) => {
-                  const x = GAP + i * (BW + GAP);
-                  const total = w.product + w.gtm + w.market;
-                  const h = total === 0 ? 3 : Math.max(6, (total / d.maxWeek) * (CH - 6));
-                  const isHi = i === hiIdx && total > 0;
-                  return (
-                    <g key={w.key}>
-                      <title>{`Week of ${w.nice} — ${total} events`}</title>
-                      <rect x={x} y={60 + (CH - h)} width={BW} height={h} rx={6.5} className={isHi ? 'gx-bar hi' : 'gx-bar'} />
-                    </g>
-                  );
-                })}
-                {hiTotal > 0 && (
-                  <g className="gx-flag">
-                    <rect x={flagX} y={2} width={156} height={46} rx={12} />
-                    <text x={flagX + 14} y={21} className="gx-flag-d">Week of {hi.nice}</text>
-                    <text x={flagX + 14} y={38} className="gx-flag-n">{hiTotal} events · {hi.product}p {hi.gtm}g {hi.market}m</text>
-                    <line x1={hiX + BW / 2} y1={48} x2={hiX + BW / 2} y2={60 + (CH - Math.max(6, (hiTotal / d.maxWeek) * (CH - 6)))} />
-                  </g>
-                )}
-                {d.monthTicks.map((t) => (
-                  <text key={t.idx} x={GAP + t.idx * (BW + GAP)} y={CH + 72} className="gx-xtick">{t.label}</text>
-                ))}
-              </svg>
+              <div className="gx-body">
+                <div className="gx-info">
+                  <div className="gx-info-ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg>
+                  </div>
+                  <h2>All signals</h2>
+                  <p>Everything that happened across your {d.compCount} competitors — dated, bundled, cited. <a href="/battlecards">Need context?</a></p>
+                  <div className="gx-big">{d.chartTotal}</div>
+                  <div className="gx-leg">
+                    <div className="gx-leg-row"><i className="lg-dash" /><span>Momentum, 4-wk</span><b>{Math.round(avg[avg.length - 1])} /wk</b></div>
+                    <div className="gx-leg-row"><i className="lg-dot w" /><span>GTM — ads &amp; hiring</span><b>{gtmTotal}</b></div>
+                    <div className="gx-leg-row"><i className="lg-dot m" /><span>Market &amp; news</span><b>{marketTotal}</b></div>
+                    <div className="gx-leg-row"><i className="lg-dot f" /><span>Product &amp; pricing</span><b>{productTotal}</b></div>
+                  </div>
+                </div>
+
+                <div className="gx-chartwrap">
+                  <div className="gx-chart-meta"><span>last 6 months</span></div>
+                  <svg viewBox={`0 0 ${CW} ${CH + 30}`} className="gx-chart">
+                    {d.monthTicks.map((t) => (
+                      <text key={t.idx} x={bx(t.idx)} y={14} className="gx-wlab">{t.label}</text>
+                    ))}
+                    {[0.33, 0.66, 1].map((f) => (
+                      <text key={f} x={CW - 2} y={by(d.maxWeek * f) + 3} className="gx-ytick">{Math.round(d.maxWeek * f)}</text>
+                    ))}
+                    <path d={area} className="gx-area" />
+                    {d.weeks.map((w, i) => {
+                      const total = totals[i];
+                      const h = total === 0 ? 4 : Math.max(7, (CH - TOP) * (total / d.maxWeek));
+                      return (
+                        <g key={w.key}>
+                          <title>{`Week of ${w.nice} — ${total} events`}</title>
+                          <rect x={bx(i)} y={CH - h} width={NEEDLE} height={h} rx={2.2} className={i === hiIdx && total > 0 ? 'gx-needle hi' : 'gx-needle'} />
+                        </g>
+                      );
+                    })}
+                    <path d={curve} className="gx-curve" />
+                    {totals[hiIdx] > 0 && (
+                      <g className="gx-flag">
+                        <rect x={flagX} y={20} width={170} height={62} rx={12} />
+                        <text x={flagX + 13} y={38} className="gx-flag-d">Week of {hi.nice}</text>
+                        <rect x={flagX + 11} y={45} width={8} height={8} rx={2.5} className="fr1" />
+                        <text x={flagX + 24} y={52.5} className="gx-flag-r">{totals[hiIdx]} events</text>
+                        <rect x={flagX + 11} y={59} width={8} height={8} rx={2.5} className="fr2" />
+                        <text x={flagX + 24} y={66.5} className="gx-flag-r">{hi.gtm} gtm · {hi.market} market · {hi.product} product</text>
+                        <line x1={bx(hiIdx) + NEEDLE / 2} y1={84} x2={bx(hiIdx) + NEEDLE / 2} y2={CH - Math.max(7, (CH - TOP) * (totals[hiIdx] / d.maxWeek))} />
+                      </g>
+                    )}
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -142,50 +180,61 @@ export default async function GlassBeta() {
               <a key={t} href={i === 0 ? '/feed' : `/feed?cat=${t}`} className={i === 0 ? 'on' : ''}>{t}</a>
             ))}
           </div>
-        </section>
 
-        <section className="gx-cards">
-          <div className="gx-card">
-            <div className="gx-card-head"><h4>Threat performance</h4><span>live</span></div>
-            {d.threat.slice(0, 4).map((t) => (
-              <a className="gx-trow" key={t.slug} href={`/feed?comp=${t.slug}`}>
-                <span className="gx-avatar sm">{initials(t.competitor)}</span>
-                <span className="gx-trow-name">{t.competitor}</span>
-                <span className="gx-trow-score">{t.total}</span>
-                <span className="gx-trow-note">threat</span>
-              </a>
-            ))}
-          </div>
-
-          <div className="gx-card center">
-            <div className="gx-card-head"><h4>Coverage</h4></div>
-            <div className="gx-gauge-n">{Math.round((d.activeChannels / d.totalChannels) * 100)}<i>%</i></div>
-            <svg viewBox="0 0 120 64" className="gx-gauge">
-              <path d="M10 58 A50 50 0 0 1 110 58" fill="none" stroke="#e7ebe2" strokeWidth="10" strokeLinecap="round" />
-              <path d="M10 58 A50 50 0 0 1 110 58" fill="none" stroke="#e3e75a" strokeWidth="10" strokeLinecap="round"
-                strokeDasharray={`${(d.activeChannels / d.totalChannels) * 157} 157`} />
-            </svg>
-            <p>{d.activeChannels} of {d.totalChannels} channels live</p>
-          </div>
-
-          <div className="gx-card">
-            <div className="gx-card-head"><h4>Mentions of {me}</h4><span>12 wks</span></div>
-            <div className="gx-mbars">
-              {d.mWeeks.map((w) => (
-                <span key={w.key} style={{ height: `${w.n === 0 ? 8 : Math.max(14, (w.n / d.mMax) * 100)}%` }} className={w.n > 0 ? 'on' : ''} />
+          <div className="gx-band">
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Threat performance</h4><a href="/battlecards">↗</a></div>
+              <div className="gx-bsub">Competitor ratings</div>
+              <div className="gx-thead"><span>Competitor</span><span>Threat</span><span>Product</span></div>
+              {d.threat.slice(0, 4).map((t) => (
+                <a className="gx-trow" key={t.slug} href={`/feed?comp=${t.slug}`}>
+                  <span className="gx-avatar sm">{initials(t.competitor)}</span>
+                  <span className="gx-trow-name">{t.competitor}<small>{t.delta == null ? 'baseline' : t.delta > 0 ? `▲ +${t.delta} this week` : t.delta < 0 ? `▼ ${t.delta} this week` : 'no change'}</small></span>
+                  <b>{t.total}</b>
+                  <em>{t.dims.product ?? '—'}</em>
+                </a>
               ))}
             </div>
-            <p className="gx-mnote">{d.mTotal} mentions in news &amp; signals</p>
-          </div>
 
-          <div className="gx-card">
-            <div className="gx-card-head"><h4>The reads</h4><a href="/battlecards">→</a></div>
-            {d.railCards.slice(0, 2).map((c) => (
-              <a className="gx-read" key={c.slug} href="/battlecards">
-                <b>{c.competitor}</b>
-                <span>{c.read.hook}</span>
-              </a>
-            ))}
+            <div className="gx-bcol center">
+              <div className="gx-bhead"><h4>Coverage</h4></div>
+              <div className="gx-gauge-n">{Math.round((d.activeChannels / d.totalChannels) * 100)}<i>%</i></div>
+              <svg viewBox="0 0 120 62" className="gx-gauge">
+                <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-bg" />
+                <path d="M12 56 A48 48 0 0 1 108 56" fill="none" className="gx-gauge-fg"
+                  strokeDasharray={`${(d.activeChannels / d.totalChannels) * 151} 151`} />
+              </svg>
+              <p className="gx-bnote">Channels live</p>
+              <div className="gx-bfoot"><span>Reads current</span><b>{d.reads.size}/{d.compCount}</b></div>
+            </div>
+
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Mentions over time</h4></div>
+              <div className="gx-bleg"><span><i className="lg-dot l" />{me}</span><span><i className="lg-dot m" />weekly</span></div>
+              <div className="gx-mbars">
+                {d.mWeeks.map((w) => (
+                  <span key={w.key} style={{ height: `${w.n === 0 ? 10 : Math.max(16, (w.n / d.mMax) * 100)}%` }} className={w.n > 0 ? 'on' : ''} />
+                ))}
+              </div>
+              <div className="gx-mrange"><span>{d.mWeeks[0]?.key.slice(5)}</span><span>{d.mWeeks[d.mWeeks.length - 1]?.key.slice(5)}</span></div>
+            </div>
+
+            <div className="gx-bcol">
+              <div className="gx-bhead"><h4>Launch radar</h4></div>
+              <div className="gx-bsub">Evidence powered</div>
+              <div className="gx-ring-row">
+                <svg viewBox="0 0 64 64" className="gx-ring">
+                  <circle cx="32" cy="32" r="26" fill="none" className="gx-ring-bg" />
+                  <circle cx="32" cy="32" r="26" fill="none" className="gx-ring-fg"
+                    strokeDasharray={`${(d.battlecardCount / Math.max(1, d.compCount)) * 163} 163`} transform="rotate(-90 32 32)" />
+                </svg>
+                <div className="gx-ring-meta">
+                  <div><span>Battlecards</span><b>{d.battlecardCount}/{d.compCount}</b></div>
+                  <div><span>Forecast</span><b className="lime">{d.topRadar ? d.topRadar.confidence : 'Clear'}</b></div>
+                </div>
+              </div>
+              {d.topRadar && <p className="gx-radarline">{d.topRadar.headline}</p>}
+            </div>
           </div>
         </section>
       </div>
