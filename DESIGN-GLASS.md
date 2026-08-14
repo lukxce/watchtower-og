@@ -2,8 +2,8 @@
 
 A reusable dashboard design language — **neutral cool-grey scene, teal-green
 frosted sheets** (two tones, always), highlighter yellow-green accent, airy
-editorial type at generous scale. Reference implementation (v5):
-`app/(beta)/overview-beta/glass/` in this repo (Watchtower). Written so it
+editorial type at generous scale. Reference implementation (v6, live app):
+`app/(app)/overview/` + the glass overrides in `app/globals.css` (Watchtower). Written so it
 can be lifted onto any product.
 
 ---
@@ -73,12 +73,14 @@ box-shadow: 0 36px 80px rgba(28, 40, 42, .24),
 
 | Role | Value | Rules |
 |---|---|---|
-| Ink | `#1f2629` | Cool near-black. All headings, key numbers. |
-| Muted | `#4d5a58` | Body copy, labels. |
-| Faint | `#5f6c6a` / `#6f7c7a` | Micro-labels, ticks, ranges. |
-| **Highlighter** | `#e0f23c` (fills), `#cfe32c` (strokes/lines) | THE accent. Yellow-green like a text highlighter — not yellow, not lime-green. |
+| Ink | `#142522` | Cool near-black. All headings, key numbers. |
+| Muted | `#404d4a` | Body copy, labels. |
+| Faint | `#5b6a66` / `#6e7d78` | Micro-labels, ticks, ranges. |
+| **Highlighter** | `#eafd35` (fills), `#e2f463` (strokes/lines) | THE accent. Yellow-green like a text highlighter — not yellow, not lime-green. |
 | Data-neutral | `rgba(255,255,255,.88)` | Bars, tracks, secondary series. |
-| Data-muted | `#8a9795` | Tertiary series dots. |
+| Data-muted | `#b1c6a2` | Tertiary series dots. |
+| Soft green | `#c9dc7c` | Chart area fills, soft accent surfaces. |
+| Text accent | `#6b7f16` (olive) | Links/accent TEXT on light ground — the highlighter itself is unreadable as text. |
 | Coral (hot) | `#c25446` | High threat/urgency numbers and statuses. Text/chip level only. |
 | Amber (warm) | `#a3701f` | Mid threat, "medium" statuses. Real amber — never a muddy brown. |
 | Sky (info) | `#4f80a3` | Informational categories/statuses. Text/chip only. |
@@ -121,7 +123,7 @@ highlighter buttons, always. On-glass "hover surface" is white, not accent.
 - **Icon rail:** individual frosted circle buttons (~46px) fixed to the
   viewport's left edge (they follow scroll), a soft vertical hairline
   separating them from content. The rail must explain itself: a small
-  vertical caption above it (e.g. "SCOUTS"), a divider between the
+  vertical caption above it (e.g. "SIGNALS"), a divider between the
   "all" button and the rest, and a dark label pill that slides out on
   hover (`::after { content: attr(data-label) }`). Never a boxed sidebar.
   On mobile it collapses away.
@@ -140,7 +142,7 @@ The hero chart is **needle bars + a momentum curve**, not fat bars:
    highlighted period is the only accent-colored needle.
 2. **Momentum curve:** a smoothed line (Catmull-Rom → bézier) of the moving
    average, accent stroke ~2.4px, with a soft accent area fill under it
-   (`rgba(215,235,52,.26)`) reaching the baseline. The curve tells the
+   (`rgba(201,220,124,.34)`) reaching the baseline. The curve tells the
    story; the needles are texture.
 3. **Period labels ABOVE the chart** (W1…/months), micro-label style.
    **Y-ticks on the RIGHT edge**, faint.
@@ -194,10 +196,14 @@ competitor summaries → "Briefings"; industry news → "Beyond the walls";
 greeting sub-line reports what the scouts brought back this week. The data
 stays verifiable; only the vocabulary plays.
 
-**The AI is "the Tower."** Always with the article, capital T — a character,
-not a building. Scouts gather; the Tower reads. Every AI surface names
-itself from this: "Ask the Tower," "the Tower's read," "the Tower connected
-these." Don't invent a separate assistant name on top of it.
+**The lore is a three-beat chain: "Scouts gather. The Tower sees. The
+Keeper reads."** Scouts are the collectors, the Tower is the product (it
+sees everything), and **the Keeper is the AI** — the character who reads
+what the scouts bring back and writes the briefings. Every AI surface
+names itself from the Keeper: "Ask the Keeper," "the Keeper's read," "the
+Keeper connected these." The Tower never reads — it sees. And a signal is
+always a signal ("Pricing", "Ads"), never "the pricing scout" — scouts are
+who *brought* it, not what it is.
 
 ## 11. Motion & feel
 
