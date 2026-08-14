@@ -602,14 +602,12 @@ details.bundle[open] summary{color:var(--brand-strong);border-color:var(--brand-
 .onb-done{margin-top:12px}
 .addcomp-wide{flex-basis:100%;width:100% !important;resize:vertical}
 
-/* ---------- overview-beta switcher (neutral, sits above every skin) ---------- */
-.beta-switcher{position:sticky;top:58px;z-index:45;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#fff;border-bottom:1px solid var(--line);padding:10px 24px;font-size:12.5px}
-.beta-switcher-label{font-weight:700;color:var(--mut)}
-.beta-switcher-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.beta-switcher-links a{font-weight:700;color:var(--mut);padding:6px 13px;border-radius:999px;background:var(--card-2);border:1px solid var(--line)}
-.beta-switcher-links a:hover{color:var(--ink);border-color:var(--faint)}
-.beta-switcher-links a.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.beta-switcher-live{margin-left:8px;color:var(--brand) !important;background:var(--brand-wash) !important;border-color:transparent !important}
+/* ---------- overview-beta floating switcher ---------- */
+.beta-fab{position:fixed;right:18px;bottom:18px;z-index:200;display:flex;align-items:center;gap:5px;background:rgba(20,20,26,.88);backdrop-filter:blur(10px);border-radius:999px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.beta-fab a{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;color:rgba(255,255,255,.55)}
+.beta-fab a:hover{color:#fff}
+.beta-fab a.on{background:#fff;color:#15151c}
+.beta-fab-live{width:auto !important;padding:0 12px;border-radius:999px !important;background:rgba(255,255,255,.12);color:#fff !important;font-size:10.5px !important}
 
 @media (prefers-reduced-motion: reduce){
   .card,.compcard,.ttile,.bc,.ovsig,.ovbc,.mini{transition:none}

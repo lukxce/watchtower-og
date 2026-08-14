@@ -1,0 +1,92 @@
+/* Azure — aeros-style: near-black navy, left visual panel, thin numerals. */
+.az2{min-height:100vh;background:#0b0e17;font-family:var(--sans);color:#dfe4f2;padding:22px}
+.az2 *{box-sizing:border-box}
+.az2 a{text-decoration:none;color:inherit}
+.az2-frame{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:330px 1fr;gap:0;background:#0e1220;border-radius:28px;overflow:hidden;min-height:calc(100vh - 44px);border:1px solid #1b2136}
+@media(max-width:1000px){.az2-frame{grid-template-columns:1fr}}
+
+/* left visual panel */
+.az2-visual{position:relative;padding:30px 28px;display:flex;flex-direction:column;overflow:hidden}
+.az2-visual-art{position:absolute;inset:0;background:
+  radial-gradient(420px 320px at 70% 22%, rgba(84,124,240,.5) 0%, transparent 60%),
+  radial-gradient(380px 420px at 15% 75%, rgba(46,74,140,.55) 0%, transparent 65%),
+  radial-gradient(300px 260px at 85% 85%, rgba(120,90,200,.3) 0%, transparent 60%),
+  linear-gradient(165deg,#17203a 0%,#101528 60%,#0d1120 100%)}
+.az2-visual>*{position:relative;z-index:1}
+.az2-crumb{font-size:11px;color:#8fa0cc;font-weight:600;letter-spacing:.03em}
+.az2-visual h1{font-size:44px;font-weight:300;letter-spacing:-.02em;color:#fff;margin:14px 0 4px}
+.az2-visual-sub{font-size:12.5px;color:#8fa0cc;margin:0}
+.az2-rooms{margin-top:auto;display:flex;gap:7px;flex-wrap:wrap}
+.az2-rooms a{font-size:12px;font-weight:600;color:#c6d0ea;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 15px}
+.az2-rooms a:hover{background:rgba(255,255,255,.15)}
+.az2-rooms a.on{background:#fff;color:#10152a;font-weight:700}
+
+/* right main */
+.az2-main{padding:22px 30px 30px;min-width:0}
+.az2-top{display:flex;align-items:center;gap:18px}
+.az2-nav{display:flex;gap:20px;flex:1;justify-content:center}
+.az2-nav a{font-size:12.5px;color:#7d88ab;font-weight:600}
+.az2-nav a:hover{color:#fff}
+.az2-nav a.on{color:#fff;font-weight:700}
+@media(max-width:760px){.az2-nav{display:none}}
+.az2-topright{display:flex;align-items:center;gap:10px}
+.az2-date{font-size:11.5px;color:#7d88ab;font-weight:600}
+.az2-round{position:relative;width:34px;height:34px;border-radius:50%;border:1px solid #232a44;background:transparent;color:#aeb8d8;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.az2-round svg{width:15px;height:15px}
+.az2-round i{position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:#5a8bff}
+.az2-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,#3d5ec2,#223056);color:#fff;font-size:10.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.az2-avatar.sm{width:30px;height:30px;font-size:9.5px}
+
+.az2-title{font-size:26px;font-weight:300;letter-spacing:-.01em;color:#fff;margin:26px 0 18px}
+
+.az2-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+@media(max-width:900px){.az2-grid{grid-template-columns:1fr}}
+.az2-col{display:flex;flex-direction:column;gap:12px}
+.az2-card{background:#131829;border:1px solid #1e2540;border-radius:20px;padding:18px 20px}
+.az2-wide{grid-column:1 / -1}
+.az2-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.az2-label{font-size:12.5px;font-weight:700;color:#e6eaf7}
+.az2-label small{display:block;font-size:10.5px;color:#7d88ab;font-weight:600;margin-top:2px}
+.az2-chip-ic{width:30px;height:30px;border-radius:50%;background:#1b2138;color:#8fa0cc;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.az2-chip-ic svg{width:14px;height:14px}
+
+.az2-hero{display:flex;flex-direction:column}
+.az2-huge{font-size:74px;font-weight:200;letter-spacing:-.03em;color:#fff;line-height:1}
+.az2-huge i{font-style:normal;font-size:18px;color:#7d88ab;font-weight:500;margin-left:6px}
+.az2-updated{font-size:11px;color:#7d88ab;margin:8px 0 14px}
+.az2-line{width:100%;height:84px}
+.az2-l1{fill:none;stroke:#5a8bff;stroke-width:2}
+.az2-l2{fill:none;stroke:#e08b5a;stroke-width:1.6;stroke-dasharray:1 0;opacity:.85}
+.az2-line-legend{display:flex;gap:14px;margin:10px 0 16px}
+.az2-line-legend span{font-size:10.5px;color:#7d88ab;font-weight:600;display:flex;align-items:center;gap:6px}
+.az2-line-legend i{width:14px;height:2.5px;border-radius:2px;display:inline-block}
+.az2-line-legend .c1{background:#5a8bff}
+.az2-line-legend .c2{background:#e08b5a}
+.az2-blue{align-self:flex-start;background:#3f78f2;color:#fff;font-size:12.5px;font-weight:700;border-radius:999px;padding:10px 22px;box-shadow:0 8px 24px rgba(63,120,242,.35)}
+.az2-blue:hover{background:#4f85fa}
+
+.az2-big{font-size:40px;font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1}
+.az2-big i{font-style:normal;font-size:14px;color:#7d88ab;font-weight:500}
+.az2-dims{display:flex;align-items:flex-end;gap:6px;height:44px;margin-top:14px}
+.az2-dims span{flex:1;background:linear-gradient(180deg,#5a8bff,#3053b8);border-radius:4px 4px 2px 2px;min-height:5px}
+.az2-dims.wide span{background:#243055}
+.az2-dims.wide span.on{background:linear-gradient(180deg,#e08b5a,#b45f33)}
+
+.az2-status .az2-word{font-size:34px;font-weight:300;color:#fff;letter-spacing:-.01em}
+.az2-word.high{color:#ff9d9d}
+.az2-word.medium{color:#ffd08f}
+.az2-word.emerging{color:#9dbcff}
+.az2-word-sub{font-size:11.5px;color:#9aa6c8;line-height:1.5;margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.az2-ghost{display:inline-block;font-size:11.5px;font-weight:700;color:#aeb8d8;border:1px solid #2a3355;border-radius:999px;padding:7px 14px}
+.az2-ghost:hover{color:#fff;border-color:#3f4d80}
+.az2-track{height:7px;border-radius:99px;background:#1e2540;overflow:hidden;margin-top:16px}
+.az2-track span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#5a8bff,#3f78f2)}
+
+.az2-reads{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:760px){.az2-reads{grid-template-columns:1fr}}
+.az2-readrow{display:flex;align-items:center;gap:11px;background:#0f1424;border:1px solid #1e2540;border-radius:14px;padding:12px 14px}
+.az2-readrow:hover{border-color:#31406e}
+.az2-readrow b{display:block;font-size:12.5px;color:#fff}
+.az2-readrow span{font-size:10.5px;color:#8fa0cc;line-height:1.4;display:block;margin-top:2px}
+.az2-readrow div{flex:1;min-width:0}
+.az2-readrow em{font-style:normal;font-size:15px;font-weight:300;color:#5a8bff}
