@@ -57,8 +57,15 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
       <BetaSwitcher active="glass" />
 
       <aside className="gx-rail" aria-label="Signal scouts">
-        {RAIL.map((r) => (
-          <a key={r.title} href={r.href} title={r.title}>
+        <span className="gx-rail-cap">Scouts</span>
+        {RAIL.slice(0, 1).map((r) => (
+          <a key={r.title} href={r.href} data-label={r.title}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={r.d} /></svg>
+          </a>
+        ))}
+        <span className="gx-rail-div" aria-hidden="true" />
+        {RAIL.slice(1).map((r) => (
+          <a key={r.title} href={r.href} data-label={r.title}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={r.d} /></svg>
           </a>
         ))}
