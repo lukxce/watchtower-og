@@ -2,7 +2,21 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function BrandSettingsForm({ compact = false, brandName = '', brandDomain = '', aliases = '' }: { compact?: boolean; brandName?: string; brandDomain?: string; aliases?: string }) {
+export default function BrandSettingsForm({
+  compact = false,
+  brandName = '',
+  brandDomain = '',
+  aliases = '',
+  description = '',
+  competencies = '',
+}: {
+  compact?: boolean;
+  brandName?: string;
+  brandDomain?: string;
+  aliases?: string;
+  description?: string;
+  competencies?: string;
+}) {
   const [open, setOpen] = useState(!compact);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -17,7 +31,13 @@ export default function BrandSettingsForm({ compact = false, brandName = '', bra
       const res = await fetch('/api/brand-settings', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ brandName: data.get('brandName'), brandDomain: data.get('brandDomain'), aliases: data.get('aliases') }),
+        body: JSON.stringify({
+          brandName: data.get('brandName'),
+          brandDomain: data.get('brandDomain'),
+          aliases: data.get('aliases'),
+          description: data.get('description'),
+          competencies: data.get('competencies'),
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? 'Something went wrong.');
@@ -42,9 +62,11 @@ export default function BrandSettingsForm({ compact = false, brandName = '', bra
       <input name="brandName" defaultValue={brandName} placeholder="Your brand name (e.g. Hypefy)" required maxLength={100} autoFocus />
       <input name="brandDomain" defaultValue={brandDomain} placeholder="Your domain, optional (e.g. hypefy.com)" maxLength={200} />
       <input name="aliases" defaultValue={aliases} placeholder="Other names people call you, comma-separated — optional" maxLength={300} />
+      <textarea name="description" defaultValue={description} placeholder="Who you are, in a sentence or two — what you sell and to whom. Personalizes battlecards and recommendations." maxLength={1000} rows={2} className="addcomp-wide" />
+      <input name="competencies" defaultValue={competencies} placeholder="Your core strengths, comma-separated (e.g. AI automation, transparent pricing)" maxLength={500} className="addcomp-wide" />
       <button type="submit" className="addcomp-btn" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
       {compact && <button type="button" className="addcomp-cancel" onClick={() => setOpen(false)}>Cancel</button>}
-      <p className="addcomp-note">Used only to search for your brand — in the news, on competitor sites, and in signals already captured. Nothing is guessed.</p>
+      <p className="addcomp-note">Used to search for your brand, personalize &ldquo;how you win&rdquo; on battlecards, and recommend competitors. Nothing is guessed.</p>
     </form>
   );
 }

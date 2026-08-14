@@ -1,17 +1,21 @@
 'use client';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
-// Top nav: every page, as it was before the pill/icon split. Channel
-// shortcuts live on the persistent left rail instead (ChannelRail.tsx) —
-// the two never overlap in purpose.
+// Top nav, kept short: the five surfaces someone actually lives in, plus
+// Mentions. Everything occasional (Ask, stubs, Admin) sits behind "More".
+// Channel shortcuts live on the persistent left rail (ChannelRail.tsx) —
+// the two never overlap in purpose. /competitors was folded into
+// Battlecards: one place per competitor, not two.
 const PAGES = [
   { label: 'Overview', href: '/overview' },
   { label: 'Feed', href: '/feed' },
-  { label: 'Competitors', href: '/competitors' },
   { label: 'Battlecards', href: '/battlecards' },
-  { label: 'Launch Radar', href: '/radar' },
+  { label: 'Radar', href: '/radar' },
   { label: 'Industry', href: '/industry' },
   { label: 'Mentions', href: '/mentions' },
+];
+const MORE = [
   { label: 'Ask', href: '/ask' },
   { label: 'Newsletters', href: '/newsletters' },
   { label: 'Reports', href: '/reports' },
@@ -21,7 +25,14 @@ const PAGES = [
 
 export default function NavLinks() {
   const path = usePathname();
+  const ref = useRef<HTMLDetailsElement>(null);
   const isOn = (href: string) => path === href || path.startsWith(href + '/');
+  const moreOn = MORE.some((m) => isOn(m.href));
+  // Close the dropdown when navigating away (links are full navigations, but
+  // soft transitions keep the DOM alive).
+  useEffect(() => {
+    ref.current?.removeAttribute('open');
+  }, [path]);
   return (
     <nav className="tnav">
       {PAGES.map((n) => (
@@ -29,6 +40,16 @@ export default function NavLinks() {
           {n.label}
         </a>
       ))}
+      <details className="tnav-more" ref={ref}>
+        <summary className={moreOn ? 'on' : ''}>More ▾</summary>
+        <div className="tnav-menu">
+          {MORE.map((n) => (
+            <a key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
+              {n.label}
+            </a>
+          ))}
+        </div>
+      </details>
     </nav>
   );
 }

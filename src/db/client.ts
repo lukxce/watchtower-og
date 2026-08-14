@@ -234,6 +234,8 @@ CREATE TABLE IF NOT EXISTS org_settings (
   aliases JSONB NOT NULL DEFAULT '[]'::jsonb,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS competencies TEXT;
 
 -- Platform-admin corrections on the LLM reasoning layer (src/lib/reason.ts).
 -- Deliberately NOT org-scoped for reads — a correction made while viewing one

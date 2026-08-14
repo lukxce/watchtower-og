@@ -51,7 +51,14 @@ async function main() {
   // the box. Never do this for a real customer org — their brand can't be
   // guessed, so a fresh workspace stays unconfigured until the owner sets it.
   if (ORG_ID === 'dev-workspace') {
-    await setBrandSettings(ORG_ID, 'Hypefy', 'hypefy.ai', []);
+    await setBrandSettings(
+      ORG_ID,
+      'Hypefy',
+      'hypefy.ai',
+      [],
+      'AI-powered influencer marketing platform that automates campaign planning, creator selection, and pricing — from brief to booked campaign in minutes. Croatian startup, $7.2M Series A (July 2026), targeting brands and agencies that want campaigns run by AI with human oversight.',
+      'AI campaign automation, creator-price prediction, speed to launch, transparent pricing',
+    );
     console.log('seeded brand identity: Hypefy (dev-workspace only)');
   }
   console.log('done.');

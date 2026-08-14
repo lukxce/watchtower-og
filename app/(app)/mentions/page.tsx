@@ -51,7 +51,7 @@ export default async function Mentions() {
               competitor sites, and captured signals.
             </p>
           </div>
-          <BrandSettingsForm compact brandName={settings.brandName} brandDomain={settings.brandDomain ?? ''} aliases={settings.aliases.join(', ')} />
+          <BrandSettingsForm compact brandName={settings.brandName} brandDomain={settings.brandDomain ?? ''} aliases={settings.aliases.join(', ')} description={settings.description ?? ''} competencies={settings.competencies ?? ''} />
         </div>
 
         <h3 className="admin-h" style={{ marginTop: 4 }}>On competitor sites</h3>

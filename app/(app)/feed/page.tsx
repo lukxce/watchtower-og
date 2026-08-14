@@ -1,12 +1,13 @@
-// Feed — every single event, one card each, day-grouped. Filtering by
-// channel happens from the persistent left rail (ChannelRail.tsx, app-wide);
-// this page just reads whatever ?cat=/?comp= it's given. A compact pill row
-// is shown as a mobile fallback where the rail is hidden. The at-a-glance
-// view lives on /overview.
+// Feed — bundled events, day-grouped. Ten ads observed the same day is ONE
+// card ("10 new ads observed — 4 LinkedIn · 6 Google") with the members
+// inside a native expander; the same story in five outlets is ONE card.
+// Filtering by channel happens from the persistent left rail
+// (ChannelRail.tsx, app-wide). The at-a-glance view lives on /overview.
 import { getDb } from '@/db/client';
 import { computeThreat } from '@/lib/threat';
 import { requireOrgId } from '@/lib/tenant';
 import { interpretSignal } from '@/lib/interpret';
+import { bundleRows, type BundleRow } from '@/lib/bundle';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,11 +55,13 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     params.push(comp);
     clauses.push(`c.slug = $${params.length}`);
   }
-  const items = await db.query<{ channel: string; category: string | null; score: number | null; title: string; url: string | null; created_at: string; published_at: string | null; name: string }>(
-    `SELECT si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name
+  // Higher LIMIT than the old per-card feed: bundling collapses most of
+  // these rows (a single day's ad crawl can be 60 rows on its own).
+  const items = await db.query<BundleRow>(
+    `SELECT si.id, si.channel, si.category, si.score, si.title, si.url, si.created_at, si.published_at, c.name, c.slug
      FROM stream_items si JOIN competitors c ON c.id = si.competitor_id
      WHERE ${clauses.join(' AND ')}
-     ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 60`,
+     ORDER BY si.score DESC NULLS LAST, si.created_at DESC LIMIT 400`,
     params,
   );
 
@@ -72,13 +75,12 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     return s ? `/feed?${s}` : '/feed';
   };
 
-  // Collapse locale duplicates: the same new page published in /de/ /pt/ /ko/…
-  // is one product move, not eight.
-  type FeedItem = (typeof items)[number] & { locales?: number };
+  // Collapse locale duplicates before bundling: the same new page published
+  // in /de/ /pt/ /ko/… is one product move, not eight.
   const LOCALE = /^(https?:\/\/[^/]+)\/([a-z]{2}(?:-[a-z]{2})?)\//i;
-  const byPage = new Map<string, FeedItem>();
-  const display: FeedItem[] = [];
-  for (const raw of items as FeedItem[]) {
+  const byPage = new Map<string, BundleRow & { locales?: number }>();
+  const display: (BundleRow & { locales?: number })[] = [];
+  for (const raw of items as (BundleRow & { locales?: number })[]) {
     const m = raw.title.match(/^New page published: (\S+)$/);
     if (m) {
       const norm = m[1].replace(LOCALE, '$1/');
@@ -92,11 +94,13 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
     display.push(raw);
   }
 
-  const buckets = new Map<(typeof BUCKET_ORDER)[number], FeedItem[]>();
-  for (const it of display) {
-    const key = bucketOf(it.published_at ?? it.created_at);
+  const bundles = bundleRows(display);
+
+  const buckets = new Map<(typeof BUCKET_ORDER)[number], typeof bundles>();
+  for (const b of bundles) {
+    const key = bucketOf(b.when);
     if (!buckets.has(key)) buckets.set(key, []);
-    buckets.get(key)!.push(it);
+    buckets.get(key)!.push(b);
   }
 
   return (
@@ -104,8 +108,8 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
       <section className="feed">
         <h1>{activeComp ? `${activeComp} — feed` : 'Signal feed'}</h1>
         <p className="sub">
-          Every verified event, one card each, ranked by impact. Times are the event date where known, else when
-          Watchtower first observed it. The at-a-glance view is the <a href="/overview" style={{ color: 'var(--brand)', fontWeight: 700 }}>Overview</a>.
+          Bundled events, ranked by impact — one card per thing that happened, not per raw detection. Times are the
+          event date where known, else when Watchtower first observed it. The at-a-glance view is the <a href="/overview" style={{ color: 'var(--brand)', fontWeight: 700 }}>Overview</a>.
         </p>
 
         {(activeComp || active) && (
@@ -124,7 +128,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
           ))}
         </div>
 
-        {display.length === 0 ? (
+        {bundles.length === 0 ? (
           <div className="empty">
             No signals in this view yet. Trigger a collection with <code>POST /api/run</code> (or wait for the daily
             07:00 crawl). The first run captures each competitor&apos;s current state; changes surface from the next run.
@@ -134,28 +138,50 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
             {BUCKET_ORDER.filter((b) => buckets.has(b)).map((b) => (
               <div className="tl-group" key={b}>
                 <div className="tl-label"><span>{b}</span></div>
-                {buckets.get(b)!.map((it, i) => {
-                  const read = interpretSignal(it.channel, it.title, it.name);
+                {buckets.get(b)!.map((bundle, i) => {
+                  const single = bundle.kind === 'single' ? bundle.rows[0] : null;
+                  const read = single ? interpretSignal(single.channel, single.title, single.name) : null;
+                  const first = bundle.rows[0];
+                  const dated = bundle.kind === 'news' || (single && single.published_at);
                   return (
-                    <div className={`card${(it.score ?? 0) >= 80 ? ` featured fc-${catClass(it.category ?? 'other').slice(2)}` : ''}`} key={i}>
+                    <div className={`card${bundle.score >= 80 ? ` featured fc-${catClass(bundle.category).slice(2)}` : ''}`} key={i}>
                       <div className="crow">
-                        <span className={`badge ${catClass(it.category ?? 'other')}`}>{it.category ?? it.channel}</span>
-                        <span className="card-avatar">{initials(it.name)}</span>
-                        <span className="comp">{it.name}</span>
-                        {it.score != null && <span className={`score ${scoreClass(it.score)}`}>{it.score}</span>}
-                        {it.published_at ? (
-                          <span className="when">{ago(it.published_at)}</span>
+                        <span className={`badge ${catClass(bundle.category)}`}>{bundle.category}</span>
+                        <span className="card-avatar">{initials(bundle.name)}</span>
+                        <span className="comp">{bundle.name}</span>
+                        {bundle.score > 0 && <span className={`score ${scoreClass(bundle.score)}`}>{bundle.score}</span>}
+                        {dated ? (
+                          <span className="when">{ago(bundle.when)}</span>
                         ) : (
                           <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
-                            first seen {ago(it.created_at)}
+                            first seen {ago(bundle.when)}
                           </span>
                         )}
                       </div>
                       <div className="title">
-                        {it.url ? <a href={it.url} target="_blank" rel="noreferrer">{read.headline}</a> : read.headline}
-                        {it.locales && it.locales > 1 && <span className="locale-note"> (+{it.locales - 1} locale versions)</span>}
+                        {single && single.url ? (
+                          <a href={single.url} target="_blank" rel="noreferrer">{read!.headline}</a>
+                        ) : (
+                          bundle.kind === 'single' ? read!.headline : bundle.headline
+                        )}
+                        {(first as { locales?: number }).locales && (first as { locales?: number }).locales! > 1 && (
+                          <span className="locale-note"> (+{(first as { locales?: number }).locales! - 1} locale versions)</span>
+                        )}
                       </div>
-                      {read.howWeKnow && <div className="howknow">How we know: {read.howWeKnow}</div>}
+                      {bundle.kind !== 'single' && bundle.sub && <div className="bundle-sub">{bundle.sub}</div>}
+                      {single && read!.howWeKnow && <div className="howknow">How we know: {read!.howWeKnow}</div>}
+                      {bundle.kind !== 'single' && (
+                        <details className="bundle">
+                          <summary>See all {bundle.rows.length}</summary>
+                          <ul className="bundle-items">
+                            {bundle.rows.map((r) => (
+                              <li key={r.id}>
+                                {r.url ? <a href={r.url} target="_blank" rel="noreferrer">{r.title}</a> : r.title}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      )}
                     </div>
                   );
                 })}

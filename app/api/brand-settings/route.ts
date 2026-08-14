@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const orgId = await resolveOrgId();
   if (!orgId) return NextResponse.json({ error: 'sign in required' }, { status: 401 });
 
-  const body = (await req.json().catch(() => ({}))) as { brandName?: string; brandDomain?: string; aliases?: string };
+  const body = (await req.json().catch(() => ({}))) as { brandName?: string; brandDomain?: string; aliases?: string; description?: string; competencies?: string };
   const brandName = (body.brandName ?? '').trim();
   if (!brandName) return NextResponse.json({ error: 'brand name is required' }, { status: 400 });
   const brandDomain = (body.brandDomain ?? '').trim().replace(/^https?:\/\//, '').split('/')[0] || null;
@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
     .map((a) => a.trim())
     .filter(Boolean)
     .slice(0, 5);
+  const description = (body.description ?? '').trim().slice(0, 1000) || null;
+  const competencies = (body.competencies ?? '').trim().slice(0, 500) || null;
 
-  await setBrandSettings(orgId, brandName, brandDomain, aliases);
+  await setBrandSettings(orgId, brandName, brandDomain, aliases, description, competencies);
   return NextResponse.json({ ok: true });
 }

@@ -30,7 +30,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="top-right">
             {clerkConfigured ? (
               <>
-                <OrganizationSwitcher afterSelectOrganizationUrl="/overview" afterCreateOrganizationUrl="/overview" hidePersonal />
+                <OrganizationSwitcher afterSelectOrganizationUrl="/overview" afterCreateOrganizationUrl="/onboarding" hidePersonal />
                 <UserButton />
               </>
             ) : (
