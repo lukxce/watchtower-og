@@ -98,34 +98,39 @@ const ENGINE = [
 export default function Home() {
   return (
     <>
-      <section className="nw-hero" id="product">
-        <div className="wrap nw-grid">
-          <div className="nw-copy">
-            <span className="nw-kicker"><span className="nw-beacon" />Competitive intelligence for operators</span>
-            <h1 className="nw-h1">While you slept, <span className="accent">your market moved.</span></h1>
-            <p className="nw-dek">
-              Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your
-              competitors — reads them <em>together</em>, and hands you the next move. Every fact cited.
-            </p>
-            <div className="nw-cta">
-              <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
-              <Link href="#brain" className="btn btn-ghost btn-lg">How the brain works ↓</Link>
-            </div>
-            <p className="nw-note">Self-serve from $99/mo · no demo call · signals within the hour</p>
+      <section className="mkt-hero" id="product">
+        <div className="wrap">
+          <span className="kicker"><span className="nw-beacon" />Competitive intelligence for operators</span>
+          <h1 className="mkt-h1">While you slept, <span className="accent">your market moved.</span></h1>
+          <p className="mkt-dek">
+            Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your
+            competitors — reads them together, and hands you the next move. Every fact cited.
+          </p>
+          <div className="mkt-hero-cta">
+            <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
+            <Link href="#brain" className="btn btn-ghost btn-lg">How the brain works ↓</Link>
           </div>
-          <div className="nw-log" aria-label="A real morning of Watchtower signals">
-            <div className="nw-log-head">
-              <span className="mono">this morning&apos;s signals</span>
-              <span className="nw-live"><span />live</span>
+          <p className="mkt-hero-note">Self-serve from $99/mo · no demo call · signals within the hour</p>
+        </div>
+        <div className="mkt-hero-device">
+          <div className="wrap" style={{ position: 'relative' }}>
+            <div className="float-chip fc-1">
+              <span className="fc-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg></span>
+              <span>6 new signals this morning<span className="fc-sub">bundled · every one cited</span></span>
             </div>
-            {LOG.map((l, i) => (
-              <div className={`nw-line ${l.cls}`} key={i} style={{ animationDelay: `${0.35 + i * 0.5}s` }}>
-                <span className="nw-t mono">{l.t}</span>
-                <span className="nw-txt">{l.text}</span>
-                <span className="nw-tag mono">{l.tag}</span>
-              </div>
-            ))}
-            <p className="nw-log-note">Real signal types from a live workspace — worded exactly as the feed words them.</p>
+            <div className="float-chip fc-3">
+              <span className="fc-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z" strokeLinejoin="round" /></svg></span>
+              <span>Grin is preparing a launch<span className="fc-sub">launch.grin.co + their own press</span></span>
+            </div>
+            <div className="float-chip fc-2">
+              <span className="fc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
+              <span>Threat 86 · ▲ +6 this week<span className="fc-sub">CreatorIQ</span></span>
+            </div>
+            <div className="shot-frame">
+              <div className="shot-bar"><span /><span /><span /></div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/screenshots/overview.png" alt="The Watchtower overview: market activity chart, bundled highlights, threat index, coverage, and per-competitor reads" className="shot-img" />
+            </div>
           </div>
         </div>
       </section>
@@ -176,16 +181,33 @@ export default function Home() {
 
       <section className="mkt-section">
         <div className="wrap">
-          <span className="mkt-eyebrow">The morning after</span>
-          <h2>Open the tower. Know the state of your market in ten seconds.</h2>
-          <p className="lede">
-            One chart of real, dated market activity. The bundled highlights that matter. A read per competitor and a
-            battlecard that says — literally — how <em>your</em> company wins.
-          </p>
-          <div className="shot-frame light">
-            <div className="shot-bar"><span /><span /><span /></div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/screenshots/overview.png" alt="The Watchtower overview: market activity chart, bundled highlights, threat index, coverage, and per-competitor reads" className="shot-img" />
+          <div className="mkt-2col">
+            <div>
+              <span className="mkt-eyebrow">Every morning</span>
+              <h2>Ten seconds to the state of your market.</h2>
+              <p className="lede">
+                The watch runs daily. By the time you open it: one chart of real, dated market activity, the bundled
+                highlights that matter, a read per competitor, and a battlecard that says — literally — how{' '}
+                <em>your</em> company wins.
+              </p>
+              <p className="lede">
+                No pile of alerts. Sixty-six ads is one card. Five articles about the same funding round is one story.
+              </p>
+            </div>
+            <div className="nw-log" aria-label="A real morning of Watchtower signals">
+              <div className="nw-log-head">
+                <span className="mono">this morning&apos;s signals</span>
+                <span className="nw-live"><span />live</span>
+              </div>
+              {LOG.map((l, i) => (
+                <div className={`nw-line ${l.cls}`} key={i} style={{ animationDelay: `${0.35 + i * 0.5}s` }}>
+                  <span className="nw-t mono">{l.t}</span>
+                  <span className="nw-txt">{l.text}</span>
+                  <span className="nw-tag mono">{l.tag}</span>
+                </div>
+              ))}
+              <p className="nw-log-note">Real signal types from a live workspace — worded exactly as the feed words them.</p>
+            </div>
           </div>
         </div>
       </section>

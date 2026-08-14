@@ -65,8 +65,10 @@ h1.mkt-h1 .accent{color:var(--a-beacon)}
 .float-chip .fc-ic.p{background:var(--a-pink-wash);color:var(--a-pink)}
 .float-chip .fc-ic svg{width:14px;height:14px}
 .float-chip .fc-sub{display:block;font-family:var(--mono, monospace);font-size:10px;color:var(--a-faint);font-weight:500}
+.float-chip .fc-ic.m{background:var(--a-mint-wash);color:var(--a-mint)}
 .float-chip.fc-1{top:-18px;left:6%;transform:rotate(-5deg)}
 .float-chip.fc-2{top:40px;right:5%;transform:rotate(4deg)}
+.float-chip.fc-3{top:-30px;right:24%;transform:rotate(2deg)}
 @media(max-width:900px){.float-chip{display:none}}
 
 /* real product screenshot, framed */
