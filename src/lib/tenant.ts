@@ -5,7 +5,6 @@
 // setup — matching the rest of this repo's "zero config locally" convention.
 import { redirect } from 'next/navigation';
 import { getViewAsOrg } from './adminAuth';
-import { touchWorkspace } from '@/db/queries';
 
 export const DEV_ORG_ID = 'dev-workspace';
 export const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -24,8 +23,16 @@ export async function requireOrgId(): Promise<string> {
   if (!orgId) redirect('/select-org');
   // Fire-and-forget: registers the workspace (or bumps last_seen_at) so it
   // shows up under /admin/workspaces even with zero competitors added yet.
-  // Never blocks or fails the page on a write hiccup.
-  void touchWorkspace(orgId, orgSlug ?? null).catch(() => {});
+  // Never blocks or fails the page on a write hiccup. Dynamically imported,
+  // same reason as the Clerk import above: this file is pulled in by the
+  // ROOT layout (every page, including the public marketing site and
+  // sign-in/up), and a static import of '@/db/queries' would drag the whole
+  // DB client (PGlite + postgres + node:path) into every single page's
+  // module graph even when it's never called. That regression is what broke
+  // the site the first time this landed — keep this import dynamic.
+  import('@/db/queries')
+    .then((m) => m.touchWorkspace(orgId, orgSlug ?? null))
+    .catch(() => {});
   return orgId;
 }
 
