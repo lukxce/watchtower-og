@@ -211,31 +211,11 @@ h1.nw-h1 .accent{color:var(--a-beacon)}
 .lg-b .nw-tag{background:var(--a-mint-wash);color:var(--a-mint)}
 .nw-line.lg-b .nw-txt{color:var(--a-ink);font-weight:700}
 .nw-log-note{font-size:10.5px;color:var(--a-faint);margin:10px 6px 0;line-height:1.5}
-/* ---------- story strip (the GRIN case) ---------- */
-.story-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px;position:relative}
-@media(max-width:960px){.story-strip{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.story-strip{grid-template-columns:1fr}}
-.story-step{position:relative;background:var(--a-card);border-radius:20px;padding:26px 24px 22px;box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
-.story-step:hover{transform:translateY(-3px);box-shadow:var(--a-shadow-lift)}
-.story-n{display:inline-flex;font-size:11px;font-weight:700;color:var(--a-violet);background:var(--a-violet-wash);border-radius:8px;padding:4px 9px;margin-bottom:14px}
-.story-step h4{font-size:16px;font-weight:800;letter-spacing:-.015em;margin:0 0 8px}
-.story-step p{font-size:13px;color:var(--a-mut);line-height:1.6;margin:0 0 14px}
-.story-cite{display:block;font-size:10px;color:var(--a-faint);border-top:1px solid var(--a-line2);padding-top:10px}
-.story-note{font-size:13px;color:var(--a-faint);margin-top:22px;max-width:70ch;line-height:1.6}
-
-/* ---------- platform section: real screenshots, alternating rows ---------- */
-.platform-list{display:flex;flex-direction:column;gap:64px;margin-top:52px}
-.platform-row{display:grid;grid-template-columns:0.86fr 1.14fr;gap:48px;align-items:center}
-.platform-row.rev{grid-template-columns:1.14fr 0.86fr}
-.platform-row.rev .platform-text{order:2}
-.platform-row.rev .platform-media{order:1}
-@media(max-width:860px){
-  .platform-row,.platform-row.rev{grid-template-columns:1fr;gap:20px}
-  .platform-row.rev .platform-text,.platform-row.rev .platform-media{order:initial}
-}
-.platform-text h4{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0 0 12px}
-.platform-text p{font-size:15px;color:var(--a-mut);line-height:1.65;margin:0;max-width:42ch}
-.platform-media .shot-frame{margin:0}
+/* ---------- platform section: one screenshot, conversational lede ---------- */
+.lede.big{font-size:19px;line-height:1.6;max-width:64ch;color:var(--a-ink)}
+.platform-one{max-width:1000px;margin:44px auto 0}
+.platform-one .shot-frame{margin:0}
+.platform-caption{text-align:center;font-size:13px;color:var(--a-faint);margin:16px 0 0}
 
 /* ---------- honest source strip: real data channels, not fake logos ---------- */
 .source-strip{padding:36px 0 40px;border-top:1px solid rgba(20,37,34,.08);border-bottom:1px solid rgba(20,37,34,.08)}
@@ -246,14 +226,14 @@ h1.nw-h1 .accent{color:var(--a-beacon)}
 @media(max-width:640px){.source-row span{padding:0 12px}}
 
 @media (prefers-reduced-motion: reduce){
-  .blog-item,.btn,.story-step{transition:none}
+  .blog-item,.btn{transition:none}
   .nw-beacon,.nw-live span{animation:none}
   .nw-line{animation:none;opacity:1;transform:none}
 }
 
 
 /* ---------- GLASS PASS: frosted white cards, highlighter CTAs ---------- */
-.engine-card,.tier,.blog-item,.post-body,.contact-grid form,.contact-info,.story-step,.nw-log,.trust-card{
+.engine-card,.tier,.blog-item,.post-body,.contact-grid form,.contact-info,.nw-log,.trust-card{
   background:rgba(255,255,255,.55);
   backdrop-filter:blur(22px) saturate(130%);
   -webkit-backdrop-filter:blur(22px) saturate(130%);

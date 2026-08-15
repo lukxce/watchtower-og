@@ -20,79 +20,14 @@ const LOG: { t: string; text: string; tag: string; cls: string }[] = [
   { t: '07:31', text: 'battlecard refreshed · how you win, updated', tag: 'battlecard', cls: 'lg-b' },
 ];
 
-const STORY = [
-  {
-    n: '01',
-    title: 'A hostname appears',
-    body: 'One quiet ping on the public certificate log: launch.grin.co. Most tools would forward it to you raw, or miss it entirely.',
-    cite: 'source: crt.sh, cited in-product',
-  },
-  {
-    n: '02',
-    title: 'Context, already on file',
-    body: 'GRIN’s own press from January 27, 2026 was sitting in the workspace: instant self-serve access, month-to-month billing, the enterprise-only model over.',
-    cite: 'source: GRIN press release, Jan 27 2026',
-  },
-  {
-    n: '03',
-    title: 'The Tower connects them',
-    body: 'The Tower writes the briefing: “Grin is mid-transition, tearing out the old model.” Confident, and not because an AI guessed. Their own announcement confirms what the hostname implies.',
-    cite: 'one read per competitor, every fact dated',
-  },
-  {
-    n: '04',
-    title: 'Your team moves',
-    body: 'The battlecard updates itself: migration friction for their Classic customers, proven “GRIN alternatives” search demand, and literally how you win.',
-    cite: 'personalized to your company, not abstract advice',
-  },
-];
-
 const SOURCES = [
   'Pricing pages', 'Ad libraries', 'Job boards', 'Certificate logs', 'Press & news', 'G2 & Trustpilot', 'Changelogs', 'LinkedIn',
 ];
 
-// The platform, in the customer's own workspace — real screenshots, not
-// icons. Each block leads with what you get, not how the crawler works.
-const PLATFORM = [
-  {
-    title: 'Every move, bundled, not dumped.',
-    body: 'Ten ads on the same day is one card. Five articles about the same funding round is one story. You read what mattered, not everything that was detected.',
-    img: '/screenshots/feed.png',
-    alt: 'The Watchtower signal feed: bundled, dated, cited events per competitor',
-  },
-  {
-    title: 'The Tower writes how you win.',
-    body: 'One read per competitor: their strengths, the crack in their story, and exactly how your company wins against them. Personalized, not generic advice pulled from their website.',
-    img: '/screenshots/battlecards.png',
-    alt: 'A Watchtower battlecard: the Tower’s read, strengths, vulnerabilities, and how you win',
-  },
-  {
-    title: 'See launches before the press release.',
-    body: 'A new hostname alone is noise. A hostname plus a hiring cluster plus a funding round in the same window is a launch. Radar only fires when independent signals actually align.',
-    img: '/screenshots/radar.png',
-    alt: 'Watchtower Launch Radar: high-confidence forecasts built from aligned signals',
-  },
-  {
-    title: 'Know the moment they mention you.',
-    body: 'Competitor pages, review sites, and the press, scanned for your own name. When a competitor starts targeting your gap on their site, you see it before your prospects do.',
-    img: '/screenshots/mentions.png',
-    alt: 'Watchtower Mentions: where your own brand shows up across competitor sites and the press',
-  },
-];
-
 const ENGINE = [
-  {
-    title: 'Bundled, not dumped.',
-    body: 'Ten ads on the same day is one thing that happened. The same story in five outlets is one story. You read what mattered, not what was detected.',
-  },
-  {
-    title: 'Read by the Tower.',
-    body: 'Every competitor gets one whole-picture briefing: moves, buildouts, and hiring, read together by the Tower. Not a pile of disconnected alerts.',
-  },
-  {
-    title: 'Sourced, always.',
-    body: 'Every line links to the page it came from, with a capture time. If we couldn’t verify something, it isn’t in your feed.',
-  },
+  { title: 'Bundled, not dumped.', body: 'Ten ads in a day is one card, not ten alerts.' },
+  { title: 'Read together.', body: 'One whole-picture briefing per competitor, not a pile of pings.' },
+  { title: 'Sourced, always.', body: 'Every line links to where it came from, and when.' },
 ];
 
 export default function Home() {
@@ -101,11 +36,8 @@ export default function Home() {
       <section className="mkt-hero" id="product">
         <div className="wrap">
           <span className="kicker"><span className="nw-beacon" />Scouts gather. The Tower sees.</span>
-          <h1 className="mkt-h1">Know your competitors&apos; <span className="accent">next move</span>, before your customers do.</h1>
-          <p className="mkt-dek">
-            Watchtower tracks pricing, launches, hiring, ads and funding across every competitor, then reads it
-            together and writes the briefing. Every fact cited, updated daily.
-          </p>
+          <h1 className="mkt-h1">Know your competitors&apos; <span className="accent">next&nbsp;move</span>, before your customers do.</h1>
+          <p className="mkt-dek">Actionable intelligence, not a pile of alerts. Every fact cited, updated daily.</p>
           <div className="mkt-hero-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
             <Link href="#platform" className="btn btn-ghost btn-lg">See a real battlecard ↓</Link>
@@ -132,52 +64,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mkt-section" id="brain">
+      <section className="mkt-section" id="platform">
         <div className="wrap">
-          <span className="mkt-eyebrow">How the brain works</span>
-          <h2>One hostname appeared. Watchtower told the whole story.</h2>
-          <p className="lede">
-            A true sequence, from a live workspace. This is the difference between forwarding detections and doing
-            intelligence: signals are read <em>together</em>, per competitor, and only claimed when the facts confirm it.
+          <span className="mkt-eyebrow">Actionable intelligence</span>
+          <h2>We watch everything. You just get told what matters.</h2>
+          <p className="lede big">
+            Know when they cut a price. Know when they&apos;re about to launch. Know when they mention you by name.
+            Know what their ads say, and who they&apos;re chasing. Know what their founders are telling the press.
+            You don&apos;t pick channels, you just get told what changed, and why it matters.
           </p>
-          <div className="story-strip">
-            {STORY.map((s) => (
-              <div className="story-step" key={s.n}>
-                <span className="story-n mono">{s.n}</span>
-                <h4>{s.title}</h4>
-                <p>{s.body}</p>
-                <span className="story-cite mono">{s.cite}</span>
-              </div>
-            ))}
-          </div>
-          <p className="story-note">
-            Where a connection is only timing, like a funding round followed by new hostnames, the read says exactly that
-            instead of overclaiming. No false fires is a product law here, not a slogan.
-          </p>
-        </div>
-      </section>
-
-      <section className="mkt-section alt" id="platform">
-        <div className="wrap">
-          <span className="mkt-eyebrow">In your workspace</span>
-          <h2>Everything your team needs to sell against them.</h2>
-          <p className="lede">Not mockups, not a demo environment. This is a real workspace, tracking five real competitors, right now.</p>
-          <div className="platform-list">
-            {PLATFORM.map((f, i) => (
-              <div className={`platform-row${i % 2 ? ' rev' : ''}`} key={f.title}>
-                <div className="platform-text">
-                  <h4>{f.title}</h4>
-                  <p>{f.body}</p>
-                </div>
-                <div className="platform-media">
-                  <div className="shot-frame light">
-                    <div className="shot-bar"><span /><span /><span /></div>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={f.img} alt={f.alt} className="shot-img" />
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="platform-one">
+            <div className="shot-frame light">
+              <div className="shot-bar"><span /><span /><span /></div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/screenshots/battlecards.png" alt="A Watchtower battlecard: the Tower's read, strengths, vulnerabilities, and how you win" className="shot-img" />
+            </div>
+            <p className="platform-caption">A real battlecard from a real workspace, tracking five real competitors right now.</p>
           </div>
         </div>
       </section>
@@ -189,12 +91,8 @@ export default function Home() {
               <span className="mkt-eyebrow">Every morning</span>
               <h2>Ten seconds to the state of your market.</h2>
               <p className="lede">
-                The watch runs daily. By the time you open it: one chart of real, dated market activity, the bundled
-                highlights that matter, a read per competitor, and a battlecard that literally says how{' '}
-                <em>your</em> company wins.
-              </p>
-              <p className="lede">
-                No pile of alerts. Sixty-six ads is one card. Five articles about the same funding round is one story.
+                Sixty-six ads is one card, not sixty-six alerts. Five articles about the same raise is one story.
+                You read what mattered, not everything that happened.
               </p>
             </div>
             <div className="nw-log" aria-label="A real morning of Watchtower signals">
