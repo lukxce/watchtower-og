@@ -36,11 +36,13 @@ export default function NavLinks() {
   }, [path]);
   return (
     <nav className="tnav">
-      {PAGES.map((n) => (
-        <Link key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
-          {n.label}
-        </Link>
-      ))}
+      <div className="tnav-scroll">
+        {PAGES.map((n) => (
+          <Link key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
+            {n.label}
+          </Link>
+        ))}
+      </div>
       <details className="tnav-more" ref={ref}>
         <summary className={moreOn ? 'on' : ''}>More ▾</summary>
         <div className="tnav-menu">
