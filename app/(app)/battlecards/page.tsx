@@ -1,4 +1,4 @@
-// Battlecards — where the Keeper's reasoning lives, and the single home for
+// Battlecards — where the Tower's reasoning lives, and the single home for
 // everything about a competitor (the old /competitors tab was folded in
 // here). Each card opens with "The read": one whole-picture synthesis per
 // competitor (competitor_reasoning) connecting every signal on file into
@@ -118,7 +118,7 @@ export default async function Battlecards() {
               {read && (
                 <div className="bc-read">
                   <div className="bc-read-top">
-                    <span className="bc-read-tag">The Keeper&apos;s read</span>
+                    <span className="bc-read-tag">The Tower&apos;s read</span>
                     <span className="bc-read-hook">{read.hook}</span>
                   </div>
                   <p className="bc-read-body">{read.narrative}</p>

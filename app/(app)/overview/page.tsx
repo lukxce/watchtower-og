@@ -1,8 +1,9 @@
 // Overview — the Glass system, now the real page (chrome comes from the
 // app layout; this page is just the sheets). Lore: scouts gather, the
-// Tower sees, the KEEPER reads — the Keeper is the AI.
+// Tower sees — and reads what it means. One character, not two: the Tower
+// is both the product and the voice that writes the briefings.
 // Sheet 1: profile + hero chart (interactive) + focus chips.
-// Sheet 2: Ask the Keeper (hero, with suggested questions) + competitor
+// Sheet 2: Ask the Tower (hero, with suggested questions) + competitor
 //          ratings (each row opens its briefing) + biggest-threat
 //          spotlight + launch radar (evidence, not slogans).
 // Sheet 3: Scout reports (bundled) + Beyond the walls.
@@ -92,12 +93,12 @@ export default async function Overview({ searchParams }: { searchParams: Promise
           </div>
         </section>
 
-        {/* ---------- sheet 2: the keeper + the war table ---------- */}
+        {/* ---------- sheet 2: the tower + the war table ---------- */}
         <section className="gx-sheet cool">
           <div className="gx-askhero">
             <div className="gx-askhero-copy">
-              <h3>Ask the Keeper</h3>
-              <p>Scouts gather. The Tower sees. The Keeper reads — and cites every signal.</p>
+              <h3>Ask the Tower</h3>
+              <p>Scouts gather. The Tower sees, and cites every signal it reads.</p>
             </div>
             <div className="gx-askhero-main">
               <form className="gx-askhero-form" action="/ask" method="get">
@@ -115,7 +116,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
           <div className="gx-band three">
             <div className="gx-bcol">
               <div className="gx-bhead"><h4>Competitor ratings</h4><a href="/battlecards">All briefings ↗</a></div>
-              <div className="gx-bsub">Tap a competitor for the Keeper&apos;s briefing</div>
+              <div className="gx-bsub">Tap a competitor for the Tower&apos;s briefing</div>
               <div className="gx-thead"><span>Competitor</span><span>Threat</span><span>Product</span></div>
               {d.threat.slice(0, 5).map((t) => (
                 <a className="gx-trow" key={t.slug} href={`/battlecards#${t.slug}`}>

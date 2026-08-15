@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Watchtower · While you slept, your market moved.',
   description:
-    'Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your competitors. The Keeper reads them together and hands you the next move. Every fact cited. From $99/mo.',
+    'Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your competitors, reads them together, and hands you the next move. Every fact cited. From $99/mo.',
 };
 
 // The watch log in the hero is real output, not lorem: every line below is a
@@ -16,7 +16,7 @@ const LOG: { t: string; text: string; tag: string; cls: string }[] = [
   { t: '06:11', text: 'Upfluence: 66 new ads observed · 43 Google · 23 LinkedIn', tag: 'ads', cls: 'lg-g' },
   { t: '06:48', text: 'CreatorIQ: 25 open roles · enterprise CS cluster', tag: 'hiring', cls: 'lg-g' },
   { t: '07:02', text: 'Hypefy raises $7.2M Series A · covered by 5 outlets', tag: 'news', cls: 'lg-m' },
-  { t: '07:30', text: 'the Keeper updated a briefing · “Grin: mid-transition, tearing out the old model”', tag: 'the keeper', cls: 'lg-b' },
+  { t: '07:30', text: 'the Tower updated a briefing · “Grin: mid-transition, tearing out the old model”', tag: 'the tower', cls: 'lg-b' },
   { t: '07:31', text: 'battlecard refreshed · how you win, updated', tag: 'battlecard', cls: 'lg-b' },
 ];
 
@@ -35,8 +35,8 @@ const STORY = [
   },
   {
     n: '03',
-    title: 'The Keeper connects them',
-    body: 'The Keeper writes the briefing: “Grin is mid-transition, tearing out the old model.” Confident, and not because an AI guessed. Their own announcement confirms what the hostname implies.',
+    title: 'The Tower connects them',
+    body: 'The Tower writes the briefing: “Grin is mid-transition, tearing out the old model.” Confident, and not because an AI guessed. Their own announcement confirms what the hostname implies.',
     cite: 'one read per competitor, every fact dated',
   },
   {
@@ -47,36 +47,36 @@ const STORY = [
   },
 ];
 
-const WATCH = [
+const SOURCES = [
+  'Pricing pages', 'Ad libraries', 'Job boards', 'Certificate logs', 'Press & news', 'G2 & Trustpilot', 'Changelogs', 'LinkedIn',
+];
+
+// The platform, in the customer's own workspace — real screenshots, not
+// icons. Each block leads with what you get, not how the crawler works.
+const PLATFORM = [
   {
-    title: 'Pricing & packaging',
-    body: 'A tier gets cheaper, a feature moves behind a paywall, a plan quietly disappears. You hear about it that morning, not from a lost deal three weeks later.',
-    icon: <><path d="M12 3.5v17" strokeLinecap="round" /><path d="M16 7.2c-.8-1.3-2.3-2-4-2-2.3 0-4 1.2-4 3 0 3.9 8 2.1 8 6 0 1.9-1.8 3.1-4 3.1-1.9 0-3.4-.8-4.2-2.2" strokeLinecap="round" /></>,
+    title: 'Every move, bundled, not dumped.',
+    body: 'Ten ads on the same day is one card. Five articles about the same funding round is one story. You read what mattered, not everything that was detected.',
+    img: '/screenshots/feed.png',
+    alt: 'The Watchtower signal feed: bundled, dated, cited events per competitor',
   },
   {
-    title: 'Product & launches',
-    body: 'Changelogs, app releases, new pages, and pre-launch subdomains like launch.grin.co, often visible weeks before the announcement.',
-    icon: <><path d="M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z" strokeLinejoin="round" /><path d="M9 15l-1.5 4M15 9l4-1.5" strokeLinecap="round" /></>,
+    title: 'The Tower writes how you win.',
+    body: 'One read per competitor: their strengths, the crack in their story, and exactly how your company wins against them. Personalized, not generic advice pulled from their website.',
+    img: '/screenshots/battlecards.png',
+    alt: 'A Watchtower battlecard: the Tower’s read, strengths, vulnerabilities, and how you win',
   },
   {
-    title: 'Hiring',
-    body: 'One job post is noise. Four senior ML roles in the same week is a roadmap. We flag the cluster and skip the noise.',
-    icon: <><circle cx="12" cy="8" r="3.2" /><path d="M5 19c.8-3 3.5-4.6 7-4.6s6.2 1.6 7 4.6" strokeLinecap="round" /></>,
+    title: 'See launches before the press release.',
+    body: 'A new hostname alone is noise. A hostname plus a hiring cluster plus a funding round in the same window is a launch. Radar only fires when independent signals actually align.',
+    img: '/screenshots/radar.png',
+    alt: 'Watchtower Launch Radar: high-confidence forecasts built from aligned signals',
   },
   {
-    title: 'Ads & campaigns',
-    body: 'Sixty-six new ads is one bundled card with the platform and format mix, not sixty-six alerts. Which platforms, aimed at whom, where the money points.',
-    icon: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></>,
-  },
-  {
-    title: 'Reviews & reputation',
-    body: 'The complaints buried in their G2 and Trustpilot reviews are your objection-handling script. We collect them for you.',
-    icon: <path d="M12 3.5l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6-5.1-2.8-5.1 2.8 1.1-5.6L3.8 9.4l5.7-.7Z" strokeLinejoin="round" />,
-  },
-  {
-    title: 'News, funding & events',
-    body: 'A funding round covered by five outlets is one story with five citations, not five signals. Plus executive moves, partnerships, and the wider industry pulse.',
-    icon: <><rect x="4" y="5" width="16" height="14" rx="2" /><path d="M8 9.5h8M8 13h5" strokeLinecap="round" /></>,
+    title: 'Know the moment they mention you.',
+    body: 'Competitor pages, review sites, and the press, scanned for your own name. When a competitor starts targeting your gap on their site, you see it before your prospects do.',
+    img: '/screenshots/mentions.png',
+    alt: 'Watchtower Mentions: where your own brand shows up across competitor sites and the press',
   },
 ];
 
@@ -86,8 +86,8 @@ const ENGINE = [
     body: 'Ten ads on the same day is one thing that happened. The same story in five outlets is one story. You read what mattered, not what was detected.',
   },
   {
-    title: 'Read by the Keeper.',
-    body: 'Every competitor gets one whole-picture briefing: moves, buildouts, and hiring, read together by the Keeper. Not a pile of disconnected alerts.',
+    title: 'Read by the Tower.',
+    body: 'Every competitor gets one whole-picture briefing: moves, buildouts, and hiring, read together by the Tower. Not a pile of disconnected alerts.',
   },
   {
     title: 'Sourced, always.',
@@ -100,37 +100,34 @@ export default function Home() {
     <>
       <section className="mkt-hero" id="product">
         <div className="wrap">
-          <span className="kicker"><span className="nw-beacon" />Scouts gather. The Tower sees. The Keeper reads.</span>
-          <h1 className="mkt-h1">While you slept, <span className="accent">your market moved.</span></h1>
+          <span className="kicker"><span className="nw-beacon" />Scouts gather. The Tower sees.</span>
+          <h1 className="mkt-h1">Know your competitors&apos; <span className="accent">next move</span>, before your customers do.</h1>
           <p className="mkt-dek">
-            Your scouts track every pricing change, launch, hire, ad blitz and funding round across your
-            competitors. The Keeper reads them together and hands you the next move. Every fact cited.
+            Watchtower tracks pricing, launches, hiring, ads and funding across every competitor, then reads it
+            together and writes the briefing. Every fact cited, updated daily.
           </p>
           <div className="mkt-hero-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
-            <Link href="#brain" className="btn btn-ghost btn-lg">How the brain works ↓</Link>
+            <Link href="#platform" className="btn btn-ghost btn-lg">See a real battlecard ↓</Link>
           </div>
           <p className="mkt-hero-note">Self-serve from $99/mo · no demo call · signals within the hour</p>
         </div>
         <div className="mkt-hero-device">
-          <div className="wrap" style={{ position: 'relative' }}>
-            <div className="float-chip fc-1">
-              <span className="fc-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" strokeLinejoin="round" /></svg></span>
-              <span>6 new signals this morning<span className="fc-sub">bundled · every one cited</span></span>
-            </div>
-            <div className="float-chip fc-3">
-              <span className="fc-ic m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 19c1.5-4.5 3-7.5 7-11.5 2.5-2.5 6-3 7-2s.5 4.5-2 7C13 16.5 10 18 5.5 19.5Z" strokeLinejoin="round" /></svg></span>
-              <span>Grin is preparing a launch<span className="fc-sub">launch.grin.co + their own press</span></span>
-            </div>
-            <div className="float-chip fc-2">
-              <span className="fc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21a9 9 0 1 1 9-9" strokeLinecap="round" /><path d="M12 12l5-3" strokeLinecap="round" /></svg></span>
-              <span>Threat 86 · ▲ +6 this week<span className="fc-sub">CreatorIQ</span></span>
-            </div>
+          <div className="wrap">
             <div className="shot-frame">
               <div className="shot-bar"><span /><span /><span /></div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/screenshots/overview.png" alt="The Watchtower overview: market activity chart, bundled highlights, threat index, coverage, and per-competitor reads" className="shot-img" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="source-strip">
+        <div className="wrap">
+          <span className="source-label">22 channels of real public data, not guesses</span>
+          <div className="source-row">
+            {SOURCES.map((s) => <span key={s}>{s}</span>)}
           </div>
         </div>
       </section>
@@ -160,19 +157,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mkt-section alt" id="watch">
+      <section className="mkt-section alt" id="platform">
         <div className="wrap">
-          <span className="mkt-eyebrow">22 channels on the watch</span>
-          <h2>If they ship it, price it, post it, or hire for it, you&apos;ll know.</h2>
-          <p className="lede">Everything a competitor does in public, watched daily: their site, their ads, their job board, their reviews, their press.</p>
-          <div className="mkt-grid">
-            {WATCH.map((f) => (
-              <div className="mkt-feature" key={f.title}>
-                <div className="fi">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">{f.icon}</svg>
+          <span className="mkt-eyebrow">In your workspace</span>
+          <h2>Everything your team needs to sell against them.</h2>
+          <p className="lede">Not mockups, not a demo environment. This is a real workspace, tracking five real competitors, right now.</p>
+          <div className="platform-list">
+            {PLATFORM.map((f, i) => (
+              <div className={`platform-row${i % 2 ? ' rev' : ''}`} key={f.title}>
+                <div className="platform-text">
+                  <h4>{f.title}</h4>
+                  <p>{f.body}</p>
                 </div>
-                <h4>{f.title}</h4>
-                <p>{f.body}</p>
+                <div className="platform-media">
+                  <div className="shot-frame light">
+                    <div className="shot-bar"><span /><span /><span /></div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={f.img} alt={f.alt} className="shot-img" />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -298,7 +301,7 @@ export default function Home() {
           <div className="mkt-cta-inner">
             <span className="kicker">Get started</span>
             <h2>Stop being the last to know.</h2>
-            <p className="lede">Tell us who you are and pick your competitors, or let the Keeper recommend them. Real, sourced signals appear inside an hour.</p>
+            <p className="lede">Tell us who you are and pick your competitors, or let the Tower recommend them. Real, sourced signals appear inside an hour.</p>
             <div className="mkt-hero-cta">
               <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
               <Link href="/contact" className="btn btn-on-navy-ghost btn-lg">Talk to us</Link>

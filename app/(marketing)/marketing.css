@@ -58,19 +58,6 @@ h1.mkt-h1 .accent{color:var(--a-ink);background:linear-gradient(120deg, rgba(234
 .mkt-hero-note{font-size:12.5px;color:var(--a-faint);font-weight:500}
 .mkt-hero-device{margin-top:56px;position:relative}
 
-/* floating accent chips around the hero shot */
-.float-chip{position:absolute;z-index:2;background:#fff;border-radius:14px;box-shadow:var(--a-shadow-lift);padding:12px 16px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:9px}
-.float-chip .fc-ic{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
-.float-chip .fc-ic.v{background:var(--a-violet-wash);color:var(--a-violet)}
-.float-chip .fc-ic.p{background:var(--a-pink-wash);color:var(--a-pink)}
-.float-chip .fc-ic svg{width:14px;height:14px}
-.float-chip .fc-sub{display:block;font-family:var(--mono, monospace);font-size:10px;color:var(--a-faint);font-weight:500}
-.float-chip .fc-ic.m{background:var(--a-mint-wash);color:var(--a-mint)}
-.float-chip.fc-1{top:-18px;left:6%;transform:rotate(-5deg)}
-.float-chip.fc-2{top:40px;right:5%;transform:rotate(4deg)}
-.float-chip.fc-3{top:-30px;right:24%;transform:rotate(2deg)}
-@media(max-width:900px){.float-chip{display:none}}
-
 /* real product screenshot, framed */
 .shot-frame{max-width:1160px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -8px 0 rgba(255,255,255,.35), 0 30px 80px rgba(35,30,60,.25);overflow:hidden}
 .shot-bar{display:flex;gap:6px;padding:12px 16px;background:var(--a-card-2);border-bottom:1px solid var(--a-line)}
@@ -98,21 +85,6 @@ h1.mkt-h1 .accent{color:var(--a-ink);background:linear-gradient(120deg, rgba(234
 .engine-card{background:var(--a-card);border-radius:20px;padding:30px 28px;box-shadow:var(--a-shadow)}
 .engine-card h4{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
 .engine-card p{font-size:14px;color:var(--a-mut);line-height:1.6;margin:0}
-
-/* feature grid */
-.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
-@media(max-width:860px){.mkt-grid{grid-template-columns:1fr}}
-.mkt-feature{background:var(--a-card);border-radius:18px;padding:26px 24px;box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
-.mkt-feature:hover{transform:translateY(-3px);box-shadow:var(--a-shadow-lift)}
-.mkt-feature .fi{width:36px;height:36px;border-radius:12px;background:var(--a-violet-wash);display:flex;align-items:center;justify-content:center;color:var(--a-violet);margin-bottom:16px}
-.mkt-feature:nth-child(2) .fi{background:var(--a-pink-wash);color:var(--a-pink)}
-.mkt-feature:nth-child(3) .fi{background:var(--a-blue-wash);color:var(--a-blue)}
-.mkt-feature:nth-child(4) .fi{background:var(--a-mint-wash);color:var(--a-mint)}
-.mkt-feature:nth-child(5) .fi{background:var(--a-amber-wash);color:var(--a-amber)}
-.mkt-feature:nth-child(6) .fi{background:var(--a-red-wash);color:var(--a-red)}
-.mkt-feature .fi svg{width:18px;height:18px}
-.mkt-feature h4{font-size:15px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
-.mkt-feature p{font-size:13.5px;color:var(--a-mut);line-height:1.55;margin:0}
 
 /* verifiable / trust mock */
 .trust-mock{background:var(--a-dark);border-radius:22px;padding:32px;margin-top:16px}
@@ -245,34 +217,55 @@ h1.nw-h1 .accent{color:var(--a-beacon)}
 @media(max-width:640px){.story-strip{grid-template-columns:1fr}}
 .story-step{position:relative;background:var(--a-card);border-radius:20px;padding:26px 24px 22px;box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
 .story-step:hover{transform:translateY(-3px);box-shadow:var(--a-shadow-lift)}
-.story-step:nth-child(3){background:linear-gradient(140deg, rgba(234,253,53,.4), rgba(255,255,255,.55))}
 .story-n{display:inline-flex;font-size:11px;font-weight:700;color:var(--a-violet);background:var(--a-violet-wash);border-radius:8px;padding:4px 9px;margin-bottom:14px}
-.story-step:nth-child(3) .story-n{background:#fff}
 .story-step h4{font-size:16px;font-weight:800;letter-spacing:-.015em;margin:0 0 8px}
 .story-step p{font-size:13px;color:var(--a-mut);line-height:1.6;margin:0 0 14px}
 .story-cite{display:block;font-size:10px;color:var(--a-faint);border-top:1px solid var(--a-line2);padding-top:10px}
-.story-step:nth-child(3) .story-cite{border-top-color:rgba(20,37,34,.12)}
 .story-note{font-size:13px;color:var(--a-faint);margin-top:22px;max-width:70ch;line-height:1.6}
 
+/* ---------- platform section: real screenshots, alternating rows ---------- */
+.platform-list{display:flex;flex-direction:column;gap:64px;margin-top:52px}
+.platform-row{display:grid;grid-template-columns:0.86fr 1.14fr;gap:48px;align-items:center}
+.platform-row.rev{grid-template-columns:1.14fr 0.86fr}
+.platform-row.rev .platform-text{order:2}
+.platform-row.rev .platform-media{order:1}
+@media(max-width:860px){
+  .platform-row,.platform-row.rev{grid-template-columns:1fr;gap:20px}
+  .platform-row.rev .platform-text,.platform-row.rev .platform-media{order:initial}
+}
+.platform-text h4{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0 0 12px}
+.platform-text p{font-size:15px;color:var(--a-mut);line-height:1.65;margin:0;max-width:42ch}
+.platform-media .shot-frame{margin:0}
+
+/* ---------- honest source strip: real data channels, not fake logos ---------- */
+.source-strip{padding:36px 0 40px;border-top:1px solid rgba(20,37,34,.08);border-bottom:1px solid rgba(20,37,34,.08)}
+.source-label{display:block;text-align:center;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-faint);font-weight:700;margin-bottom:18px}
+.source-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 0}
+.source-row span{font-size:13.5px;color:var(--a-mut);font-weight:600;padding:0 20px;border-right:1px solid var(--a-line)}
+.source-row span:last-child{border-right:none}
+@media(max-width:640px){.source-row span{padding:0 12px}}
+
 @media (prefers-reduced-motion: reduce){
-  .mkt-feature,.blog-item,.btn,.story-step{transition:none}
+  .blog-item,.btn,.story-step{transition:none}
   .nw-beacon,.nw-live span{animation:none}
   .nw-line{animation:none;opacity:1;transform:none}
 }
 
 
 /* ---------- GLASS PASS: frosted white cards, highlighter CTAs ---------- */
-.mkt-feature,.engine-card,.tier,.blog-item,.post-body,.contact-grid form,.contact-info,.story-step,.nw-log,.trust-card{
+.engine-card,.tier,.blog-item,.post-body,.contact-grid form,.contact-info,.story-step,.nw-log,.trust-card{
   background:rgba(255,255,255,.55);
   backdrop-filter:blur(22px) saturate(130%);
   -webkit-backdrop-filter:blur(22px) saturate(130%);
   border:none;
   box-shadow:0 16px 40px rgba(20,37,34,.10), inset 0 1px 0 rgba(255,255,255,.7);
 }
-.story-step:nth-child(3){background:linear-gradient(140deg, rgba(234,253,53,.42), rgba(255,255,255,.5))}
 .tier.on{background:var(--a-dark);backdrop-filter:none;box-shadow:0 30px 70px rgba(20,37,34,.35)}
 .mkt a.btn-primary,.btn-primary{background:#eafd35;color:#142522;box-shadow:0 10px 26px rgba(170,190,20,.42)}
 .btn-primary:hover{box-shadow:0 12px 30px rgba(170,190,20,.5)}
 .tier.on .btn-primary{background:#eafd35;color:#142522}
-.kicker{color:#1e6f5c;background:rgba(234,253,53,.35)}
+/* Highlighter is reserved for buttons and the hero accent sweep only — every
+   other "accent" surface (kickers, eyebrows) uses the calmer teal instead,
+   so the yellow-green actually reads as energy when it does show up. */
+.kicker{color:#1e6f5c;background:rgba(30,111,92,.10)}
 .mkt-eyebrow{color:#1e6f5c}

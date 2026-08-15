@@ -11,6 +11,8 @@ const shots = [
   { path: '/feed', file: 'feed.png', clip: { x: 0, y: 0, width: 1440, height: 860 } },
   { path: '/battlecards', file: 'battlecards.png', clip: { x: 0, y: 0, width: 1440, height: 880 } },
   { path: '/admin', file: 'admin.png', clip: { x: 0, y: 0, width: 1440, height: 700 } },
+  { path: '/radar', file: 'radar.png', clip: { x: 0, y: 0, width: 1440, height: 860 } },
+  { path: '/mentions', file: 'mentions.png', clip: { x: 0, y: 0, width: 1440, height: 860 } },
 ];
 
 const browser = await chromium.launch();

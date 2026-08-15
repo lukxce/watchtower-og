@@ -234,14 +234,16 @@ competitor summaries → "Briefings"; industry news → "Beyond the walls";
 greeting sub-line reports what the scouts brought back this week. The data
 stays verifiable; only the vocabulary plays.
 
-**The lore is a three-beat chain: "Scouts gather. The Tower sees. The
-Keeper reads."** Scouts are the collectors, the Tower is the product (it
-sees everything), and **the Keeper is the AI** — the character who reads
-what the scouts bring back and writes the briefings. Every AI surface
-names itself from the Keeper: "Ask the Keeper," "the Keeper's read," "the
-Keeper connected these." The Tower never reads — it sees. And a signal is
-always a signal ("Pricing", "Ads"), never "the pricing scout" — scouts are
-who *brought* it, not what it is.
+**The lore is a two-beat chain: "Scouts gather. The Tower sees."** Scouts
+are the collectors; the Tower is the product, and it's the whole voice —
+it sees everything, reads what the scouts bring back, and writes the
+briefings. One character, not two: an earlier draft split "sees" and
+"reads" into a separate AI persona (the Keeper), but two named characters
+was one too many concepts for a buyer to hold — cut it. Every AI surface
+names itself from the Tower: "Ask the Tower," "the Tower's read," "the
+Tower connected these." And a signal is always a signal ("Pricing",
+"Ads"), never "the pricing scout" — scouts are who *brought* it, not what
+it is.
 
 ## 11. Motion & feel
 
