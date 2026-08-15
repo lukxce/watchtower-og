@@ -16,7 +16,7 @@ export default function SignUpPage() {
   }
   return (
     <main className="auth-shell">
-      <SignUp />
+      <SignUp fallbackRedirectUrl="/select-org" />
     </main>
   );
 }

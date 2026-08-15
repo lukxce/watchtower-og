@@ -2,9 +2,11 @@
 
 A reusable dashboard design language — **neutral cool-grey scene, teal-green
 frosted sheets** (two tones, always), highlighter yellow-green accent, airy
-editorial type at generous scale. Reference implementation (v6, live app):
-`app/(app)/overview/` + the glass overrides in `app/globals.css` (Watchtower). Written so it
-can be lifted onto any product.
+editorial type at generous scale. Reference implementation (shipped, live
+app-wide): `app/(app)/overview/` for the hero sheet pattern, plus the
+cascade-final glass overrides in `app/globals.css` that apply it to every
+other page and the topbar/rail chrome (Watchtower). Written so it can be
+lifted onto any product.
 
 ---
 
@@ -28,16 +30,30 @@ the sheets. **Scene = neutral cool grey. Glass = teal-green.** Never let
 them converge into one sage wash.
 
 ```css
-background:
-  radial-gradient(1100px 640px at 80% -14%, #b3bcba 0%, transparent 58%),
-  radial-gradient(800px 560px at 0% 100%, #969fa0 0%, transparent 55%),
-  linear-gradient(160deg, #a7aeae 0%, #9da6a5 52%, #a4acaa 100%);
-background-attachment: fixed; /* glass slides over it on scroll */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1100px 640px at 80% -14%, #b3bcba 0%, transparent 58%),
+    radial-gradient(800px 560px at 0% 100%, #969fa0 0%, transparent 55%),
+    linear-gradient(160deg, #a7aeae 0%, #9da6a5 52%, #a4acaa 100%);
+}
 ```
 
 - Low contrast, no pure white and no saturated color in the scene itself.
 - A photo or abstract render also works (the originals use a room photo) as
   long as it's desaturated, grey-leaning and darker than the sheet.
+- **Never `background: … ; background-attachment: fixed` on `body` itself.**
+  Combined with `backdrop-filter` on many stacked sheets, Chromium repaints
+  the entire fixed background on every scroll frame — janky enough to
+  swallow the first click on nav links and buttons (symptom: "everything
+  needs to be clicked twice"). A fixed pseudo-element behind the content
+  (`body::before`, `z-index: -1`) looks identical and costs nothing on
+  scroll. Pair it with real `<Link>`/client-router navigation, not plain
+  `<a>` tags, for the top nav — full page reloads read as the same "double
+  click" symptom.
 
 ## 3. The sheet (glass recipe)
 
@@ -80,11 +96,12 @@ box-shadow: 0 36px 80px rgba(28, 40, 42, .24),
 | Data-neutral | `rgba(255,255,255,.88)` | Bars, tracks, secondary series. |
 | Data-muted | `#b1c6a2` | Tertiary series dots. |
 | Soft green | `#c9dc7c` | Chart area fills, soft accent surfaces. |
-| Text accent | `#6b7f16` (olive) | Links/accent TEXT on light ground — the highlighter itself is unreadable as text. |
+| Text accent | `#1e6f5c` (deep teal) | Links/accent TEXT on light ground — the highlighter itself is unreadable as text. Not olive, not the scene teal — a distinct, saturated deep teal so it reads as a clickable accent rather than another neutral. |
 | Coral (hot) | `#c25446` | High threat/urgency numbers and statuses. Text/chip level only. |
 | Amber (warm) | `#a3701f` | Mid threat, "medium" statuses. Real amber — never a muddy brown. |
 | Sky (info) | `#4f80a3` | Informational categories/statuses. Text/chip only. |
 | Sand (neutral tag) | `#837d6b` | Low-priority category chips. |
+| Category chips (extended) | olive `#7d941f`, green `#3f8f68`, violet `#8a5fa8` (plus coral/amber/sky above) | One hue per content category (Pricing, Ads, Hiring, News, Product…) so the rail and badges are scannable at a glance. Applied as **tinted glass, never solid fill**: `rgba(hue, .16)` background + the saturated hue as text color. A solid-filled chip reads as a sticker, not glass. |
 
 **Highlighter discipline:** the highlighter is for *your* energy — the
 primary CTA, the momentum curve, the highlighted bar, gauge fills, the
@@ -112,14 +129,35 @@ highlighter buttons, always. On-glass "hover surface" is white, not accent.
 - Greeting is a UI element: bold short line + muted sub ("Hey, {name}! 👋 /
   your scouts brought back N reports…"), right-aligned opposite the
   profile block.
+- **Page titles (h1) get the same generous scale as everything else** —
+  ~34px / 800 weight, tight letter-spacing (−.03em). A page title sized
+  like body copy is the single most common "why does this look boring"
+  complaint; it should compete visually with the hero numeral, not sit
+  quietly above the sheet.
 
 ## 6. Chrome (the sheet's own navigation)
 
-- **Top bar lives inside the sheet:** logo (rounded-square accent mark with
-  a dark dot + lowercase wordmark) · center pill nav (active = solid white
-  pill with a soft shadow; inactive = bare muted text) · right cluster:
-  frosted round icon buttons (34px circle, `rgba(255,255,255,.5)`) — gear,
-  bell with an accent dot — then a dark circular avatar.
+- **Top bar is a floating frosted PILL above everything, not a full-width
+  bar and not embedded inside the first sheet.** `position: sticky` on a
+  transparent wrapper, with the actual visible bar (`border-radius: 999px`,
+  same glass recipe as a sheet but lighter/more opaque, its own drop
+  shadow) sitting centered with margin on both sides — content scrolls
+  underneath it. Getting this wrong (stretching it edge-to-edge as its own
+  full-bleed row) is the single most common regression when porting; it
+  should look like it's floating, the same way a single sheet does.
+  Contents: logo (rounded-square accent mark with a dark dot + lowercase
+  wordmark) · center pill nav (active = solid white pill with a soft
+  shadow; inactive = bare muted text) · right cluster: frosted round icon
+  buttons (34px circle, `rgba(255,255,255,.5)`) — gear, bell with an accent
+  dot — then a dark circular avatar.
+- **No white outline border on large frosted panels** (feed cards, module
+  panels, forms, tables). Earlier drafts put a `1px solid rgba(255,255,255,.6)`
+  ring on every surface — on anything panel-sized it reads as a bordered
+  box, not glass; drop it there and let the inset top highlight (§3) plus
+  the drop shadow carry the material. A thin border is still fine, even
+  correct, on genuinely *small* raised elements (the topbar pill, circular
+  rail buttons, small chips) where it reads as an edge-lit rim rather than
+  an outline.
 - **Icon rail:** individual frosted circle buttons (~46px) fixed to the
   viewport's left edge (they follow scroll), a soft vertical hairline
   separating them from content. The rail must explain itself: a small

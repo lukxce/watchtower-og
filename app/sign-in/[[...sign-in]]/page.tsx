@@ -16,7 +16,7 @@ export default function SignInPage() {
   }
   return (
     <main className="auth-shell">
-      <SignIn />
+      <SignIn fallbackRedirectUrl="/overview" />
     </main>
   );
 }
