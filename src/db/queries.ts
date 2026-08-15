@@ -43,8 +43,14 @@ export interface WorkspaceRow {
 // until they add their first competitor.
 export async function allWorkspaces(): Promise<WorkspaceRow[]> {
   const db = await getDb();
+  // ::text casts are load-bearing: postgres.js auto-parses bare TIMESTAMPTZ
+  // columns into JS Date objects, not strings, which silently breaks any
+  // caller (e.g. .localeCompare()) that trusts the WorkspaceRow['...':
+  // string] type. Cast at the query so the runtime value actually matches
+  // what TypeScript claims — tsc has no way to catch this class of bug since
+  // it just trusts the generic on db.query<T>().
   const rows = await db.query<{ org_id: string; name: string | null; created_at: string; last_seen_at: string }>(
-    'SELECT org_id, name, created_at, last_seen_at FROM workspaces ORDER BY last_seen_at DESC',
+    'SELECT org_id, name, created_at::text created_at, last_seen_at::text last_seen_at FROM workspaces ORDER BY last_seen_at DESC',
   );
   return rows.map((r) => ({ orgId: r.org_id, name: r.name, createdAt: r.created_at, lastSeenAt: r.last_seen_at }));
 }
