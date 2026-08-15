@@ -270,6 +270,19 @@ CREATE TABLE IF NOT EXISTS competitor_reasoning (
   generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   generated_by TEXT NOT NULL DEFAULT 'claude-in-session'
 );
+
+-- Every workspace that has ever signed in, whether or not they've added a
+-- competitor yet. Distinct from distinctOrgIds() (src/db/queries.ts), which
+-- only sees orgs with rows in competitors — that under-counts brand-new
+-- signups. touchWorkspace() (src/db/queries.ts) upserts this on every
+-- authenticated request in tenant.ts, so the admin workspace list reflects
+-- "everyone who has an account" not just "everyone with data".
+CREATE TABLE IF NOT EXISTS workspaces (
+  org_id TEXT PRIMARY KEY,
+  name TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 `;
 
 declare global {

@@ -5,6 +5,7 @@
 // setup — matching the rest of this repo's "zero config locally" convention.
 import { redirect } from 'next/navigation';
 import { getViewAsOrg } from './adminAuth';
+import { touchWorkspace } from '@/db/queries';
 
 export const DEV_ORG_ID = 'dev-workspace';
 export const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -18,9 +19,13 @@ export async function requireOrgId(): Promise<string> {
   if (viewAs) return viewAs;
   if (!clerkConfigured) return DEV_ORG_ID;
   const { auth } = await import('@clerk/nextjs/server');
-  const { userId, orgId } = await auth();
+  const { userId, orgId, orgSlug } = await auth();
   if (!userId) redirect('/sign-in');
   if (!orgId) redirect('/select-org');
+  // Fire-and-forget: registers the workspace (or bumps last_seen_at) so it
+  // shows up under /admin/workspaces even with zero competitors added yet.
+  // Never blocks or fails the page on a write hiccup.
+  void touchWorkspace(orgId, orgSlug ?? null).catch(() => {});
   return orgId;
 }
 

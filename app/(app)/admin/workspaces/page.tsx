@@ -6,7 +6,7 @@
 // for a customer.
 import { redirect } from 'next/navigation';
 import { getDb } from '@/db/client';
-import { distinctOrgIds } from '@/db/queries';
+import { distinctOrgIds, allWorkspaces } from '@/db/queries';
 import { isPlatformAdmin, getViewAsOrg } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
@@ -24,7 +24,15 @@ export default async function AdminWorkspaces() {
   if (!(await isPlatformAdmin())) redirect('/overview');
   const viewingAs = await getViewAsOrg();
   const db = await getDb();
-  const orgIds = await distinctOrgIds();
+  // Union two sources: workspaces (everyone who's ever signed in, including
+  // still-empty orgs — touchWorkspace() in tenant.ts) and distinctOrgIds()
+  // (a safety net for orgs seeded straight into the DB by a script, like
+  // dev-workspace, which never goes through the request path that registers
+  // a workspace row).
+  const [known, withData] = await Promise.all([allWorkspaces(), distinctOrgIds()]);
+  const nameByOrg = new Map(known.map((w) => [w.orgId, w] as const));
+  for (const orgId of withData) if (!nameByOrg.has(orgId)) nameByOrg.set(orgId, { orgId, name: null, createdAt: '', lastSeenAt: '' });
+  const orgIds = [...nameByOrg.keys()];
 
   const rows = await Promise.all(
     orgIds.map(async (orgId) => {
@@ -34,13 +42,16 @@ export default async function AdminWorkspaces() {
       const signals = compIds.length
         ? Number((await db.query<{ n: string }>(`SELECT COUNT(*)::text n FROM stream_items WHERE competitor_id IN (${inClause})`, compIds))[0]?.n ?? 0)
         : 0;
-      const latest = compIds.length
+      const latestSignal = compIds.length
         ? (await db.query<{ m: string | null }>(`SELECT MAX(created_at)::text m FROM stream_items WHERE competitor_id IN (${inClause})`, compIds))[0]?.m ?? null
         : null;
       const brand = (await db.query<{ brand_name: string }>('SELECT brand_name FROM org_settings WHERE org_id = $1', [orgId]))[0]?.brand_name ?? null;
-      return { orgId, competitors: comps.length, signals, latest, brand };
+      const w = nameByOrg.get(orgId)!;
+      const latest = latestSignal ?? (w.lastSeenAt || null);
+      return { orgId, name: w.name, competitors: comps.length, signals, latest, brand };
     }),
   );
+  rows.sort((a, b) => (b.latest ?? '').localeCompare(a.latest ?? ''));
 
   return (
     <main className="main solo">
@@ -60,7 +71,10 @@ export default async function AdminWorkspaces() {
             <tbody>
               {rows.map((r) => (
                 <tr key={r.orgId}>
-                  <td className="rl mono">{r.orgId}</td>
+                  <td className="rl mono">
+                    {r.orgId}
+                    {r.name && <span style={{ color: 'var(--faint)', marginLeft: 6 }}>({r.name})</span>}
+                  </td>
                   <td className="rl">{r.brand ?? <span style={{ color: 'var(--faint)' }}>not set</span>}</td>
                   <td className="n">{r.competitors}</td>
                   <td className="n">{r.signals}</td>

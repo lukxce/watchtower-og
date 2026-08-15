@@ -29,6 +29,38 @@ export async function distinctOrgIds(): Promise<string[]> {
   return rows.map((r) => r.org_id);
 }
 
+export interface WorkspaceRow {
+  orgId: string;
+  name: string | null;
+  createdAt: string;
+  lastSeenAt: string;
+}
+
+// Every workspace that has ever signed in — a superset of distinctOrgIds(),
+// which only sees orgs that already have a competitor row. Registered on
+// every authenticated request via touchWorkspace() so a brand-new, still-empty
+// signup shows up in /admin/workspaces immediately instead of being invisible
+// until they add their first competitor.
+export async function allWorkspaces(): Promise<WorkspaceRow[]> {
+  const db = await getDb();
+  const rows = await db.query<{ org_id: string; name: string | null; created_at: string; last_seen_at: string }>(
+    'SELECT org_id, name, created_at, last_seen_at FROM workspaces ORDER BY last_seen_at DESC',
+  );
+  return rows.map((r) => ({ orgId: r.org_id, name: r.name, createdAt: r.created_at, lastSeenAt: r.last_seen_at }));
+}
+
+// Upsert-on-every-request, cheap by design (one indexed PK write). Name is
+// best-effort (Clerk's org slug, if the session carries one) and never
+// overwrites a previously-known name with null.
+export async function touchWorkspace(orgId: string, name?: string | null): Promise<void> {
+  const db = await getDb();
+  await db.query(
+    `INSERT INTO workspaces (org_id, name, last_seen_at) VALUES ($1, $2, now())
+     ON CONFLICT (org_id) DO UPDATE SET last_seen_at = now(), name = COALESCE(EXCLUDED.name, workspaces.name)`,
+    [orgId, name ?? null],
+  );
+}
+
 export interface StreamItem {
   externalId: string;
   title: string;
