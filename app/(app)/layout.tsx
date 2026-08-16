@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <a className="demo-exit" href="/api/demo/exit">Exit</a>
         </div>
       )}
-      {viewingAs && (
+      {viewingAs && !demo && (
         <div className="admin-banner">
           Viewing as workspace <b className="mono">{viewingAs}</b> — this is exactly what that client sees.
           <a href="/api/admin/view-as?clear=1">Exit view-as</a>
