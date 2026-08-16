@@ -41,11 +41,14 @@ const COMPETITORS = [
     extra_tier2: ['/blog', '/about'],
   },
   {
-    slug: 'contify', name: 'Contify', domain: 'www.contify.com', track_linkedin: true,
+    // The closest competitor in the set: same promise (source-linked
+    // citations on every claim), same artifacts (battlecards, an ask-the-AI
+    // chat in "Ask CIx"), and a free tier that tracks one competitor.
+    slug: 'signal-labs', name: 'Signal Labs', domain: 'usesignallabs.com', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: 'Contify market intelligence platform', reddit: 'contify', podcast: 'Contify market intelligence' },
-    extra_tier1: ['/pricing', '/market-intelligence-platform', '/competitive-intelligence', '/news-api'],
-    extra_tier2: ['/customers', '/about-us'],
+    queries: { news: '"Signal Labs" competitive intelligence CIx', reddit: 'signal labs competitive intelligence', podcast: 'Signal Labs competitive intelligence' },
+    extra_tier1: ['/pricing', '/cix', '/solutions', '/docs'],
+    extra_tier2: ['/blog', '/about', '/contact'],
   },
 ];
 
