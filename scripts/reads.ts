@@ -69,6 +69,53 @@ const READS: Record<string, Read> = {
       { label: 'Buildouts', text: 'launch.hypefy.ai and ai-agent.hypefy.ai on the certificate log, ~5 weeks after the round' },
     ],
   },
+  // ---- demo workspace (Watchtower's own market, ORG_ID=demo-workspace) ----
+  klue: {
+    hook: 'The funded category leader, and it shows in the infrastructure',
+    narrative: `Klue is the best-capitalised competitor in the set and the crawl shows where the money went: 255 hostnames on the certificate log, most of them per-pull-request preview environments, which is the fingerprint of a large engineering org shipping continuously. Their own news trail runs $4M at launch, then a $15M Series A, then $62M to accelerate "competitive enablement" — they named the category and then funded owning it. Paid presence is modest (~11 Google ads, 6 on LinkedIn) because they do not need to buy the category. The opening is not their capability, it is their shape: enterprise-weighted, sold to product marketing teams, priced on a call.`,
+    evidence: [
+      { label: 'Funding trail', text: '$4M launch → $15M Series A → $62M raise, all from their own press coverage' },
+      { label: 'Engineering scale', text: '255 hostnames observed, dominated by per-PR preview environments' },
+      { label: 'Paid presence', text: '~11 Google ads via "Klue Labs Inc" · 6 LinkedIn ads' },
+    ],
+  },
+  crayon: {
+    hook: 'Buying distribution instead of buying attention',
+    narrative: `Crayon is the quietest advertiser in the set: zero Google ads and a single LinkedIn ad, which for an incumbent of its size is a choice rather than a shortfall. What they are doing instead showed up in the news channel — integrating competitive intelligence into Glean, putting their content where AI workplace search already sits. That is a distribution bet: reach the revenue team inside the tool they already have open, rather than paying to interrupt them. Worth watching whether more such integrations follow; one is a deal, three would be a strategy.`,
+    evidence: [
+      { label: 'Distribution move', text: 'Crayon integrates competitive intelligence into Glean for revenue teams' },
+      { label: 'Paid presence', text: '0 Google ads · 1 LinkedIn ad — near-silent for an incumbent' },
+      { label: 'Caveat', text: 'One integration is a data point; the strategy read is not confirmed until more follow' },
+    ],
+  },
+  kompyte: {
+    hook: 'Absorbed into Semrush, and running on its distribution',
+    narrative: `Kompyte no longer behaves like an independent company, and the collection makes that visible in a way a feature comparison would not: no careers page of its own (it 404s), and no advertiser account — zero ads on either platform, because acquisition means the spend runs under Semrush. Its own history is a small-cap trail (500 Startups demo day, a €400k round led by Rose Tech Ventures) that ends at the Semrush acquisition, after which the news becomes partnership announcements like IcebergIQ. The read: you are not competing with Kompyte's roadmap, you are competing with Semrush's bundle and its existing seats.`,
+    evidence: [
+      { label: 'Absorbed', text: 'kompyte.com/careers returns 404 · zero own ad accounts on Google or LinkedIn' },
+      { label: 'Now positioned as', text: '"Kompyte by Semrush", latest news is the IcebergIQ partnership' },
+      { label: 'Pre-acquisition trail', text: '500 Startups demo day · €400k round led by Rose Tech Ventures' },
+    ],
+  },
+  visualping: {
+    hook: 'Coming up from the bottom, not down from enterprise',
+    narrative: `Visualping is the only competitor here that arrives from underneath. Its press history is consumer utility — people using it to catch delivery slots and vaccine appointments — and its product news is extension-level: one-click AI monitoring and action recording in Chrome. It is the most active advertiser in the set relative to size (~11 Google ads) and carries 47 hostnames. The threat is not that it wins enterprise CI evaluations; it is that it makes "just watch their pricing page" free and obvious, and anchors what buyers think change monitoring should cost before they ever reach a real CI vendor.`,
+    evidence: [
+      { label: 'Product direction', text: 'One-click AI monitoring and action recording shipped to the Chrome extension' },
+      { label: 'Origin', text: 'Consumer utility press: delivery slots, COVID vaccine appointment tracking · $2M raise' },
+      { label: 'Paid presence', text: '~11 Google ads via "Webmonitoring Technologies Inc."' },
+    ],
+  },
+  'signal-labs': {
+    hook: 'Closest to us on promise, furthest on pricing',
+    narrative: `Signal Labs is the nearest competitor in the set and the overlap is not accidental: CIx sells source-linked citations on every claim, battlecards as the artifact, and an "Ask CIx" chat — the same three commitments we make. Their free tier is real (one living competitor page, one battlecard a month, three seats). The divergence is the buying motion: Team pricing is custom, scoped on a 30-minute call, and their own page concedes the friction by promising "you will know the price before the trial starts, not after it ends". They are too young to have news coverage — zero qualifying articles, which is an honest zero, not a collection gap — but they are already running ~10 Google ads.`,
+    evidence: [
+      { label: 'Same promise', text: 'Source-linked citations on every claim, battlecards, and an ask-the-AI chat (Ask CIx)' },
+      { label: 'Pricing motion', text: 'Free = 1 competitor · Team = custom, quoted on a 30-minute call' },
+      { label: 'Their own tell', text: '"You will know the price before the trial starts, not after it ends"' },
+      { label: 'Coverage', text: '0 qualifying news articles — real for a company this young, not a miss' },
+    ],
+  },
 };
 
 async function main() {

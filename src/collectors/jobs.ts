@@ -80,13 +80,28 @@ async function probeAts(comp: Competitor): Promise<Ats | null> {
       if (jobs !== null) return { kind: 'greenhouse', slug: forMatch[1] };
     }
   }
+  // Name-verified slug probing. Crucially this picks the board with the most
+  // OPEN ROLES rather than the first name match: Crayon has a stale, empty
+  // Greenhouse board called "Crayon" and a live Workable board with real
+  // openings, and because Greenhouse was probed first the empty one won and
+  // was then cached forever — the competitor showed "0 open" while their
+  // careers page listed three. An empty board that merely shares a name
+  // should never beat a populated one.
   const candidates = [...new Set([comp.slug, comp.name.toLowerCase().replace(/[^a-z0-9]/g, ''), comp.domain.replace(/^www\./, '').split('.')[0]])];
+  let best: { ats: Ats; count: number } | null = null;
   for (const slug of candidates) {
     const gh = (await jsonFetch(`https://boards-api.greenhouse.io/v1/boards/${slug}`)) as { name?: string } | null;
-    if (gh?.name && similar(gh.name, comp.name)) return { kind: 'greenhouse', slug };
+    if (gh?.name && similar(gh.name, comp.name)) {
+      const jobs = await fetchJobs({ kind: 'greenhouse', slug });
+      if (jobs && (!best || jobs.length > best.count)) best = { ats: { kind: 'greenhouse', slug }, count: jobs.length };
+    }
     const wk = (await jsonFetch(`https://apply.workable.com/api/v1/widget/accounts/${slug}`)) as { name?: string } | null;
-    if (wk?.name && similar(wk.name, comp.name)) return { kind: 'workable', slug };
+    if (wk?.name && similar(wk.name, comp.name)) {
+      const jobs = await fetchJobs({ kind: 'workable', slug });
+      if (jobs && (!best || jobs.length > best.count)) best = { ats: { kind: 'workable', slug }, count: jobs.length };
+    }
   }
+  if (best) return best.ats;
   return null;
 }
 
