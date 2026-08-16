@@ -3,14 +3,18 @@ import { useEffect, useState } from 'react';
 
 // The hero headline finishes itself, over and over. This is the whole
 // "what does it watch" pitch without a feature list: the sentence just
-// keeps landing somewhere new. Phrases stay short so the marker sweep
-// never wraps to a second line (a wrapped sweep reads as a yellow block,
-// not a highlight).
+// keeps landing somewhere new.
+//
+// Every phrase is kept to ~15 characters on purpose. The sweep is
+// white-space:nowrap (see .wt-tail), so a phrase that does not fit moves
+// to the next line WHOLE rather than splitting into a two-line yellow
+// slab. Short phrases plus nowrap is what keeps the headline at a stable
+// two lines from a 320px phone up to desktop.
 const TAILS = [
   'cut a price.',
-  'mention you by name.',
-  'start building something.',
-  'change the pitch.',
+  'mention you.',
+  'ship something.',
+  'change tack.',
   'go quiet.',
 ];
 

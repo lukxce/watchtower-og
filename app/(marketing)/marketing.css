@@ -56,11 +56,14 @@
 .wt-kicker{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--a-teal);background:var(--a-teal-wash);padding:7px 15px;border-radius:999px;margin-bottom:24px}
 .wt-kicker i{width:7px;height:7px;border-radius:50%;background:var(--a-teal);animation:wt-pulse 2.2s ease-out infinite}
 @keyframes wt-pulse{0%{box-shadow:0 0 0 0 rgba(30,111,92,.45)}70%{box-shadow:0 0 0 9px rgba(30,111,92,0)}100%{box-shadow:0 0 0 0 rgba(30,111,92,0)}}
-h1.wt-h1{font-size:clamp(34px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1.03;margin:0 0 20px;color:var(--a-ink)}
-/* The rotating half sits on its own line so a longer phrase changes the
-   line's length, never the block's height — no jump as it cycles. */
-.wt-tail-slot{display:block;min-height:1.06em;margin-top:.1em}
-.wt-tail{display:inline-block;background:linear-gradient(120deg, rgba(234,253,53,.92), rgba(226,244,99,.62));border-radius:11px;padding:0 .3em;opacity:0;transform:translateY(.16em);transition:opacity .26s ease, transform .26s ease}
+h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1.03;margin:0 0 20px;color:var(--a-ink)}
+/* The rotating half flows straight on from "they" instead of being forced
+   onto its own line. white-space:nowrap is the load-bearing bit: without it
+   a long phrase splits across two lines and the sweep renders as a big
+   yellow slab (the exact thing this keeps regressing into). With it, a
+   phrase that does not fit moves to the next line whole. */
+.wt-tail-slot{display:inline}
+.wt-tail{display:inline-block;white-space:nowrap;background:linear-gradient(120deg, rgba(234,253,53,.92), rgba(226,244,99,.62));border-radius:11px;padding:0 .28em;opacity:0;transform:translateY(.16em);transition:opacity .26s ease, transform .26s ease}
 .wt-tail.on{opacity:1;transform:none}
 .wt-dek{font-size:18px;color:var(--a-mut);line-height:1.6;margin:0 0 30px;max-width:44ch}
 .wt-cta{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:16px}

@@ -6,6 +6,7 @@
 // (PGlite locally, Neon in prod).
 import { NextResponse } from 'next/server';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { DEMO_COOKIE } from '@/lib/demo';
 
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
@@ -16,6 +17,10 @@ const isProtectedRoute = createRouteMatcher([
 export default clerkConfigured
   ? clerkMiddleware(async (auth, req) => {
       if (!isProtectedRoute(req)) return;
+      // Public demo: browsing the real app with no account. tenant.ts pins
+      // these requests to the demo workspace, and resolveOrgId() refuses
+      // them, so every API mutation still fails closed.
+      if (req.cookies.get(DEMO_COOKIE)?.value === '1') return;
       const { userId, orgId } = await auth();
       if (!userId) {
         const signIn = new URL('/sign-in', req.url);

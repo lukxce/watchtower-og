@@ -6,7 +6,9 @@
 // architecture (empty until that pipeline is built).
 import { getDb } from '@/db/client';
 import { requireOrgId } from '@/lib/tenant';
+import { redirect } from 'next/navigation';
 import { isPlatformAdmin } from '@/lib/adminAuth';
+import { isDemo } from '@/lib/demo';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +24,10 @@ function ago(iso: string): string {
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 export default async function Admin() {
+  // The admin console is an internal ops surface (it reads raw tables and
+  // talks about the pipeline). It leaks nothing cross-tenant in demo mode,
+  // but a prospect should never land on it — bounce them to the product.
+  if (await isDemo()) redirect('/overview');
   const orgId = await requireOrgId();
   const platformAdmin = await isPlatformAdmin();
   const db = await getDb();

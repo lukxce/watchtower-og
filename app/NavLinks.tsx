@@ -24,11 +24,12 @@ const MORE = [
   { label: 'Admin', href: '/admin' },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({ demo = false }: { demo?: boolean }) {
   const path = usePathname();
   const ref = useRef<HTMLDetailsElement>(null);
   const isOn = (href: string) => path === href || path.startsWith(href + '/');
-  const moreOn = MORE.some((m) => isOn(m.href));
+  const more = demo ? MORE.filter((m) => m.href !== '/admin') : MORE;
+  const moreOn = more.some((m) => isOn(m.href));
   // Close the dropdown when navigating away (links are full navigations, but
   // soft transitions keep the DOM alive).
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function NavLinks() {
       <details className="tnav-more" ref={ref}>
         <summary className={moreOn ? 'on' : ''}>More ▾</summary>
         <div className="tnav-menu">
-          {MORE.map((n) => (
+          {more.map((n) => (
             <Link key={n.href} href={n.href} className={isOn(n.href) ? 'on' : ''}>
               {n.label}
             </Link>

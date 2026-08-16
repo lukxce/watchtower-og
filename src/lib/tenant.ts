@@ -5,6 +5,7 @@
 // setup — matching the rest of this repo's "zero config locally" convention.
 import { redirect } from 'next/navigation';
 import { getViewAsOrg } from './adminAuth';
+import { DEMO_ORG_ID, isDemo } from './demo';
 
 export const DEV_ORG_ID = 'dev-workspace';
 export const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -16,6 +17,9 @@ export const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE
 export async function requireOrgId(): Promise<string> {
   const viewAs = await getViewAsOrg();
   if (viewAs) return viewAs;
+  // Public demo (see lib/demo.ts): pinned to one hardcoded workspace, so a
+  // demo visitor can never resolve to a real customer's data.
+  if (await isDemo()) return DEMO_ORG_ID;
   if (!clerkConfigured) return DEV_ORG_ID;
   const { auth } = await import('@clerk/nextjs/server');
   const { userId, orgId, orgSlug } = await auth();
@@ -38,6 +42,9 @@ export async function requireOrgId(): Promise<string> {
 
 // API routes: same resolution, but returns null instead of redirecting so the
 // caller can respond with 401/400 JSON.
+// NOTE: deliberately does NOT honour demo mode. This is the path API routes
+// use, so a demo visitor gets null here and every mutation 401s. Read-only
+// browsing is the whole grant.
 export async function resolveOrgId(): Promise<string | null> {
   const viewAs = await getViewAsOrg();
   if (viewAs) return viewAs;

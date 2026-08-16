@@ -4,11 +4,20 @@ import NavLinks from '../NavLinks';
 import ChannelRail from '../ChannelRail';
 import { clerkConfigured } from '@/lib/tenant';
 import { getViewAsOrg } from '@/lib/adminAuth';
+import { isDemo } from '@/lib/demo';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const viewingAs = await getViewAsOrg();
+  const demo = await isDemo();
   return (
     <div className="app">
+      {demo && (
+        <div className="demo-banner">
+          <span><b>Demo</b> · real signals from a live workspace tracking 5 real competitors. Read only.</span>
+          <a className="demo-cta" href="/sign-up">Start free</a>
+          <a className="demo-exit" href="/api/demo/exit">Exit</a>
+        </div>
+      )}
       {viewingAs && (
         <div className="admin-banner">
           Viewing as workspace <b className="mono">{viewingAs}</b> — this is exactly what that client sees.
@@ -26,9 +35,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </svg>
             watch<b>tower</b>
           </a>
-          <NavLinks />
+          <NavLinks demo={demo} />
           <div className="top-right">
-            {clerkConfigured ? (
+            {demo ? (
+              <span className="ws-chip">
+                <span className="ws-dot" />
+                demo workspace
+              </span>
+            ) : clerkConfigured ? (
               <>
                 <OrganizationSwitcher afterSelectOrganizationUrl="/overview" afterCreateOrganizationUrl="/onboarding" hidePersonal />
                 <UserButton />

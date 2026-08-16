@@ -40,9 +40,9 @@ export default function Home() {
             </p>
             <div className="wt-cta">
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
-              <Link href="#proof" className="btn btn-ghost btn-lg">See it working ↓</Link>
+              <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $99/mo · no demo call · no card required</p>
+            <p className="wt-note">From $99/mo · no card required · the demo needs no account</p>
           </div>
 
           <aside className="wt-panel" aria-label="A live morning of Watchtower signals">
@@ -169,7 +169,7 @@ export default function Home() {
           <p>Name your competitors, or let the Tower name them. Real signals inside the hour.</p>
           <div className="wt-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
-            <Link href="/contact" className="btn btn-ghost btn-lg">Talk to us</Link>
+            <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo</Link>
           </div>
         </div>
       </section>
