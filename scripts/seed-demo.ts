@@ -15,28 +15,32 @@ const COMPETITORS = [
   {
     slug: 'kompyte', name: 'Kompyte', domain: 'kompyte.com', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: 'Kompyte competitive intelligence', reddit: 'kompyte', podcast: 'Kompyte' },
+    queries: { news: '"Kompyte"', reddit: 'kompyte', podcast: 'Kompyte' },
     extra_tier1: ['/pricing', '/battlecards', '/competitive-intelligence-automation', '/integrations'],
     extra_tier2: ['/case-studies', '/about'],
   },
   {
     slug: 'crayon', name: 'Crayon', domain: 'www.crayon.co', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: 'Crayon competitive intelligence platform', reddit: 'crayon competitive intelligence', podcast: 'Crayon competitive intelligence' },
+    queries: { news: '"Crayon" competitive intelligence', reddit: 'crayon competitive intelligence', podcast: 'Crayon competitive intelligence',
+      // "Crayon" also names a Norwegian IT firm, a Lainey Wilson song and an
+      // anime — the search API cannot disambiguate, so gate on the category.
+      newsMust: ['competitive intelligence', 'competitive enablement', 'crayon.co', 'battlecard', 'compete'] },
     extra_tier1: ['/pricing', '/platform', '/battlecards', '/competitive-intelligence'],
     extra_tier2: ['/customers', '/resources'],
   },
   {
     slug: 'klue', name: 'Klue', domain: 'klue.com', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: 'Klue competitive enablement', reddit: 'klue competitive', podcast: 'Klue competitive enablement' },
+    queries: { news: '"Klue" competitive intelligence', reddit: 'klue competitive', podcast: 'Klue competitive enablement',
+      newsMust: ['competitive intelligence', 'competitive enablement', 'win-loss', 'win/loss', 'battlecard', 'klue.com', 'product marketing', 'compete'] },
     extra_tier1: ['/pricing', '/platform', '/battlecards', '/win-loss-analysis'],
     extra_tier2: ['/customers', '/about'],
   },
   {
     slug: 'visualping', name: 'Visualping', domain: 'visualping.io', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: 'Visualping website change monitoring', reddit: 'visualping', podcast: 'Visualping' },
+    queries: { news: '"Visualping"', reddit: 'visualping', podcast: 'Visualping' },
     extra_tier1: ['/pricing', '/enterprise', '/competitive-intelligence'],
     extra_tier2: ['/blog', '/about'],
   },
@@ -46,7 +50,11 @@ const COMPETITORS = [
     // chat in "Ask CIx"), and a free tier that tracks one competitor.
     slug: 'signal-labs', name: 'Signal Labs', domain: 'usesignallabs.com', track_linkedin: true,
     meta_page_id: null, youtube_handle: null,
-    queries: { news: '"Signal Labs" competitive intelligence CIx', reddit: 'signal labs competitive intelligence', podcast: 'Signal Labs competitive intelligence' },
+    queries: { news: '"Signal Labs" competitive intelligence', reddit: 'signal labs competitive intelligence', podcast: 'Signal Labs competitive intelligence',
+      // A different, unrelated Signal Labs (Lightspeed-backed, acquired
+      // BrassRing) dominates this name in the news. Zero results here is the
+      // honest answer for a startup this young, not a collection failure.
+      newsMust: ['competitive intelligence', 'usesignallabs', 'cix', 'battlecard'] },
     extra_tier1: ['/pricing', '/cix', '/solutions', '/docs'],
     extra_tier2: ['/blog', '/about', '/contact'],
   },

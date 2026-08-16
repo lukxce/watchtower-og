@@ -38,13 +38,32 @@ async function viaRss(q: string): Promise<StreamItem[] | null> {
 export async function collectNews(comp: Competitor): Promise<string> {
   const q = comp.queries?.news ?? `"${comp.name}"`;
   const gnews = await viaGNews(comp, q);
-  const items = gnews ?? (await viaRss(q));
+  let items = gnews ?? (await viaRss(q));
   const via = gnews ? 'GNews API' : 'Google News RSS (fallback)';
   if (!items) {
     await recordRun(comp.id, 'news', false, 0, 'both GNews and RSS failed');
     return 'FAILED (news)';
   }
+  // Generic brand names (Crayon, Klue, Signal Labs) collide with unrelated
+  // companies, songs, even obituaries — and neither GNews nor Google News RSS
+  // reliably honours boolean grouping in the query, so the filtering has to
+  // happen here. When queries.newsMust is set, a headline must contain at
+  // least one of those terms to count. Competitors with a distinctive name
+  // leave it unset and are unaffected. Dropping a real story is the cheaper
+  // error: a feed full of the wrong company is what "no false fires" is for.
+  let dropped = 0;
+  const must = comp.queries?.newsMust;
+  if (must?.length) {
+    const before = items.length;
+    const needles = must.map((m) => m.toLowerCase());
+    items = items.filter((it) => {
+      const hay = `${it.title} ${it.url ?? ''}`.toLowerCase();
+      return needles.some((nd) => hay.includes(nd));
+    });
+    dropped = before - items.length;
+  }
   const { added, fresh } = await ingestItems(comp.id, 'news', items);
-  await recordRun(comp.id, 'news', true, added, `via ${via}`);
-  return `+${added} (${fresh} pending) via ${via}`;
+  const note = dropped ? `${via}, ${dropped} off-topic dropped` : via;
+  await recordRun(comp.id, 'news', true, added, `via ${note}`);
+  return `+${added} (${fresh} pending) via ${note}`;
 }

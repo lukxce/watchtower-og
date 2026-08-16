@@ -13,14 +13,37 @@ export interface Competitor {
   meta_page_id: string | null;
   youtube_handle: string | null;
   track_linkedin: boolean;
-  queries: { news?: string; reddit?: string; podcast?: string };
+  queries: { news?: string; reddit?: string; podcast?: string; newsMust?: string[] };
   extra_tier1: string[];
   extra_tier2: string[];
 }
 
+// JSONB columns can come back double-encoded: the seed scripts pass
+// JSON.stringify(obj) as a parameter, and postgres.js then encodes that JS
+// string as a JSON *string scalar*, so the column holds "{\"news\":...}"
+// rather than {"news":...}. Reads then produced a string where the type said
+// object, which made comp.queries?.news silently undefined — every custom
+// news/reddit/podcast query and every pinned extra_tier1/extra_tier2 page has
+// been quietly ignored. Normalising on read fixes it for rows already stored
+// wrong, under both drivers (PGlite parses, postgres.js may not), which
+// writing it correctly from now on would not.
+function asJson<T>(v: unknown, fallback: T): T {
+  if (v == null) return fallback;
+  if (typeof v === 'string') {
+    try { return JSON.parse(v) as T; } catch { return fallback; }
+  }
+  return v as T;
+}
+
 export async function allCompetitors(orgId: string): Promise<Competitor[]> {
   const db = await getDb();
-  return db.query<Competitor>('SELECT * FROM competitors WHERE org_id = $1 ORDER BY id', [orgId]);
+  const rows = await db.query<Competitor>('SELECT * FROM competitors WHERE org_id = $1 ORDER BY id', [orgId]);
+  return rows.map((r) => ({
+    ...r,
+    queries: asJson(r.queries, {} as Competitor['queries']),
+    extra_tier1: asJson(r.extra_tier1, [] as string[]),
+    extra_tier2: asJson(r.extra_tier2, [] as string[]),
+  }));
 }
 
 export async function distinctOrgIds(): Promise<string[]> {
