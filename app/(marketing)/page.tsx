@@ -1,156 +1,124 @@
 import Link from 'next/link';
+import RotatingTail from './RotatingTail';
 
 export const metadata = {
-  title: 'Watchtower · While you slept, your market moved.',
+  title: 'Watchtower · Know the moment your competitors move.',
   description:
-    'Watchtower tracks every pricing change, launch, hire, ad blitz and funding round across your competitors, reads them together, and hands you the next move. Every fact cited. From $99/mo.',
+    'Watchtower reads everything your competitors do in public and tells you what it means. Actionable competitive intelligence, every fact cited. From $99/mo.',
 };
 
-// The watch log in the hero is real output, not lorem: every line below is a
-// genuine signal type this product produced against real competitors, worded
-// exactly the way the feed words it.
-const LOG: { t: string; text: string; tag: string; cls: string }[] = [
-  { t: '02:14', text: 'cert log · new hostname: launch.grin.co', tag: 'buildout', cls: 'lg-p' },
-  { t: '06:00', text: 'the daily watch begins · 6 competitors · 22 channels', tag: 'crawl', cls: 'lg-m' },
-  { t: '06:07', text: 'grin.co/pricing changed · self-serve tiers are live', tag: 'pricing', cls: 'lg-p' },
-  { t: '06:11', text: 'Upfluence: 66 new ads observed · 43 Google · 23 LinkedIn', tag: 'ads', cls: 'lg-g' },
-  { t: '06:48', text: 'CreatorIQ: 25 open roles · enterprise CS cluster', tag: 'hiring', cls: 'lg-g' },
-  { t: '07:02', text: 'Hypefy raises $7.2M Series A · covered by 5 outlets', tag: 'news', cls: 'lg-m' },
-  { t: '07:30', text: 'the Tower updated a briefing · “Grin: mid-transition, tearing out the old model”', tag: 'the tower', cls: 'lg-b' },
-  { t: '07:31', text: 'battlecard refreshed · how you win, updated', tag: 'battlecard', cls: 'lg-b' },
+// The watch panel in the hero. Real signal types, worded the way the feed
+// words them — this is the product's own voice, not marketing copy about it.
+const WATCH = [
+  { t: '02:14', text: 'new hostname: launch.grin.co', tag: 'buildout' },
+  { t: '06:07', text: 'grin.co/pricing changed · self-serve tiers live', tag: 'pricing' },
+  { t: '06:11', text: 'Upfluence: 66 new ads · 43 Google · 23 LinkedIn', tag: 'ads' },
+  { t: '06:48', text: 'CreatorIQ: 25 open roles · enterprise CS cluster', tag: 'hiring' },
+  { t: '07:30', text: '“Grin is mid-transition, tearing out the old model”', tag: 'the tower', hot: true },
 ];
 
-const SOURCES = [
-  'Pricing pages', 'Ad libraries', 'Job boards', 'Certificate logs', 'Press & news', 'G2 & Trustpilot', 'Changelogs', 'LinkedIn',
-];
-
-const ENGINE = [
-  { title: 'Bundled, not dumped.', body: 'Ten ads in a day is one card, not ten alerts.' },
-  { title: 'Read together.', body: 'One whole-picture briefing per competitor, not a pile of pings.' },
-  { title: 'Sourced, always.', body: 'Every line links to where it came from, and when.' },
+const BEATS = [
+  { k: '02:14', h: 'A hostname appears', p: 'launch.grin.co shows up on a public certificate log. On its own, it is noise.' },
+  { k: 'on file', h: 'Context is already there', p: 'Grin’s own January press: self-serve access, month-to-month, enterprise-only model over.' },
+  { k: '07:30', h: 'The Tower connects them', p: 'One read, written for you: Grin is mid-transition, and here is the crack to sell into.' },
 ];
 
 export default function Home() {
   return (
     <>
-      <section className="mkt-hero" id="product">
-        <div className="wrap">
-          <span className="kicker"><span className="nw-beacon" />Scouts gather. The Tower sees.</span>
-          <h1 className="mkt-h1">Know your competitors&apos; <span className="accent">next&nbsp;move</span>, before your customers do.</h1>
-          <p className="mkt-dek">Actionable intelligence, not a pile of alerts. Every fact cited, updated daily.</p>
-          <div className="mkt-hero-cta">
-            <Link href="/sign-up" className="btn btn-primary btn-lg">Start free, no card required</Link>
-            <Link href="#platform" className="btn btn-ghost btn-lg">See a real battlecard ↓</Link>
-          </div>
-          <p className="mkt-hero-note">Self-serve from $99/mo · no demo call · signals within the hour</p>
-        </div>
-        <div className="mkt-hero-device">
-          <div className="wrap">
-            <div className="shot-frame">
-              <div className="shot-bar"><span /><span /><span /></div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/screenshots/overview.png" alt="The Watchtower overview: market activity chart, bundled highlights, threat index, coverage, and per-competitor reads" className="shot-img" />
+      {/* ---------- hero: the sentence finishes itself ---------- */}
+      <section className="wt-hero">
+        <div className="wrap wt-hero-grid">
+          <div className="wt-hero-copy">
+            <span className="wt-kicker"><i />Scouts gather. The Tower sees.</span>
+            <h1 className="wt-h1">
+              Know the moment they{' '}
+              <RotatingTail />
+            </h1>
+            <p className="wt-dek">
+              Watchtower reads everything your competitors do in public, then tells you what it means.
+            </p>
+            <div className="wt-cta">
+              <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
+              <Link href="#proof" className="btn btn-ghost btn-lg">See it working ↓</Link>
             </div>
+            <p className="wt-note">From $99/mo · no demo call · no card required</p>
           </div>
-        </div>
-      </section>
 
-      <section className="source-strip">
-        <div className="wrap">
-          <span className="source-label">22 channels of real public data, not guesses</span>
-          <div className="source-row">
-            {SOURCES.map((s) => <span key={s}>{s}</span>)}
-          </div>
-        </div>
-      </section>
-
-      <section className="mkt-section" id="platform">
-        <div className="wrap">
-          <span className="mkt-eyebrow">Actionable intelligence</span>
-          <h2>We watch everything. You just get told what matters.</h2>
-          <p className="lede big">
-            Know when they cut a price. Know when they&apos;re about to launch. Know when they mention you by name.
-            Know what their ads say, and who they&apos;re chasing. Know what their founders are telling the press.
-            You don&apos;t pick channels, you just get told what changed, and why it matters.
-          </p>
-          <div className="platform-one">
-            <div className="shot-frame light">
-              <div className="shot-bar"><span /><span /><span /></div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/screenshots/battlecards.png" alt="A Watchtower battlecard: the Tower's read, strengths, vulnerabilities, and how you win" className="shot-img" />
+          <aside className="wt-panel" aria-label="A live morning of Watchtower signals">
+            <div className="wt-panel-head">
+              <span className="mono">the watch</span>
+              <span className="wt-live"><i />live</span>
             </div>
-            <p className="platform-caption">A real battlecard from a real workspace, tracking five real competitors right now.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="mkt-section">
-        <div className="wrap">
-          <div className="mkt-2col">
-            <div>
-              <span className="mkt-eyebrow">Every morning</span>
-              <h2>Ten seconds to the state of your market.</h2>
-              <p className="lede">
-                Sixty-six ads is one card, not sixty-six alerts. Five articles about the same raise is one story.
-                You read what mattered, not everything that happened.
-              </p>
-            </div>
-            <div className="nw-log" aria-label="A real morning of Watchtower signals">
-              <div className="nw-log-head">
-                <span className="mono">this morning&apos;s signals</span>
-                <span className="nw-live"><span />live</span>
+            {WATCH.map((w, i) => (
+              <div className={`wt-row${w.hot ? ' hot' : ''}`} key={w.t} style={{ animationDelay: `${0.4 + i * 0.45}s` }}>
+                <span className="wt-row-t mono">{w.t}</span>
+                <span className="wt-row-x">{w.text}</span>
+                <span className="wt-row-g mono">{w.tag}</span>
               </div>
-              {LOG.map((l, i) => (
-                <div className={`nw-line ${l.cls}`} key={i} style={{ animationDelay: `${0.35 + i * 0.5}s` }}>
-                  <span className="nw-t mono">{l.t}</span>
-                  <span className="nw-txt">{l.text}</span>
-                  <span className="nw-tag mono">{l.tag}</span>
-                </div>
-              ))}
-              <p className="nw-log-note">Real signal types from a live workspace, worded exactly as the feed words them.</p>
-            </div>
-          </div>
+            ))}
+          </aside>
         </div>
       </section>
 
-      <section className="mkt-section alt">
+      {/* ---------- everything, said once, conversationally ---------- */}
+      <section className="wt-band">
         <div className="wrap">
-          <span className="mkt-eyebrow">No false fires</span>
-          <h2>If we can&apos;t verify it, we don&apos;t show it.</h2>
-          <p className="lede">
-            No fabricated rows, no confidence-score hand-waving, no silent failures. When a page can&apos;t be fetched,
-            the log says so, in the product, where you can see it.
+          <h2 className="wt-band-h">
+            We watch everything they do in public. You just get told what matters.
+          </h2>
+          <p className="wt-band-p">
+            Their prices, their ads, their job board, their reviews, their press, the pages they quietly
+            put up before a launch, and what their founders promised on a podcast. You never pick a channel.
           </p>
-          <div className="mkt-3up">
-            {ENGINE.map((e) => (
-              <div className="engine-card" key={e.title}>
-                <h4>{e.title}</h4>
-                <p>{e.body}</p>
+        </div>
+      </section>
+
+      {/* ---------- proof: one real morning ---------- */}
+      <section className="wt-proof" id="proof">
+        <div className="wrap">
+          <span className="wt-eyebrow">A real morning</span>
+          <h2 className="wt-h2">One hostname appeared. Watchtower told the whole story.</h2>
+          <div className="wt-beats">
+            {BEATS.map((b) => (
+              <div className="wt-beat" key={b.h}>
+                <span className="wt-beat-k mono">{b.k}</span>
+                <h3>{b.h}</h3>
+                <p>{b.p}</p>
               </div>
             ))}
           </div>
-          <div className="trust-mock">
-            <div className="row">
-              <div className="trust-card">
-                <span className="te">New signal</span>
-                <p>&ldquo;Fathom Labs published a compare page targeting our SOC 2 gap.&rdquo;</p>
-                <span className="chip">Cite source</span>
-              </div>
-              <div className="trust-card">
-                <span className="te">Honest failure</span>
-                <p>&ldquo;fathomlabs.com/enterprise: unfetchable, robots-blocked. Skipped.&rdquo;</p>
-                <span className="chip skip">Logged, not guessed</span>
-              </div>
-            </div>
-          </div>
+          <p className="wt-fine">
+            Where a connection is only timing, the read says exactly that. If a page cannot be verified, it does not appear.
+          </p>
         </div>
       </section>
 
-      <section className="mkt-section">
+      {/* ---------- the artifact ---------- */}
+      <section className="wt-card-sec" id="platform">
         <div className="wrap">
-          <span className="mkt-eyebrow">Pricing</span>
-          <h2>Start at $99. See value in an hour.</h2>
-          <p className="lede">The incumbents quote five figures after a demo call. We publish prices and let the product do the demo.</p>
+          <div className="wt-card-copy">
+            <span className="wt-eyebrow">The artifact</span>
+            <h2 className="wt-h2">Then it writes how you win.</h2>
+            <p className="wt-lede">
+              One briefing per competitor, written against your positioning, refreshed every morning. Your reps
+              open it and know what to say.
+            </p>
+          </div>
+          <div className="wt-shot">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/screenshots/battlecards.png" alt="A Watchtower battlecard: the Tower's read, their strengths, their vulnerabilities, and how you win" />
+          </div>
+          <p className="wt-cap">A real battlecard, from a workspace tracking five real competitors right now.</p>
+        </div>
+      </section>
+
+      {/* ---------- pricing ---------- */}
+      <section className="wt-pricing">
+        <div className="wrap">
+          <span className="wt-eyebrow">Pricing</span>
+          <h2 className="wt-h2">Published, because we are not afraid of it.</h2>
+          <p className="wt-lede">The incumbents quote five figures after a demo call. Start today for $99.</p>
           <div className="mkt-tiers">
             <div className="tier">
               <span className="tier-tag">Starter</span>
@@ -194,16 +162,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mkt-cta-band">
+      {/* ---------- close ---------- */}
+      <section className="wt-close">
         <div className="wrap">
-          <div className="mkt-cta-inner">
-            <span className="kicker">Get started</span>
-            <h2>Stop being the last to know.</h2>
-            <p className="lede">Tell us who you are and pick your competitors, or let the Tower recommend them. Real, sourced signals appear inside an hour.</p>
-            <div className="mkt-hero-cta">
-              <Link href="/sign-up" className="btn btn-on-navy btn-lg">Start free, no card required</Link>
-              <Link href="/contact" className="btn btn-on-navy-ghost btn-lg">Talk to us</Link>
-            </div>
+          <h2>Stop being the last to know.</h2>
+          <p>Name your competitors, or let the Tower name them. Real signals inside the hour.</p>
+          <div className="wt-cta">
+            <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
+            <Link href="/contact" className="btn btn-ghost btn-lg">Talk to us</Link>
           </div>
         </div>
       </section>

@@ -12,7 +12,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             watch<b>tower</b>
           </Link>
           <nav className="mkt-links">
-            <Link href="/#watch" className="mkt-navlink">Product</Link>
+            <Link href="/#proof" className="mkt-navlink">Product</Link>
             <Link href="/pricing" className="mkt-navlink">Pricing</Link>
             <Link href="/blog" className="mkt-navlink">Blog</Link>
             <Link href="/contact" className="mkt-navlink">Contact</Link>
@@ -36,8 +36,8 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           </div>
           <div className="fcol">
             <h5>Product</h5>
-            <Link href="/#product">Overview</Link>
-            <Link href="/#watch">What it watches</Link>
+            <Link href="/#proof">How it works</Link>
+            <Link href="/#platform">Battlecards</Link>
             <Link href="/pricing">Pricing</Link>
           </div>
           <div className="fcol">
