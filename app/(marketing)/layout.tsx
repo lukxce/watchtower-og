@@ -13,7 +13,6 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           </Link>
           <nav className="mkt-links">
             <Link href="/#platform" className="mkt-navlink">Product</Link>
-            <Link href="/demo" className="mkt-navlink">Demo</Link>
             <Link href="/pricing" className="mkt-navlink">Pricing</Link>
             <Link href="/blog" className="mkt-navlink">Blog</Link>
             <div className="mkt-cta-row">

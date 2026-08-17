@@ -78,6 +78,14 @@ export default function Home() {
             workspace, watching our own market. Switch between them.
           </p>
           <BattlecardDemo />
+
+          <div className="wt-inline-cta">
+            <p>Every card above was written by the product, from public signals, about our own market.</p>
+            <div className="wt-cta">
+              <Link href="/sign-up" className="btn btn-primary">Start free</Link>
+              <Link href="/demo" className="btn btn-ghost">See the live demo →</Link>
+            </div>
+          </div>
         </div>
       </section>
 

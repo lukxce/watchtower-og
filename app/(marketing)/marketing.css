@@ -229,23 +229,60 @@ h1.mkt-h1{font-size:clamp(36px,4.6vw,56px);font-weight:800;letter-spacing:-.04em
 .mkt-watermark{position:absolute;left:50%;bottom:-.28em;transform:translateX(-50%);font-size:clamp(90px,16vw,230px);font-weight:800;letter-spacing:-.04em;color:rgba(20,37,34,.05);white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
 
 /* ---------- blog ---------- */
-.blog-list{margin-top:40px;display:flex;flex-direction:column;gap:14px}
-.blog-item{padding:24px 26px;background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);border-radius:18px;box-shadow:var(--a-shadow);display:grid;grid-template-columns:140px 1fr;gap:28px;transition:transform .16s ease, box-shadow .16s ease}
-.blog-item:hover{transform:translateY(-2px);box-shadow:var(--a-shadow-lift)}
-@media(max-width:640px){.blog-item{grid-template-columns:1fr;gap:8px}}
-.blog-meta{font-family:var(--mono, monospace);font-size:12px;color:var(--a-faint)}
-.blog-item h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
-.blog-item h3 a:hover{color:var(--a-teal)}
-.blog-item p{font-size:14px;color:var(--a-mut);margin:0;line-height:1.5;max-width:64ch}
-.post-head{max-width:70ch;margin:0 auto 8px}
-.post-meta{font-family:var(--mono, monospace);font-size:12px;color:var(--a-faint);margin-bottom:18px}
+.blog-cats{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 30px}
+.blog-cat{font-size:12px;font-weight:700;color:var(--a-mut);background:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:6px 14px}
+.blog-tag{display:inline-block;font-family:var(--mono, monospace);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:800;color:var(--a-teal);margin-bottom:10px}
+.blog-by{display:block;font-size:12.5px;color:var(--a-faint);margin-top:12px}
+
+/* lead story */
+.blog-lead{display:grid;grid-template-columns:1.05fr 1fr;gap:0;border-radius:20px;overflow:hidden;
+  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
+.blog-lead:hover{transform:translateY(-2px);box-shadow:var(--a-shadow-lift)}
+@media(max-width:820px){.blog-lead{grid-template-columns:1fr}}
+.blog-lead-art{background:rgba(20,37,34,.06);min-height:250px;display:grid;place-items:center;color:var(--a-ink)}
+.blog-lead-art svg{width:100%;height:100%;max-height:280px}
+.blog-lead-copy{padding:34px 36px;display:flex;flex-direction:column;justify-content:center}
+.blog-lead-copy h3{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin:0 0 12px;text-wrap:balance}
+.blog-lead-copy p{font-size:15px;color:var(--a-mut);line-height:1.6;margin:0}
+
+/* grid */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.blog-card{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;padding:0 0 22px;
+  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  box-shadow:var(--a-shadow);transition:transform .16s ease, box-shadow .16s ease}
+.blog-card:hover{transform:translateY(-2px);box-shadow:var(--a-shadow-lift)}
+.blog-card-art{background:rgba(20,37,34,.06);height:132px;color:var(--a-ink);margin-bottom:20px}
+.blog-card-art svg{width:100%;height:100%}
+.blog-card .blog-tag,.blog-card h4,.blog-card p,.blog-card .blog-by{padding-left:24px;padding-right:24px}
+.blog-card h4{font-size:17px;font-weight:750;letter-spacing:-.018em;line-height:1.25;margin:0 0 8px;text-wrap:balance}
+.blog-card p{font-size:13.5px;color:var(--a-mut);line-height:1.55;margin:0}
+
+/* post */
+.post-head{max-width:70ch;margin:0 auto 26px}
+.post-meta{font-size:13px;color:var(--a-faint);margin-top:16px}
 .post-title{font-size:clamp(30px,4.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.08;margin:0 0 16px;text-wrap:balance}
-.post-dek{font-size:18px;color:var(--a-mut);line-height:1.55;margin:0 0 40px}
-.post-body{max-width:70ch;margin:0 auto;background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);border-radius:22px;padding:40px 44px;box-shadow:var(--a-shadow)}
+.post-dek{font-size:18px;color:var(--a-mut);line-height:1.55;margin:0}
+.post-art{max-width:70ch;margin:0 auto 30px;border-radius:18px;overflow:hidden;height:230px;
+  background:rgba(20,37,34,.06);color:var(--a-ink)}
+.post-art svg{width:100%;height:100%}
+.post-body{max-width:70ch;margin:0 auto;background:var(--a-glass);backdrop-filter:var(--a-blur);
+  -webkit-backdrop-filter:var(--a-blur);border-radius:22px;padding:40px 44px;box-shadow:var(--a-shadow)}
 @media(max-width:640px){.post-body{padding:26px 22px}}
-.post-body p{font-size:16px;line-height:1.75;color:var(--a-mut);margin:0 0 22px}
+.post-body p{font-size:16.5px;line-height:1.78;color:var(--a-mut);margin:0 0 22px}
+.post-body p:first-of-type{font-size:18px;color:var(--a-ink)}
 .post-body h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:38px 0 16px;color:var(--a-ink)}
-.post-back{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono, monospace);font-size:12.5px;color:var(--a-teal);margin-bottom:32px}
+/* flex (block-level), not inline-flex — as inline it sat on the same line as
+   the category tag that follows it. */
+.post-back{display:flex;width:max-content;align-items:center;gap:6px;font-family:var(--mono, monospace);font-size:12.5px;color:var(--a-teal);margin-bottom:20px}
+.post-next{max-width:70ch;margin:52px auto 0}
+.post-cta{max-width:70ch;margin:28px auto 0;display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;padding:24px 28px;border-radius:18px;background:var(--a-dark);color:var(--a-on-dark)}
+.post-cta p{margin:0;font-size:14.5px;max-width:38ch;color:var(--a-on-dark-mut)}
+.post-cta .wt-cta{margin:0}
+.post-cta .btn-ghost{background:rgba(255,255,255,.1);color:var(--a-on-dark);border-color:rgba(255,255,255,.18)}
 
 /* ---------- contact ---------- */
 .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;margin-top:40px;align-items:start}
@@ -267,3 +304,13 @@ h1.mkt-h1{font-size:clamp(36px,4.6vw,56px);font-weight:800;letter-spacing:-.04em
   .wt-kicker i,.wt-live i{animation:none}
   .wt-row{animation:none;opacity:1;transform:none}
 }
+
+/* ---------- inline CTA under the battlecards ---------- */
+.wt-inline-cta{
+  display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;
+  margin-top:22px;padding:22px 26px;border-radius:18px;
+  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  box-shadow:var(--a-shadow);
+}
+.wt-inline-cta p{margin:0;font-size:14.5px;color:var(--a-mut);max-width:50ch}
+.wt-inline-cta .wt-cta{margin:0}
