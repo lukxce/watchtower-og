@@ -28,7 +28,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="topbar">
         <div className="topbar-in">
           <a className="brand" href="/overview">
-            <Logo />
+            <Logo accent="var(--brand, #1e6f5c)" />
             watch<b>tower</b>
           </a>
           <NavLinks demo={demo} />

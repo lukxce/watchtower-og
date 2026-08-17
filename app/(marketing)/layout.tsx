@@ -9,13 +9,13 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         <div className="wrap">
           <Link href="/" className="mkt-logo">
             <Logo />
-            watch<b>tower</b>
+            <span className="wm">watchtower</span>
           </Link>
           <nav className="mkt-links">
-            <Link href="/#proof" className="mkt-navlink">Product</Link>
+            <Link href="/#platform" className="mkt-navlink">Product</Link>
+            <Link href="/demo" className="mkt-navlink">Demo</Link>
             <Link href="/pricing" className="mkt-navlink">Pricing</Link>
             <Link href="/blog" className="mkt-navlink">Blog</Link>
-            <Link href="/contact" className="mkt-navlink">Contact</Link>
             <div className="mkt-cta-row">
               <Link href="/sign-in" className="btn btn-ghost">Sign in</Link>
               <Link href="/sign-up" className="btn btn-primary">Start free</Link>
@@ -30,7 +30,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           <div className="fbrand">
             <div className="mkt-logo">
               <Logo />
-              watch<b>tower</b>
+              <span className="wm">watchtower</span>
             </div>
             <p>Verifiable competitive intelligence. Every signal cited, every gap disclosed.</p>
           </div>
@@ -38,6 +38,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <h5>Product</h5>
             <Link href="/#proof">How it works</Link>
             <Link href="/#platform">Battlecards</Link>
+            <Link href="/demo">Live demo</Link>
             <Link href="/pricing">Pricing</Link>
           </div>
           <div className="fcol">
