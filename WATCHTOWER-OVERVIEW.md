@@ -84,4 +84,6 @@ B2B teams who need to actually act on competitive information: sales (objection 
 
 ## Where it stands today
 
-Watchtower started as an internal tool built for **Hypefy** (an AI-powered influencer-marketing platform) to track its own competitor set, and is being productized into a standalone SaaS. The Hypefy workspace still runs as the flagship demo dataset — five real, currently-tracked competitors (Upfluence, CreatorIQ, Grin, Modash, The Cirqle) with genuine signals, not mocked data.
+Watchtower started as an internal tool built for **Hypefy** (an AI-powered influencer-marketing platform) to track its own competitor set, and is being productized into a standalone SaaS. That Hypefy workspace still exists as the development dataset.
+
+The **public demo** (`/demo`, no account needed) now runs Watchtower's *own* market instead — five real competitors in competitive intelligence: Kompyte, Crayon, Klue, Visualping and Signal Labs, with genuine signals, not mocked data. The marketing site should show our industry, not a borrowed example set.
