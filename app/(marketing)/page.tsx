@@ -61,7 +61,7 @@ export default function Home() {
       {/* ---------- fog of war: the pitch as an interaction ---------- */}
       <section className="wt-fogsec">
         <div className="wrap">
-          <span className="wt-eyebrow">The frontier</span>
+          <span className="wt-eyebrow">Fog of war</span>
           <h2 className="wt-h2">Most of your market happens in the dark.</h2>
           <p className="wt-lede">
             All of this is public. None of it is anywhere you look. Sweep the light.

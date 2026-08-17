@@ -22,7 +22,7 @@ export default async function Beta() {
     <main className="main solo">
       <section className="cov">
         <header className="cov-head">
-          <span className="cov-eyebrow">Beta · the frontier</span>
+          <span className="cov-eyebrow">Beta · fog of war</span>
           <h1>Coverage</h1>
           <p className="cov-lede">
             Every competitor against every channel. The point of this map is the distinction nothing else
@@ -34,7 +34,7 @@ export default async function Beta() {
         <div className="cov-stats">
           <div className="cov-stat">
             <b>{cov.litPct}%</b>
-            <span>of the frontier is lit</span>
+            <span>of the map is lit</span>
           </div>
           {LEGEND.map((l) => (
             <div className="cov-stat sm" key={l.state}>
