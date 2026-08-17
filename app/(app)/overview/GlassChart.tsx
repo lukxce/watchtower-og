@@ -2,11 +2,16 @@
 // Interactive needle-bars + momentum-curve chart: the flag and crosshair
 // follow the cursor (nearest week), defaulting to the peak week. Pure SVG,
 // no chart lib — geometry mirrors the server layout so there's no jump.
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface ChartWeek { key: string; nice: string; label: string; product: number; gtm: number; market: number }
 
-const CW = 700, CH = 190, TOP = 64, NEEDLE = 4.5;
+// Desktop is a wide, shallow band. On a phone the same 700×190 box scales to
+// roughly 300×80 — twenty-six needles about ten pixels apart, which reads as
+// noise rather than a chart. The compact view drops to the last thirteen weeks
+// in a squarer box, so each week actually has room.
+const WIDE = { CW: 700, CH: 190, TOP: 64, NEEDLE: 4.5, SPAN: 26 };
+const COMPACT = { CW: 360, CH: 210, TOP: 74, NEEDLE: 7, SPAN: 13 };
 
 function smoothPath(pts: [number, number][]): string {
   if (pts.length < 2) return '';
@@ -18,12 +23,42 @@ function smoothPath(pts: [number, number][]): string {
   return dPath;
 }
 
-export default function GlassChart({ weeks, maxWeek, monthTicks }: { weeks: ChartWeek[]; maxWeek: number; monthTicks: { idx: number; label: string }[] }) {
+export default function GlassChart({ weeks: allWeeks, maxWeek: fullMax, monthTicks: _ignored }: { weeks: ChartWeek[]; maxWeek: number; monthTicks: { idx: number; label: string }[] }) {
+  void _ignored; // ticks are re-derived below, because the window can be sliced
   const svgRef = useRef<SVGSVGElement>(null);
+  const [hover, setHover] = useState<number | null>(null);
+
+  // Measured after mount rather than guessed, so the server and the first
+  // client render agree and there is no hydration mismatch.
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 820px)');
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  const { CW, CH, TOP, NEEDLE, SPAN } = compact ? COMPACT : WIDE;
+  const weeks = useMemo(() => (allWeeks.length > SPAN ? allWeeks.slice(-SPAN) : allWeeks), [allWeeks, SPAN]);
+  // Rescale to the visible window: a six-month peak flattens a three-month view.
+  const maxWeek = useMemo(
+    () => Math.max(1, ...weeks.map((w) => w.product + w.gtm + w.market)),
+    [weeks],
+  );
+  void fullMax;
+  const monthTicks = useMemo(() => {
+    const out: { idx: number; label: string }[] = [];
+    let last = '';
+    weeks.forEach((w, i) => {
+      if (w.label !== last) { out.push({ idx: i, label: w.label }); last = w.label; }
+    });
+    return out;
+  }, [weeks]);
+
   const totals = useMemo(() => weeks.map((w) => w.product + w.gtm + w.market), [weeks]);
   const peak = useMemo(() => totals.reduce((best, v, i) => (v > totals[best] ? i : best), 0), [totals]);
-  const [hover, setHover] = useState<number | null>(null);
-  const idx = hover ?? peak;
+  const idx = Math.min(hover ?? peak, weeks.length - 1);
 
   const GAP = (CW - 30 - weeks.length * NEEDLE) / (weeks.length + 1);
   const bx = (i: number) => GAP + i * (NEEDLE + GAP);
@@ -42,7 +77,8 @@ export default function GlassChart({ weeks, maxWeek, monthTicks }: { weeks: Char
   const area = `${curve} L ${curvePts[curvePts.length - 1][0]} ${CH} L ${curvePts[0][0]} ${CH} Z`;
 
   const w = weeks[idx];
-  const flagX = Math.min(Math.max(bx(idx) - 62, 4), CW - 178);
+  const FLAG_W = compact ? 186 : 172;
+  const flagX = Math.min(Math.max(bx(idx) - FLAG_W / 2.8, 4), CW - FLAG_W - 6);
 
   function onMove(e: React.MouseEvent<SVGSVGElement>) {
     const rect = svgRef.current?.getBoundingClientRect();
@@ -85,8 +121,8 @@ export default function GlassChart({ weeks, maxWeek, monthTicks }: { weeks: Char
       ))}
       <path d={curve} className="gx-curve" />
       <g className="gx-flag">
-        <line x1={bx(idx) + NEEDLE / 2} y1={84} x2={bx(idx) + NEEDLE / 2} y2={CH - barH(totals[idx])} />
-        <rect x={flagX} y={20} width={172} height={62} rx={12} />
+        <line x1={bx(idx) + NEEDLE / 2} y1={84} x2={bx(idx) + NEEDLE / 2} y2={Math.max(84, CH - barH(totals[idx]))} />
+        <rect x={flagX} y={20} width={FLAG_W} height={62} rx={12} />
         <text x={flagX + 13} y={38} className="gx-flag-d">Week of {w.nice}</text>
         <rect x={flagX + 11} y={45} width={8} height={8} rx={2.5} className="fr1" />
         <text x={flagX + 24} y={52.5} className="gx-flag-r">{totals[idx]} event{totals[idx] === 1 ? '' : 's'}</text>

@@ -76,6 +76,35 @@ export default async function Mentions() {
         )}
 
         <h3 className="admin-h">In the news</h3>
+        {m.newsUnconfirmed && m.news.length > 0 && (
+          <p className="sub" style={{ marginTop: -4 }}>
+            These are raw name matches — add your domain and a line about what you do in{' '}
+            <a href="/mentions#brand" style={{ fontWeight: 700 }}>brand settings</a> and the Tower can tell your
+            coverage apart from anyone else called {m.brandName}.
+          </p>
+        )}
+        {(m.newsSameName.length > 0 || m.newsUnverified.length > 0) && (
+          <details className="bundle" style={{ marginBottom: 14 }}>
+            <summary>
+              {m.newsSameName.length + m.newsUnverified.length} more named &ldquo;{m.brandName}&rdquo; but could not be
+              confirmed as you — show them
+            </summary>
+            <ul className="bundle-items">
+              {m.newsSameName.map((n) => (
+                <li key={n.url}>
+                  <a href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
+                  <span className="howknow"> — reads as a different {m.brandName} (same name, other field)</span>
+                </li>
+              ))}
+              {m.newsUnverified.map((n) => (
+                <li key={n.url}>
+                  <a href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
+                  <span className="howknow"> — names you, nothing in it ties back to your market</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
         {m.news.length === 0 ? (
           <div className="empty">No news coverage naming {m.brandName} right now.</div>
         ) : (

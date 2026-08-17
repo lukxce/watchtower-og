@@ -79,7 +79,13 @@ export default async function Overview({ searchParams }: { searchParams: Promise
             </div>
 
             <div className="gx-chartwrap">
-              <div className="gx-chart-meta"><span>last 6 months · hover to inspect</span></div>
+              {/* the chart itself narrows to 3 months below 820px, so the
+                  caption has to agree — swapped in CSS, not JS, to keep this
+                  server-rendered */}
+              <div className="gx-chart-meta">
+                <span className="meta-wide">last 6 months · hover to inspect</span>
+                <span className="meta-compact">last 3 months · tap to inspect</span>
+              </div>
               <GlassChart weeks={d.weeks} maxWeek={d.maxWeek} monthTicks={d.monthTicks} />
               <div className="gx-chips">
                 <a href="/overview" className={!d.focusComp ? 'on' : ''}>All</a>

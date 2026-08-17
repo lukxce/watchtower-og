@@ -36,8 +36,11 @@
   background:rgba(240,247,243,.62);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);
   border:1px solid rgba(255,255,255,.55);border-radius:999px;
   box-shadow:0 14px 34px rgba(16,30,28,.18), inset 0 1px 0 rgba(255,255,255,.6)}
-.mkt-logo{display:flex;align-items:center;gap:10px;font-weight:750;font-size:17px;letter-spacing:-.02em}
-.mkt-logo svg{width:26px;height:26px;flex:none}
+.mkt-logo{display:flex;align-items:center;gap:7px;font-weight:750;font-size:17px;letter-spacing:-.02em}
+.mkt-logo svg{width:30px;height:30px;flex:none}
+/* the footer lockup is the sign-off, so it runs a size up from the menu */
+.mkt-footer .mkt-logo{gap:8px;font-size:19px}
+.mkt-footer .mkt-logo svg{width:35px;height:35px}
 /* One flex child, so the container's gap cannot open a space inside the
    wordmark — that is what was rendering it as "watch tower". */
 .mkt-logo .wm{color:var(--a-ink)}
