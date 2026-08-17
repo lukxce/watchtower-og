@@ -643,7 +643,11 @@ details.bundle[open] summary{color:var(--brand-strong);border-color:var(--brand-
 .side-rail{top:96px}
 
 /* signals rail: floating frosted circles with hover label pills */
-.side-rail{background:transparent;border:none;box-shadow:none;gap:10px;align-items:center;width:70px;padding:0;margin-left:26px}
+/* z-index is load-bearing: the rail and .main are flex siblings with no
+   stacking order of their own, so they paint in DOM order — rail first. The
+   glass sheets use backdrop-filter, which creates a stacking context, so they
+   painted straight over the rail's hover label. Sits under the topbar (50). */
+.side-rail{background:transparent;border:none;box-shadow:none;gap:10px;align-items:center;width:70px;padding:0;margin-left:26px;z-index:30}
 .rail-label{writing-mode:vertical-rl;transform:rotate(180deg);padding:0 0 6px;font-size:9px;letter-spacing:.12em;color:var(--mut);opacity:.8}
 .rail-label::after{display:none}
 .side-item{position:relative;width:46px;height:46px;border-radius:50%;justify-content:center;gap:0;background:rgba(232,242,238,.55);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.6);box-shadow:0 8px 20px rgba(16,30,28,.16);color:var(--mut);transition:background .14s,color .14s,transform .14s}

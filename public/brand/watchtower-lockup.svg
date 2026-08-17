@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 34" width="190" height="34" role="img" aria-label="Watchtower">
+  <rect x="7" y="5.5" width="16" height="6" rx="1.4" fill="#eafd35"/>
+  <rect x="11" y="14" width="16" height="6" rx="1.4" fill="#142522" fill-opacity="0.7"/>
+  <rect x="7" y="22.5" width="16" height="6" rx="1.4" fill="#142522" fill-opacity="0.42"/>
+  <text x="40" y="23" font-family="Plus Jakarta Sans, system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="21" font-weight="750" letter-spacing="-0.42" fill="#142522">watchtower</text>
+</svg>
