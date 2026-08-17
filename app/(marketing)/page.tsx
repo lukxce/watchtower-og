@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import RotatingTail from './RotatingTail';
 import BattlecardDemo from './BattlecardDemo';
+import FogPanel from './FogPanel';
 
 export const metadata = {
   title: 'Watchtower · Know the moment your competitors move.',
@@ -11,10 +12,10 @@ export const metadata = {
 // Real lines from our own workspace, worded the way the feed words them.
 // These are our actual competitors, not a borrowed example set.
 const WATCH = [
-  { t: '02:14', text: 'cert log · voice.klue.com, interviewer-v2.klue.com', tag: 'buildout' },
+  { t: '05:40', text: 'Visualping: 11 ads live across Google', tag: 'ads' },
   { t: '05:52', text: 'mcp-adapter.app.klue.com is live in production', tag: 'buildout' },
   { t: '06:07', text: 'crayon.co is hiring again · 3 roles opened', tag: 'hiring' },
-  { t: '06:48', text: 'kompyte.com/careers now returns 404', tag: 'signal' },
+  { t: '06:48', text: 'Signal Labs: 10 ads live, still zero press coverage', tag: 'gap' },
   { t: '07:30', text: '“Klue is building AI voice interviewing into win-loss, unannounced”', tag: 'the tower', hot: true },
 ];
 
@@ -85,6 +86,18 @@ export default function Home() {
               </div>
             ))}
           </aside>
+        </div>
+      </section>
+
+      {/* ---------- fog of war: the pitch as an interaction ---------- */}
+      <section className="wt-fogsec">
+        <div className="wrap">
+          <span className="wt-eyebrow">The frontier</span>
+          <h2 className="wt-h2">Most of your market happens in the dark.</h2>
+          <p className="wt-lede">
+            All of this is public. None of it is anywhere you look. Sweep the light.
+          </p>
+          <FogPanel />
         </div>
       </section>
 
