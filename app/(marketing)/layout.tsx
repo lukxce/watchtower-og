@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Logo from './Logo';
+import MobileNav from './MobileNav';
 import './marketing.css';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/sign-in" className="btn btn-ghost">Sign in</Link>
             <Link href="/sign-up" className="btn btn-primary">Start free</Link>
           </div>
+          <MobileNav />
         </div>
       </header>
       {children}

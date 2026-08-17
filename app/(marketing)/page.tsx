@@ -46,7 +46,7 @@ export default function Home() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $99/mo · no card required · the demo needs no account</p>
+            <p className="wt-note">From $99/mo · no card required<span className="wt-note-x"> · the demo needs no account</span></p>
           </div>
 
           {/* The product itself, bleeding off the right edge so it reads as

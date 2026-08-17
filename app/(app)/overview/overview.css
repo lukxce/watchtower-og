@@ -210,3 +210,60 @@
 @media (prefers-reduced-motion: reduce){
   .gx-icb,.gx-lime,.gx-trow,.gx-report,.gx-pulse,.gx-needle,.gx-chips a,.gx-askhero-form input,.gx-askhero-form button,.gx-minicta,.gx-spot{transition:none}
 }
+
+/* ---------- mobile ----------
+   These live here rather than in globals.css: page-level CSS is injected after
+   the global sheet, so an equal-specificity rule in globals can never win
+   against .gx-* and the whole block silently did nothing. */
+@media(max-width:820px){
+  .gxo{padding:16px 12px 56px}
+  .gx-scene{gap:12px}
+  .gx-sheet{padding:18px 16px;border-radius:22px}
+  .gx-sheet.cool,.gx-sheet.slim{padding:18px 0}
+
+  /* type: the desktop scale was never brought down */
+  .gx-big{font-size:44px}
+  .gx-hey b{font-size:19px}
+  .gx-hey span{font-size:12.5px}
+  .gx-me b{font-size:15px}
+  .gx-info h2{font-size:17px}
+  .gx-info p{max-width:none}
+  /* The profile head was a single desktop row (identity · greeting · refresh).
+     On a phone it stacks: identity + CTA on one line, greeting under it. The
+     refresh control is a link back to this same page — pure noise here. */
+  .gx-profile{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:4px}
+  .gx-me{gap:11px;width:100%}
+  .gx-me > div{flex:1;min-width:0}
+  .gx-avatar.lg{width:40px;height:40px;font-size:12px}
+  .gx-lime{margin-left:auto;font-size:12.5px;padding:9px 15px;white-space:nowrap;box-shadow:0 6px 16px rgba(170,190,20,.4)}
+  .gx-hey{margin-left:0;text-align:left;width:100%}
+  .gx-profile > .gx-icb.round-lg{display:none}
+  .gx-info-ic{width:34px;height:34px;margin-bottom:10px}
+  .gx-info-ic svg{width:15px;height:15px}
+
+  /* Briefing rows are name · text · when on one line at desktop. At phone
+     width the middle column collapses to ~30px, so the text gets its own. */
+  .gx-report{flex-wrap:wrap;align-items:center;gap:5px 10px}
+  .gx-report-text{flex:1 0 100%;-webkit-line-clamp:3}
+
+  /* layout */
+  .gx-body{grid-template-columns:1fr;gap:20px}
+  .gx-askhero{padding:2px 16px 18px;gap:16px}
+  .gx-askhero-copy h3{font-size:18px}
+  .gx-askhero-copy p{max-width:none}
+  .gx-askhero-main{min-width:0;width:100%}
+  .gx-askhero-form{flex-direction:column}
+  .gx-askhero-form button{padding:13px 22px}
+  .gx-band.three,.gx-band.two{grid-template-columns:1fr}
+  .gx-bcol{border-right:none !important;border-bottom:1px solid rgba(255,255,255,.5);padding:20px 16px}
+  .gx-bcol:last-child{border-bottom:none}
+  .gx-chips{gap:6px}
+  .gx-chips a{font-size:12px;padding:6px 12px 6px 6px}
+  .gx-chips a:first-child{padding-left:12px}
+}
+@media(max-width:400px){
+  .gx-big{font-size:38px}
+  /* below ~360 the CTA squeezes the name column to nothing — give it a row */
+  .gx-me{flex-wrap:wrap}
+  .gx-lime{width:100%;margin-left:0;text-align:center;margin-top:2px}
+}
