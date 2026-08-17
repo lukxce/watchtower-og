@@ -16,10 +16,19 @@ const shots = [
 ];
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 2 });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 2 });
+// Shoot the PUBLIC DEMO workspace (Watchtower vs its own market), not the
+// dev/Hypefy one — the marketing site should show our industry, not a
+// borrowed example set. Requires the dev server to be pointed at a database
+// where demo-workspace is populated.
+await ctx.addCookies([{ name: 'wt_demo', value: '1', domain: 'localhost', path: '/' }]);
+const page = await ctx.newPage();
 
 for (const s of shots) {
   await page.goto(`http://localhost:3000${s.path}`, { waitUntil: 'networkidle' });
+  // The demo banner is how a visitor knows they are in the demo; it has no
+  // business inside a marketing screenshot of the product.
+  await page.addStyleTag({ content: '.demo-banner{display:none !important}' });
   await page.screenshot({ path: `${OUT}/${s.file}`, clip: s.clip });
   console.log('saved', s.file);
 }

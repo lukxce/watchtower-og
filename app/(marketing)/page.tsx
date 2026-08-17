@@ -1,42 +1,44 @@
 import Link from 'next/link';
 import RotatingTail from './RotatingTail';
+import BattlecardDemo from './BattlecardDemo';
 
 export const metadata = {
   title: 'Watchtower · Know the moment your competitors move.',
   description:
-    'Watchtower reads everything your competitors do in public and tells you what it means. Actionable competitive intelligence, every fact cited. From $99/mo.',
+    'Watchtower turns everything your competitors do in public into one briefing that says what it means and what to do. Every fact cited. From $99/mo.',
 };
 
-// The watch panel in the hero. Real signal types, worded the way the feed
-// words them — this is the product's own voice, not marketing copy about it.
+// Real lines from our own workspace, worded the way the feed words them.
+// These are our actual competitors, not a borrowed example set.
 const WATCH = [
-  { t: '02:14', text: 'new hostname: launch.grin.co', tag: 'buildout' },
-  { t: '06:07', text: 'grin.co/pricing changed · self-serve tiers live', tag: 'pricing' },
-  { t: '06:11', text: 'Upfluence: 66 new ads · 43 Google · 23 LinkedIn', tag: 'ads' },
-  { t: '06:48', text: 'CreatorIQ: 25 open roles · enterprise CS cluster', tag: 'hiring' },
-  { t: '07:30', text: '“Grin is mid-transition, tearing out the old model”', tag: 'the tower', hot: true },
+  { t: '02:14', text: '255 preview hostnames observed on klue.com', tag: 'buildout' },
+  { t: '06:07', text: 'crayon.co is hiring again · 3 roles opened', tag: 'hiring' },
+  { t: '06:11', text: 'Visualping: ~11 Google ads running', tag: 'ads' },
+  { t: '06:48', text: 'kompyte.com/careers now returns 404', tag: 'signal' },
+  { t: '07:30', text: '“Kompyte is absorbed into Semrush, and running on its distribution”', tag: 'the tower', hot: true },
 ];
 
+// The story is ours, and it is built from two absences — the kind of thing a
+// feature-comparison tool would never notice.
 const BEATS = [
-  { k: '02:14', h: 'A hostname appears', p: 'launch.grin.co shows up on a public certificate log. On its own, it is noise.' },
-  { k: 'on file', h: 'Context is already there', p: 'Grin’s own January press: self-serve access, month-to-month, enterprise-only model over.' },
-  { k: '07:30', h: 'The Tower connects them', p: 'One read, written for you: Grin is mid-transition, and here is the crack to sell into.' },
+  { k: '06:48', h: 'A careers page disappears', p: 'kompyte.com/careers starts returning 404. On its own, that is nothing. Sites get reorganised.' },
+  { k: 'also', h: 'And there is no ad account', p: 'Zero advertiser accounts on Google or LinkedIn either, for a company that plainly still sells.' },
+  { k: '07:30', h: 'The Tower connects them', p: 'Two absences with one cause: Kompyte was absorbed into Semrush. You are competing with a bundle, not a roadmap.' },
 ];
 
 export default function Home() {
   return (
     <>
-      {/* ---------- hero: the sentence finishes itself ---------- */}
+      {/* ---------- hero: headline, then the product itself ---------- */}
       <section className="wt-hero">
-        <div className="wrap wt-hero-grid">
+        <div className="wrap">
           <div className="wt-hero-copy">
             <span className="wt-kicker"><i />Scouts gather. The Tower sees.</span>
             <h1 className="wt-h1">
-              Know the moment they{' '}
-              <RotatingTail />
+              Know the moment <span className="wt-keep">they <RotatingTail /></span>
             </h1>
             <p className="wt-dek">
-              Watchtower reads everything your competitors do in public, then tells you what it means.
+              One briefing every morning that says what changed, why it matters, and what to do about it. Every fact cited.
             </p>
             <div className="wt-cta">
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
@@ -44,41 +46,46 @@ export default function Home() {
             </div>
             <p className="wt-note">From $99/mo · no card required · the demo needs no account</p>
           </div>
+        </div>
 
-          <aside className="wt-panel" aria-label="A live morning of Watchtower signals">
-            <div className="wt-panel-head">
-              <span className="mono">the watch</span>
-              <span className="wt-live"><i />live</span>
-            </div>
-            {WATCH.map((w, i) => (
-              <div className={`wt-row${w.hot ? ' hot' : ''}`} key={w.t} style={{ animationDelay: `${0.4 + i * 0.45}s` }}>
-                <span className="wt-row-t mono">{w.t}</span>
-                <span className="wt-row-x">{w.text}</span>
-                <span className="wt-row-g mono">{w.tag}</span>
-              </div>
-            ))}
-          </aside>
+        <div className="wrap wt-hero-shot">
+          <div className="wt-shot">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/screenshots/overview.png" alt="The Watchtower dashboard: market activity, competitor ratings, biggest threat and launch radar" />
+          </div>
         </div>
       </section>
 
-      {/* ---------- everything, said once, conversationally ---------- */}
+      {/* ---------- what it catches, as things that happen ---------- */}
       <section className="wt-band">
         <div className="wrap">
-          <h2 className="wt-band-h">
-            We watch everything they do in public. You just get told what matters.
-          </h2>
+          <h2 className="wt-band-h">You never watch a channel. You just get told what happened.</h2>
           <p className="wt-band-p">
-            Their prices, their ads, their job board, their reviews, their press, the pages they quietly
-            put up before a launch, and what their founders promised on a podcast. You never pick a channel.
+            They quietly drop a price. They start advertising a feature they have not launched yet. They post four
+            senior roles in one week. They pick up a bad review that names you. Their founder promises something
+            on a podcast. A hostname appears that nobody was meant to see yet.
           </p>
         </div>
       </section>
 
-      {/* ---------- proof: one real morning ---------- */}
+      {/* ---------- the artifact, interactive ---------- */}
+      <section className="wt-card-sec" id="platform">
+        <div className="wrap">
+          <span className="wt-eyebrow">The artifact</span>
+          <h2 className="wt-h2">Then it writes how you win.</h2>
+          <p className="wt-lede">
+            One briefing per competitor, written against your positioning. These are real cards from our own
+            workspace, watching our own market. Switch between them.
+          </p>
+          <BattlecardDemo />
+        </div>
+      </section>
+
+      {/* ---------- proof: two absences, one conclusion ---------- */}
       <section className="wt-proof" id="proof">
         <div className="wrap">
-          <span className="wt-eyebrow">A real morning</span>
-          <h2 className="wt-h2">One hostname appeared. Watchtower told the whole story.</h2>
+          <span className="wt-eyebrow">A real morning, from our own workspace</span>
+          <h2 className="wt-h2">Nothing happened. That was the story.</h2>
           <div className="wt-beats">
             {BEATS.map((b) => (
               <div className="wt-beat" key={b.h}>
@@ -94,22 +101,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- the artifact ---------- */}
-      <section className="wt-card-sec" id="platform">
-        <div className="wrap">
-          <div className="wt-card-copy">
-            <span className="wt-eyebrow">The artifact</span>
-            <h2 className="wt-h2">Then it writes how you win.</h2>
+      {/* ---------- the raw signals, further down where they belong ---------- */}
+      <section className="wt-signals">
+        <div className="wrap wt-signals-grid">
+          <div>
+            <span className="wt-eyebrow">Underneath it</span>
+            <h2 className="wt-h2">Bundled, dated, cited.</h2>
             <p className="wt-lede">
-              One briefing per competitor, written against your positioning, refreshed every morning. Your reps
-              open it and know what to say.
+              Sixty-six ads is one card, not sixty-six alerts. Five articles about the same raise is one story.
+              You read what mattered, not everything that was detected.
             </p>
           </div>
-          <div className="wt-shot">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/screenshots/battlecards.png" alt="A Watchtower battlecard: the Tower's read, their strengths, their vulnerabilities, and how you win" />
-          </div>
-          <p className="wt-cap">A real battlecard, from a workspace tracking five real competitors right now.</p>
+          <aside className="wt-panel" aria-label="A morning of Watchtower signals">
+            <div className="wt-panel-head">
+              <span className="mono">the watch</span>
+              <span className="wt-live"><i />live</span>
+            </div>
+            {WATCH.map((w, i) => (
+              <div className={`wt-row${w.hot ? ' hot' : ''}`} key={w.t} style={{ animationDelay: `${0.1 + i * 0.14}s` }}>
+                <span className="wt-row-t mono">{w.t}</span>
+                <span className="wt-row-x">{w.text}</span>
+                <span className="wt-row-g mono">{w.tag}</span>
+              </div>
+            ))}
+          </aside>
         </div>
       </section>
 

@@ -60,8 +60,14 @@
 
 /* ---------- hero: the sentence finishes itself ---------- */
 .wt-hero{padding:56px 0 86px}
-.wt-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:50px;align-items:center}
-@media(max-width:940px){.wt-hero-grid{grid-template-columns:1fr;gap:44px}}
+/* Wide enough that "they <phrase>" always fits on one line, narrow enough
+   that the whole headline never collapses to one — so the block stays two
+   lines tall no matter which phrase is showing. */
+.wt-hero-copy{max-width:640px}
+.wt-hero-shot{margin-top:46px}
+/* "they <rotating phrase>" stays together, so the line breaks BEFORE "they"
+   rather than orphaning it above the highlight. */
+.wt-keep{white-space:nowrap}
 .wt-kicker{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--a-teal);background:var(--a-teal-wash);padding:7px 15px;border-radius:999px;margin-bottom:24px}
 .wt-kicker i{width:7px;height:7px;border-radius:50%;background:var(--a-teal);animation:wt-pulse 2.2s ease-out infinite}
 @keyframes wt-pulse{0%{box-shadow:0 0 0 0 rgba(30,111,92,.45)}70%{box-shadow:0 0 0 9px rgba(30,111,92,0)}100%{box-shadow:0 0 0 0 rgba(30,111,92,0)}}
@@ -74,7 +80,7 @@ h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;
 .wt-tail-slot{display:inline}
 .wt-tail{display:inline-block;white-space:nowrap;background:linear-gradient(120deg, rgba(234,253,53,.92), rgba(226,244,99,.62));border-radius:11px;padding:0 .28em;opacity:0;transform:translateY(.16em);transition:opacity .26s ease, transform .26s ease}
 .wt-tail.on{opacity:1;transform:none}
-.wt-dek{font-size:18px;color:var(--a-mut);line-height:1.6;margin:0 0 30px;max-width:44ch}
+.wt-dek{font-size:18px;color:var(--a-mut);line-height:1.6;margin:0 0 30px;max-width:46ch}
 .wt-cta{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:16px}
 .wt-note{font-size:12.5px;color:var(--a-faint);font-weight:600}
 
@@ -91,6 +97,11 @@ h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;
 .wt-row-g{margin-left:auto;flex:none;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;border-radius:999px;padding:3px 9px;background:rgba(20,37,34,.07);color:var(--a-faint)}
 .wt-row.hot .wt-row-x{color:var(--a-ink);font-weight:700}
 .wt-row.hot .wt-row-g{background:var(--a-hl);color:var(--a-ink)}
+
+/* ---------- signals, further down ---------- */
+.wt-signals{padding:0 0 96px}
+.wt-signals-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:940px){.wt-signals-grid{grid-template-columns:1fr;gap:32px}}
 
 /* ---------- the one big statement ---------- */
 .wt-band{padding:16px 0 96px}
@@ -120,6 +131,35 @@ h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;
 .wt-shot{margin-top:38px;border-radius:22px;overflow:hidden;box-shadow:0 34px 80px rgba(16,30,28,.28)}
 .wt-shot img{display:block;width:100%;height:auto}
 .wt-cap{text-align:center;font-size:12.5px;color:var(--a-faint);margin:16px 0 0}
+
+/* ---------- interactive battlecard ---------- */
+.bcd{margin-top:36px}
+.bcd-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.bcd-tabs button{font:inherit;font-size:13.5px;font-weight:700;color:var(--a-mut);cursor:pointer;
+  background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.6);border-radius:999px;padding:9px 20px;
+  transition:background .14s,color .14s,transform .14s}
+.bcd-tabs button:hover{background:rgba(255,255,255,.8);color:var(--a-ink)}
+.bcd-tabs button.on{background:var(--a-ink);color:#eef6ee;border-color:transparent}
+.bcd-card{background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  border-radius:26px;padding:30px 32px;box-shadow:var(--a-shadow)}
+.bcd-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.bcd-top h4{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0}
+.bcd-threat{margin-left:auto;font-size:12px;font-weight:800;color:var(--a-mut);background:rgba(255,255,255,.6);border-radius:999px;padding:5px 13px}
+.bcd-read{background:linear-gradient(135deg, rgba(226,244,99,.30), rgba(255,255,255,.42));border-radius:20px;padding:22px 24px}
+.bcd-tag{display:inline-block;font-family:var(--mono, monospace);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--a-teal);font-weight:800;margin-bottom:8px}
+.bcd-read b{display:block;font-size:17px;font-weight:800;letter-spacing:-.015em;margin-bottom:8px}
+.bcd-read p{font-size:14px;color:var(--a-mut);line-height:1.65;margin:0 0 14px}
+.bcd-ev{display:flex;flex-direction:column;gap:7px}
+.bcd-ev span{font-size:12.5px;color:var(--a-mut);background:rgba(255,255,255,.55);border-radius:9px;padding:7px 12px}
+.bcd-ev b{display:inline;font-size:12.5px;color:var(--a-ink);margin-right:6px}
+.bcd-cols{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;margin-top:22px}
+@media(max-width:760px){.bcd-cols{grid-template-columns:1fr;gap:22px}}
+.bcd-h{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-teal);font-weight:800;margin-bottom:11px}
+.bcd-cols ul{list-style:none;margin:0;padding:0}
+.bcd-cols li{font-size:13.5px;color:var(--a-mut);line-height:1.55;padding:0 0 10px 16px;position:relative}
+.bcd-cols li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--a-teal)}
+.bcd-ask{font-size:13.5px;color:var(--a-ink);line-height:1.6;margin:0;font-style:italic}
 
 /* ---------- pricing ---------- */
 .wt-pricing{padding:0 0 96px}
