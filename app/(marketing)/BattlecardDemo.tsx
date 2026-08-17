@@ -92,7 +92,9 @@ export default function BattlecardDemo() {
       <div className="bcd-card">
         <div className="bcd-top">
           <h4>{c.name}</h4>
-          <span className="bcd-threat">Threat {c.threat}</span>
+          <span className={`bcd-threat ${c.threat >= 55 ? 'hi' : c.threat >= 40 ? 'mid' : 'low'}`}>
+            <small>Threat</small> {c.threat}
+          </span>
         </div>
 
         <div className="bcd-read">

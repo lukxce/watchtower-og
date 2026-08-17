@@ -14,7 +14,10 @@ const TAILS = [
   'cut a price.',
   'mention you.',
   'ship something.',
-  'change tack.',
+  'launch an ad.',
+  'get a review.',
+  'open roles.',
+  'raise a round.',
   'go quiet.',
 ];
 

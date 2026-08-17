@@ -15,7 +15,7 @@ const WATCH = [
   { t: '05:52', text: 'mcp-adapter.app.klue.com is live in production', tag: 'buildout' },
   { t: '06:07', text: 'crayon.co is hiring again · 3 roles opened', tag: 'hiring' },
   { t: '06:48', text: 'kompyte.com/careers now returns 404', tag: 'signal' },
-  { t: '07:30', text: '“Klue is building an AI voice interviewer for win-loss, and this is v2”', tag: 'the tower', hot: true },
+  { t: '07:30', text: '“Klue is building AI voice interviewing into win-loss, unannounced”', tag: 'the tower', hot: true },
 ];
 
 // The story is ours, and it is built from two absences — the kind of thing a
@@ -23,7 +23,7 @@ const WATCH = [
 const BEATS = [
   { k: '02:14', h: 'Three hostnames appear', p: 'interview.klue.com, interviewer-v2.klue.com and voice.klue.com turn up on the public certificate log. Nobody announced anything.' },
   { k: 'on file', h: 'The context was already there', p: 'Klue runs win-loss interviews as a core motion, and spent this year publishing agentic-workflow workshops and an AI report.' },
-  { k: '07:30', h: 'The Tower connects them', p: 'They are building an AI voice interviewer for win-loss. And the v2 in that hostname says this is already their second attempt at it.' },
+  { k: '07:30', h: 'The Tower connects them', p: 'Three hostnames given over to interviewing and voice is real engineering commitment, not an experiment. They are building it. Nobody has announced it.' },
 ];
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
       <section className="wt-hero">
         <div className="wrap wt-hero-grid">
           <div className="wt-hero-copy">
-            <span className="wt-kicker"><i />Scouts gather. The Tower sees.</span>
+            <span className="wt-kicker"><i />On watch · 24/7 · 22 channels</span>
             <h1 className="wt-h1">
               Know the moment <span className="wt-keep">they <RotatingTail /></span>
             </h1>
@@ -58,20 +58,39 @@ export default function Home() {
 
       {/* ---------- what it catches, as things that happen ---------- */}
       <section className="wt-band">
-        <div className="wrap">
-          <h2 className="wt-band-h">You never watch a channel. You just get told what happened.</h2>
-          <p className="wt-band-p">
+        <div className="wrap wt-band-grid">
+          <div>
+            <span className="wt-eyebrow">Scouts gather</span>
+            <h2 className="wt-band-h">You never watch a channel. You just get told what happened.</h2>
+            <p className="wt-band-p">
             They quietly drop a price. They start advertising a feature they have not launched yet. They post four
             senior roles in one week. They pick up a bad review that names you. Their founder promises something
             on a podcast. A hostname appears that nobody was meant to see yet.
-          </p>
+            </p>
+          </div>
+
+          {/* the feed itself, right where the claim is made — this column was
+              empty and the page sagged here */}
+          <aside className="wt-panel" aria-label="A morning of Watchtower signals">
+            <div className="wt-panel-head">
+              <span className="mono">first light · 06:04</span>
+              <span className="wt-live"><i />live</span>
+            </div>
+            {WATCH.map((w, i) => (
+              <div className={`wt-row${w.hot ? ' hot' : ''}`} key={w.t} style={{ animationDelay: `${0.1 + i * 0.14}s` }}>
+                <span className="wt-row-t mono">{w.t}</span>
+                <span className="wt-row-x">{w.text}</span>
+                <span className="wt-row-g mono">{w.tag}</span>
+              </div>
+            ))}
+          </aside>
         </div>
       </section>
 
       {/* ---------- the artifact, interactive ---------- */}
       <section className="wt-card-sec" id="platform">
         <div className="wrap">
-          <span className="wt-eyebrow">The artifact</span>
+          <span className="wt-eyebrow">The Watchtower</span>
           <h2 className="wt-h2">Then it writes how you win.</h2>
           <p className="wt-lede">
             One briefing per competitor, written against your positioning. These are real cards from our own
@@ -106,33 +125,6 @@ export default function Home() {
           <p className="wt-fine">
             Where a connection is only timing, the read says exactly that. If a page cannot be verified, it does not appear.
           </p>
-        </div>
-      </section>
-
-      {/* ---------- the raw signals, further down where they belong ---------- */}
-      <section className="wt-signals">
-        <div className="wrap wt-signals-grid">
-          <div>
-            <span className="wt-eyebrow">Underneath it</span>
-            <h2 className="wt-h2">Bundled, dated, cited.</h2>
-            <p className="wt-lede">
-              Sixty-six ads is one card, not sixty-six alerts. Five articles about the same raise is one story.
-              You read what mattered, not everything that was detected.
-            </p>
-          </div>
-          <aside className="wt-panel" aria-label="A morning of Watchtower signals">
-            <div className="wt-panel-head">
-              <span className="mono">the watch</span>
-              <span className="wt-live"><i />live</span>
-            </div>
-            {WATCH.map((w, i) => (
-              <div className={`wt-row${w.hot ? ' hot' : ''}`} key={w.t} style={{ animationDelay: `${0.1 + i * 0.14}s` }}>
-                <span className="wt-row-t mono">{w.t}</span>
-                <span className="wt-row-x">{w.text}</span>
-                <span className="wt-row-g mono">{w.tag}</span>
-              </div>
-            ))}
-          </aside>
         </div>
       </section>
 
@@ -189,7 +181,7 @@ export default function Home() {
       <section className="wt-close">
         <div className="wrap">
           <h2>Stop being the last to know.</h2>
-          <p>Name your competitors, or let the Tower name them. Real signals inside the hour.</p>
+          <p>Name your competitors, or let the Tower find them. Real signals inside the hour.</p>
           <div className="wt-cta">
             <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
             <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo</Link>

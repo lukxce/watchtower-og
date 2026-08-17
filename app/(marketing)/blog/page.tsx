@@ -10,8 +10,12 @@ export const metadata = {
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-export default function BlogIndex() {
-  const sorted = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
+export default async function BlogIndex({ searchParams }: { searchParams: Promise<{ cat?: string }> }) {
+  const { cat } = await searchParams;
+  const active = CATEGORIES.find((c) => c === cat) ?? null;
+  const sorted = [...POSTS]
+    .filter((p) => !active || p.category === active)
+    .sort((a, b) => b.date.localeCompare(a.date));
   const [lead, ...rest] = sorted;
 
   return (
@@ -25,8 +29,10 @@ export default function BlogIndex() {
         </p>
 
         <div className="blog-cats">
+          <Link href="/blog" className={`blog-cat${active ? '' : ' on'}`}>All</Link>
           {CATEGORIES.map((c) => (
-            <span key={c} className="blog-cat">{c}</span>
+            <Link key={c} href={`/blog?cat=${encodeURIComponent(c)}`}
+                  className={`blog-cat${active === c ? ' on' : ''}`}>{c}</Link>
           ))}
         </div>
 

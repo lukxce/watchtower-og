@@ -15,11 +15,11 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/#platform" className="mkt-navlink">Product</Link>
             <Link href="/pricing" className="mkt-navlink">Pricing</Link>
             <Link href="/blog" className="mkt-navlink">Blog</Link>
-            <div className="mkt-cta-row">
-              <Link href="/sign-in" className="btn btn-ghost">Sign in</Link>
-              <Link href="/sign-up" className="btn btn-primary">Start free</Link>
-            </div>
           </nav>
+          <div className="mkt-cta-row">
+            <Link href="/sign-in" className="btn btn-ghost">Sign in</Link>
+            <Link href="/sign-up" className="btn btn-primary">Start free</Link>
+          </div>
         </div>
       </header>
       {children}

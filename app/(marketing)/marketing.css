@@ -31,7 +31,7 @@
    transparent and only provides the sticky offset; the .wrap inside is the
    actual pill, so content scrolls underneath it. */
 .mkt-nav{position:sticky;top:14px;z-index:40;background:transparent;border-bottom:none;backdrop-filter:none;padding:14px 20px 0}
-.mkt-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;
+.mkt-nav .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
   height:58px;max-width:1180px;padding:0 10px 0 24px;
   background:rgba(240,247,243,.62);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);
   border:1px solid rgba(255,255,255,.55);border-radius:999px;
@@ -42,11 +42,11 @@
    wordmark — that is what was rendering it as "watch tower". */
 .mkt-logo .wm{color:var(--a-ink)}
 .mkt-logo b{color:var(--a-teal);font-weight:800}
-.mkt-links{display:flex;align-items:center;gap:26px}
+.mkt-links{display:flex;align-items:center;justify-content:center;gap:28px}
 .mkt-links a{font-size:14px;color:var(--a-mut);font-weight:600}
 .mkt-links a:hover{color:var(--a-ink)}
-@media(max-width:760px){.mkt-links .mkt-navlink{display:none}}
-.mkt-cta-row{display:flex;align-items:center;gap:14px}
+@media(max-width:760px){.mkt-links{display:none}.mkt-nav .wrap{grid-template-columns:1fr auto}}
+.mkt-cta-row{display:flex;align-items:center;justify-content:flex-end;gap:12px}
 
 /* ---------- Buttons: highlighter is the primary, and only the primary ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;padding:10px 20px;border-radius:999px;letter-spacing:-.005em;transition:transform .14s ease, box-shadow .14s ease}
@@ -62,11 +62,11 @@
    ===================================================================== */
 
 /* ---------- hero: the sentence finishes itself ---------- */
-.wt-hero{padding:56px 0 86px}
+.wt-hero{padding:52px 0 64px}
 /* Two columns: copy left, the product itself right, bleeding off the right
    edge so it reads as part of the hero composition rather than a full-width
    slab dropped underneath it. */
-.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:46px;align-items:center}
+.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.92fr);gap:44px;align-items:center}
 .wt-hero-copy{max-width:560px}
 .wt-hero-shot{position:relative;border-radius:18px 0 0 18px;overflow:hidden;
   box-shadow:0 34px 80px rgba(16,30,28,.30);margin-right:calc(50% - 50vw)}
@@ -114,7 +114,9 @@ h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;
 @media(max-width:940px){.wt-signals-grid{grid-template-columns:1fr;gap:32px}}
 
 /* ---------- the one big statement ---------- */
-.wt-band{padding:16px 0 96px}
+.wt-band{padding:8px 0 88px}
+.wt-band-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:940px){.wt-band-grid{grid-template-columns:1fr;gap:32px}}
 .wt-band-h{font-size:clamp(27px,3.5vw,42px);font-weight:800;letter-spacing:-.035em;line-height:1.1;margin:0 0 20px;max-width:20ch;text-wrap:balance}
 .wt-band-p{font-size:17px;color:var(--a-mut);line-height:1.7;margin:0;max-width:60ch}
 
@@ -154,7 +156,13 @@ h1.wt-h1{font-size:clamp(29px,4.2vw,52px);font-weight:800;letter-spacing:-.04em;
   border-radius:26px;padding:30px 32px;box-shadow:var(--a-shadow)}
 .bcd-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .bcd-top h4{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0}
-.bcd-threat{margin-left:auto;font-size:12px;font-weight:800;color:var(--a-mut);background:rgba(255,255,255,.6);border-radius:999px;padding:5px 13px}
+/* severity, not decoration — the band colour is the meaning */
+.bcd-threat{margin-left:auto;display:inline-flex;align-items:baseline;gap:6px;font-size:12px;font-weight:800;
+  border-radius:999px;padding:5px 13px}
+.bcd-threat small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.72}
+.bcd-threat.hi{background:rgba(194,84,70,.16);color:#a8402f}
+.bcd-threat.mid{background:rgba(163,112,31,.16);color:#8a5c12}
+.bcd-threat.low{background:rgba(30,111,92,.14);color:var(--a-teal)}
 .bcd-read{background:linear-gradient(135deg, rgba(226,244,99,.30), rgba(255,255,255,.42));border-radius:20px;padding:22px 24px}
 .bcd-tag{display:inline-block;font-family:var(--mono, monospace);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--a-teal);font-weight:800;margin-bottom:8px}
@@ -230,8 +238,11 @@ h1.mkt-h1{font-size:clamp(36px,4.6vw,56px);font-weight:800;letter-spacing:-.04em
 
 /* ---------- blog ---------- */
 .blog-cats{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 30px}
-.blog-cat{font-size:12px;font-weight:700;color:var(--a-mut);background:rgba(255,255,255,.5);
-  border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:6px 14px}
+a.blog-cat{font-size:12px;font-weight:700;color:var(--a-mut);background:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:6px 14px;
+  transition:background .14s,color .14s}
+a.blog-cat:hover{background:rgba(255,255,255,.85);color:var(--a-ink)}
+a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transparent}
 .blog-tag{display:inline-block;font-family:var(--mono, monospace);font-size:10px;letter-spacing:.1em;
   text-transform:uppercase;font-weight:800;color:var(--a-teal);margin-bottom:10px}
 .blog-by{display:block;font-size:12.5px;color:var(--a-faint);margin-top:12px}
@@ -306,11 +317,14 @@ h1.mkt-h1{font-size:clamp(36px,4.6vw,56px);font-weight:800;letter-spacing:-.04em
 }
 
 /* ---------- inline CTA under the battlecards ---------- */
+/* A quieter relative of the closing band: same dark ground so it reads as a
+   call to action rather than one more frosted panel, but smaller and calmer. */
 .wt-inline-cta{
   display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;
-  margin-top:22px;padding:22px 26px;border-radius:18px;
-  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
-  box-shadow:var(--a-shadow);
+  margin-top:22px;padding:22px 28px;border-radius:18px;
+  background:var(--a-dark);color:var(--a-on-dark);
 }
-.wt-inline-cta p{margin:0;font-size:14.5px;color:var(--a-mut);max-width:50ch}
+.wt-inline-cta p{margin:0;font-size:14.5px;color:var(--a-on-dark-mut);max-width:46ch}
 .wt-inline-cta .wt-cta{margin:0}
+.wt-inline-cta .btn-ghost{background:rgba(255,255,255,.10);color:var(--a-on-dark);border-color:rgba(255,255,255,.18)}
+.wt-inline-cta .btn-ghost:hover{background:rgba(255,255,255,.2)}
