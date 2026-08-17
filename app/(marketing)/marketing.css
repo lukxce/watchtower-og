@@ -347,7 +347,7 @@ a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transp
 }
 @media(max-width:820px){.fog{height:400px}}
 .fog-find{
-  position:absolute;max-width:270px;display:flex;flex-direction:column;gap:5px;
+  position:absolute;left:var(--x);top:var(--y);max-width:270px;display:flex;flex-direction:column;gap:5px;
   font-size:13px;line-height:1.45;color:#cfe0d6;
   background:rgba(232,240,234,.07);border:1px solid rgba(232,240,234,.12);
   border-radius:12px;padding:11px 14px;
@@ -380,12 +380,15 @@ a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transp
   100% {--mx:20%; --my:28%}
 }
 /* portrait: the light patrols down the column instead of across the field */
+/* portrait: the light visits the phone scatter rather than sliding down the
+   middle — with a 104px hole, missing a card means never showing it */
 @keyframes fog-sweep-v{
-  0%   {--mx:38%; --my:8%}
-  25%  {--mx:62%; --my:32%}
-  50%  {--mx:40%; --my:58%}
-  75%  {--mx:60%; --my:86%}
-  100% {--mx:38%; --my:8%}
+  0%   {--mx:22%; --my:8%}
+  20%  {--mx:70%; --my:23%}
+  40%  {--mx:24%; --my:40%}
+  60%  {--mx:68%; --my:57%}
+  80%  {--mx:22%; --my:73%}
+  100% {--mx:22%; --my:8%}
 }
 @media (prefers-reduced-motion: reduce){
   .fog:not(.lit){animation:none}
@@ -450,17 +453,16 @@ a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transp
   .wt-band-p,.wt-lede{font-size:15px}
   .wt-h2{font-size:25px}
 
-  /* fog: stacked with real breathing room instead of overlapping pins */
-  .fog{height:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px;cursor:default}
-  .fog-find{position:static;max-width:none;left:auto !important;top:auto !important;
-    font-size:13px;padding:13px 15px;gap:6px}
-  /* The panel is tall and narrow here. A 168px hole on a 460px column left
-     every card half-lit and half-swallowed — the light has to be wider
-     relative to the panel, and it has to travel top-to-bottom, not corner
-     to corner. */
+  /* fog: still a scattered field, not a list — the cards shrink to fit the
+     narrow one and the light closes right in, so finding one is a beat
+     rather than a wash. Stacking them read fine and lost the whole point. */
+  .fog{height:440px;padding:0;cursor:default}
+  .fog-find{left:var(--fx);top:var(--fy);max-width:152px;
+    font-size:10.5px;line-height:1.38;padding:8px 10px;gap:3px;border-radius:10px}
+  .fog-tag{font-size:7.5px;letter-spacing:.08em}
   .fog-veil{
-    -webkit-mask-image:radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 54%, rgba(0,0,0,.7) 80%, #000 100%);
-    mask-image:radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 54%, rgba(0,0,0,.7) 80%, #000 100%);
+    -webkit-mask-image:radial-gradient(circle 104px at var(--mx) var(--my), transparent 0 42%, rgba(0,0,0,.72) 72%, #000 100%);
+    mask-image:radial-gradient(circle 104px at var(--mx) var(--my), transparent 0 42%, rgba(0,0,0,.72) 72%, #000 100%);
   }
   .fog:not(.lit){animation:fog-sweep-v 16s ease-in-out infinite}
 
