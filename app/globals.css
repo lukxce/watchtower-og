@@ -255,6 +255,17 @@ h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em;font-weight:700}
 .when{margin-left:auto;font-size:11.5px;color:var(--faint);font-weight:500}
 .when.seen{font-style:italic;opacity:.9}
 .title{font-size:14.5px;color:#2c2d3a;line-height:1.5;overflow-wrap:anywhere}
+/* Signals are clickable as a whole card rather than carrying a URL in the
+   sentence. The hit area is a stretched anchor; the bundle disclosure and any
+   real links inside sit above it so they still work. */
+.hitcard{position:relative}
+.card-hit{position:absolute;inset:0;z-index:1;border-radius:inherit}
+.hitcard:hover{border-color:var(--line)}
+.hitcard:hover .title{color:var(--ink)}
+.hitcard:hover .title-out{opacity:1}
+.hitcard:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.title-out{color:var(--mut);font-weight:700;opacity:.45;transition:opacity .13s}
+.card .bundle,.card .crow a{position:relative;z-index:2}
 .title a:hover{color:var(--brand)}
 .locale-note{color:var(--faint);font-size:12.5px;font-weight:500}
 .howknow{margin-top:7px;font-size:12px;color:var(--faint);line-height:1.45;border-top:1px solid var(--line2);padding-top:7px}

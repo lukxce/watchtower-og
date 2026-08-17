@@ -143,8 +143,25 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
                   const read = single ? interpretSignal(single.channel, single.title, single.name) : null;
                   const first = bundle.rows[0];
                   const dated = bundle.kind === 'news' || (single && single.published_at);
+                  // The URL is the citation, not the headline. Rather than
+                  // printing it in the sentence, the whole card becomes the
+                  // target — bundles keep their disclosure instead, which sits
+                  // above the hit area.
+                  const href = single?.url ?? null;
                   return (
-                    <div className={`card${bundle.score >= 80 ? ` featured fc-${catClass(bundle.category).slice(2)}` : ''}`} key={i}>
+                    <div
+                      className={`card${href ? ' hitcard' : ''}${bundle.score >= 80 ? ` featured fc-${catClass(bundle.category).slice(2)}` : ''}`}
+                      key={i}
+                    >
+                      {href && (
+                        <a
+                          className="card-hit"
+                          href={href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${read!.headline} — open source`}
+                        />
+                      )}
                       <div className="crow">
                         <span className={`badge ${catClass(bundle.category)}`}>{bundle.category}</span>
                         <span className="card-avatar">{initials(bundle.name)}</span>
@@ -159,16 +176,13 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
                         )}
                       </div>
                       <div className="title">
-                        {single && single.url ? (
-                          <a href={single.url} target="_blank" rel="noreferrer">{read!.headline}</a>
-                        ) : (
-                          bundle.kind === 'single' ? read!.headline : bundle.headline
-                        )}
+                        {bundle.kind === 'single' ? read!.headline : bundle.headline}
+                        {href && <span className="title-out" aria-hidden="true"> ↗</span>}
                         {(first as { locales?: number }).locales && (first as { locales?: number }).locales! > 1 && (
                           <span className="locale-note"> (+{(first as { locales?: number }).locales! - 1} locale versions)</span>
                         )}
                       </div>
-                      {bundle.kind !== 'single' && bundle.sub && <div className="bundle-sub">{bundle.sub}</div>}
+                      {bundle.sub && <div className="bundle-sub">{bundle.sub}</div>}
                       {single && read!.howWeKnow && <div className="howknow">How we know: {read!.howWeKnow}</div>}
                       {bundle.kind !== 'single' && (
                         <details className="bundle">

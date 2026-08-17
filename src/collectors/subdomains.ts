@@ -65,7 +65,7 @@ const WATCH_SURFACE =
 // - stale years: events.sept2024.zurichroadshow.* — a certificate for a 2024
 //   event page is history, not news
 const VETO_ENV = /(^|[.-])(sandbox|prod|production|stag(e|ing)|dev|test|qa|uat|api|internal|preview\d*)([.-]|$)/;
-const VETO_INFRA = /(^|[.-])(e?mail|smtp|billing|invoic\w*|links?|clicks?|track\w*|bounces?|unsub\w*|cdn|static|sso|auth|login|okta|gateway|mx\d*|ns\d*)([.-]|$)/;
+const VETO_INFRA = /(^|[.-])(www\d*|ftp|webmail|cpanel|whm|autodiscover|autoconfig|e?mail|smtp|billing|invoic\w*|links?|clicks?|track\w*|bounces?|unsub\w*|cdn|static|sso|auth|login|okta|gateway|mx\d*|ns\d*)([.-]|$)/;
 
 function hasStaleYear(sub: string): boolean {
   const years = sub.match(/20\d{2}/g);
