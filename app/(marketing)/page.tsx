@@ -33,7 +33,8 @@ export default function Home() {
       <section className="wt-hero">
         <div className="wrap wt-hero-grid">
           <div className="wt-hero-copy">
-            <span className="wt-kicker"><i />On watch · 24/7 · 22 channels</span>
+            <span className="wt-over">Competitive intelligence</span>
+            <span className="wt-kicker"><i />On watch · 24/7 · every public source</span>
             <h1 className="wt-h1">
               Know the moment <span className="wt-keep">they <RotatingTail /></span>
             </h1>
@@ -65,7 +66,7 @@ export default function Home() {
             <p className="wt-band-p">
             They quietly drop a price. They start advertising a feature they have not launched yet. They post four
             senior roles in one week. They pick up a bad review that names you. Their founder promises something
-            on a podcast. A hostname appears that nobody was meant to see yet.
+            on a podcast. A hostname goes up that nobody was meant to see.
             </p>
           </div>
 
@@ -99,7 +100,7 @@ export default function Home() {
           <BattlecardDemo />
 
           <div className="wt-inline-cta">
-            <p>Every card above was written by the product, from public signals, about our own market.</p>
+            <p>Everything above was found, checked, connected and written by the product itself, from public signals about our own market. Nobody typed a word of it.</p>
             <div className="wt-cta">
               <Link href="/sign-up" className="btn btn-primary">Start free</Link>
               <Link href="/demo" className="btn btn-ghost">See the live demo →</Link>

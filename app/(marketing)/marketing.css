@@ -78,6 +78,10 @@
 /* "they <rotating phrase>" stays together, so the line breaks BEFORE "they"
    rather than orphaning it above the highlight. */
 .wt-keep{white-space:nowrap}
+/* a quiet category line above the kicker — the hero's left column was
+   noticeably shorter than the product shot beside it */
+.wt-over{display:block;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--a-faint);margin-bottom:14px}
 .wt-kicker{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--a-teal);background:var(--a-teal-wash);padding:7px 15px;border-radius:999px;margin-bottom:24px}
 .wt-kicker i{width:7px;height:7px;border-radius:50%;background:var(--a-teal);animation:wt-pulse 2.2s ease-out infinite}
 @keyframes wt-pulse{0%{box-shadow:0 0 0 0 rgba(30,111,92,.45)}70%{box-shadow:0 0 0 9px rgba(30,111,92,0)}100%{box-shadow:0 0 0 0 rgba(30,111,92,0)}}
