@@ -66,14 +66,12 @@
 /* Two columns: copy left, the product itself right, bleeding off the right
    edge so it reads as part of the hero composition rather than a full-width
    slab dropped underneath it. */
-.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.82fr);gap:40px;align-items:center}
+.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:46px;align-items:center}
 .wt-hero-copy{max-width:560px}
-/* Scaled down, never cropped. It used to bleed to the viewport edge, which
-   made it enormous on wide screens; cropping to fix that cut the dashboard
-   mid-chart and just looked broken. Constraining the width shrinks the whole
-   thing proportionally and keeps it legible. */
-.wt-hero-shot{position:relative;border-radius:16px;overflow:hidden;
-  box-shadow:0 24px 56px rgba(16,30,28,.24);max-width:620px;margin-left:auto}
+/* Full-bleed off the right edge, uncropped. Never cap the height here — an
+   object-fit crop slices the dashboard mid-chart and reads as broken. */
+.wt-hero-shot{position:relative;border-radius:18px 0 0 18px;overflow:hidden;
+  box-shadow:0 34px 80px rgba(16,30,28,.30);margin-right:calc(50% - 50vw)}
 .wt-hero-shot img{display:block;width:100%;height:auto}
 @media(max-width:980px){
   .wt-hero-grid{grid-template-columns:1fr;gap:38px}
@@ -381,4 +379,4 @@ a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transp
   .fog:not(.lit){animation:none}
 }
 
-.wt-fogsec{padding:0 0 92px}
+.wt-fogsec{padding:8px 0 92px}

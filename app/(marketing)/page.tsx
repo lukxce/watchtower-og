@@ -58,6 +58,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ---------- fog of war: the pitch as an interaction ---------- */}
+      <section className="wt-fogsec">
+        <div className="wrap">
+          <span className="wt-eyebrow">The frontier</span>
+          <h2 className="wt-h2">Most of your market happens in the dark.</h2>
+          <p className="wt-lede">
+            All of this is public. None of it is anywhere you look. Sweep the light.
+          </p>
+          <FogPanel />
+        </div>
+      </section>
+
       {/* ---------- what it catches, as things that happen ---------- */}
       <section className="wt-band">
         <div className="wrap wt-band-grid">
@@ -86,18 +98,6 @@ export default function Home() {
               </div>
             ))}
           </aside>
-        </div>
-      </section>
-
-      {/* ---------- fog of war: the pitch as an interaction ---------- */}
-      <section className="wt-fogsec">
-        <div className="wrap">
-          <span className="wt-eyebrow">The frontier</span>
-          <h2 className="wt-h2">Most of your market happens in the dark.</h2>
-          <p className="wt-lede">
-            All of this is public. None of it is anywhere you look. Sweep the light.
-          </p>
-          <FogPanel />
         </div>
       </section>
 
