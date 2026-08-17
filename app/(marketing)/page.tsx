@@ -11,19 +11,19 @@ export const metadata = {
 // Real lines from our own workspace, worded the way the feed words them.
 // These are our actual competitors, not a borrowed example set.
 const WATCH = [
-  { t: '02:14', text: '255 preview hostnames observed on klue.com', tag: 'buildout' },
+  { t: '02:14', text: 'cert log · voice.klue.com, interviewer-v2.klue.com', tag: 'buildout' },
+  { t: '05:52', text: 'mcp-adapter.app.klue.com is live in production', tag: 'buildout' },
   { t: '06:07', text: 'crayon.co is hiring again · 3 roles opened', tag: 'hiring' },
-  { t: '06:11', text: 'Visualping: ~11 Google ads running', tag: 'ads' },
   { t: '06:48', text: 'kompyte.com/careers now returns 404', tag: 'signal' },
-  { t: '07:30', text: '“Kompyte is absorbed into Semrush, and running on its distribution”', tag: 'the tower', hot: true },
+  { t: '07:30', text: '“Klue is building an AI voice interviewer for win-loss, and this is v2”', tag: 'the tower', hot: true },
 ];
 
 // The story is ours, and it is built from two absences — the kind of thing a
 // feature-comparison tool would never notice.
 const BEATS = [
-  { k: '06:48', h: 'A careers page disappears', p: 'kompyte.com/careers starts returning 404. On its own, that is nothing. Sites get reorganised.' },
-  { k: 'also', h: 'And there is no ad account', p: 'Zero advertiser accounts on Google or LinkedIn either, for a company that plainly still sells.' },
-  { k: '07:30', h: 'The Tower connects them', p: 'Two absences with one cause: Kompyte was absorbed into Semrush. You are competing with a bundle, not a roadmap.' },
+  { k: '02:14', h: 'Three hostnames appear', p: 'interview.klue.com, interviewer-v2.klue.com and voice.klue.com turn up on the public certificate log. Nobody announced anything.' },
+  { k: 'on file', h: 'The context was already there', p: 'Klue runs win-loss interviews as a core motion, and spent this year publishing agentic-workflow workshops and an AI report.' },
+  { k: '07:30', h: 'The Tower connects them', p: 'They are building an AI voice interviewer for win-loss. And the v2 in that hostname says this is already their second attempt at it.' },
 ];
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
     <>
       {/* ---------- hero: headline, then the product itself ---------- */}
       <section className="wt-hero">
-        <div className="wrap">
+        <div className="wrap wt-hero-grid">
           <div className="wt-hero-copy">
             <span className="wt-kicker"><i />Scouts gather. The Tower sees.</span>
             <h1 className="wt-h1">
@@ -46,10 +46,10 @@ export default function Home() {
             </div>
             <p className="wt-note">From $99/mo · no card required · the demo needs no account</p>
           </div>
-        </div>
 
-        <div className="wrap wt-hero-shot">
-          <div className="wt-shot">
+          {/* The product itself, bleeding off the right edge so it reads as
+              part of the hero rather than a slab dropped under it. */}
+          <div className="wt-hero-shot">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/screenshots/overview.png" alt="The Watchtower dashboard: market activity, competitor ratings, biggest threat and launch radar" />
           </div>
@@ -84,8 +84,8 @@ export default function Home() {
       {/* ---------- proof: two absences, one conclusion ---------- */}
       <section className="wt-proof" id="proof">
         <div className="wrap">
-          <span className="wt-eyebrow">A real morning, from our own workspace</span>
-          <h2 className="wt-h2">Nothing happened. That was the story.</h2>
+          <span className="wt-eyebrow">A real find, from our own workspace</span>
+          <h2 className="wt-h2">Klue is shipping an AI interviewer. They have not said so.</h2>
           <div className="wt-beats">
             {BEATS.map((b) => (
               <div className="wt-beat" key={b.h}>

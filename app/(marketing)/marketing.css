@@ -60,11 +60,18 @@
 
 /* ---------- hero: the sentence finishes itself ---------- */
 .wt-hero{padding:56px 0 86px}
-/* Wide enough that "they <phrase>" always fits on one line, narrow enough
-   that the whole headline never collapses to one — so the block stays two
-   lines tall no matter which phrase is showing. */
-.wt-hero-copy{max-width:640px}
-.wt-hero-shot{margin-top:46px}
+/* Two columns: copy left, the product itself right, bleeding off the right
+   edge so it reads as part of the hero composition rather than a full-width
+   slab dropped underneath it. */
+.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:46px;align-items:center}
+.wt-hero-copy{max-width:560px}
+.wt-hero-shot{position:relative;border-radius:18px 0 0 18px;overflow:hidden;
+  box-shadow:0 34px 80px rgba(16,30,28,.30);margin-right:calc(50% - 50vw)}
+.wt-hero-shot img{display:block;width:100%;height:auto}
+@media(max-width:980px){
+  .wt-hero-grid{grid-template-columns:1fr;gap:38px}
+  .wt-hero-shot{margin-right:0;border-radius:18px}
+}
 /* "they <rotating phrase>" stays together, so the line breaks BEFORE "they"
    rather than orphaning it above the highlight. */
 .wt-keep{white-space:nowrap}
