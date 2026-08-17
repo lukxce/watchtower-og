@@ -354,31 +354,31 @@ a.blog-cat.on{background:var(--a-ink);color:var(--a-on-dark);border-color:transp
 .fog-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#8fa79b}
 .fog-find.hot .fog-tag{color:#eafd35}
 
-/* The veil. mask-position is animatable, so the same property drives both the
-   pointer (via custom properties) and the idle sweep — no JS animation loop. */
+/* The veil covers the whole panel and the mask cuts one soft hole in it.
+   The earlier version sized the mask to a 460px tile, so with no-repeat the
+   fog only painted inside that tile and everything outside it was revealed —
+   exactly backwards. A full-size gradient positioned "at var(--mx) var(--my)"
+   is the right shape: transparent at the cursor, opaque everywhere else. */
+@property --mx { syntax: '<length-percentage>'; inherits: true; initial-value: 50%; }
+@property --my { syntax: '<length-percentage>'; inherits: true; initial-value: 44%; }
+
 .fog-veil{
   position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 120% at 50% 40%, #16241f 0%, #101a17 70%, #0c1613 100%);
-  -webkit-mask-image:radial-gradient(circle closest-side, transparent 0 38%, rgba(0,0,0,.55) 62%, #000 85%);
-  mask-image:radial-gradient(circle closest-side, transparent 0 38%, rgba(0,0,0,.55) 62%, #000 85%);
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-size:460px 460px;mask-size:460px 460px;
-  -webkit-mask-position:calc(var(--mx, 50%) - 230px) calc(var(--my, 50%) - 230px);
-  mask-position:calc(var(--mx, 50%) - 230px) calc(var(--my, 50%) - 230px);
-  animation:fog-sweep 9s ease-in-out infinite;
+  background:radial-gradient(120% 120% at 50% 40%, #16241f 0%, #101a17 68%, #0b1512 100%);
+  -webkit-mask-image:radial-gradient(circle 168px at var(--mx) var(--my), transparent 0 46%, rgba(0,0,0,.72) 74%, #000 100%);
+  mask-image:radial-gradient(circle 168px at var(--mx) var(--my), transparent 0 46%, rgba(0,0,0,.72) 74%, #000 100%);
 }
-.fog.lit .fog-veil{animation:none}
+/* idle: the light patrols on its own */
+.fog:not(.lit){animation:fog-sweep 13s ease-in-out infinite}
 @keyframes fog-sweep{
-  0%   {-webkit-mask-position:-8% 10%; mask-position:-8% 10%}
-  35%  {-webkit-mask-position:62% 62%; mask-position:62% 62%}
-  70%  {-webkit-mask-position:22% -6%; mask-position:22% -6%}
-  100% {-webkit-mask-position:-8% 10%; mask-position:-8% 10%}
+  0%   {--mx:20%; --my:28%}
+  25%  {--mx:70%; --my:36%}
+  50%  {--mx:46%; --my:74%}
+  75%  {--mx:80%; --my:64%}
+  100% {--mx:20%; --my:28%}
 }
 @media (prefers-reduced-motion: reduce){
-  .fog-veil{animation:none}
+  .fog:not(.lit){animation:none}
 }
-.fog-hint{
-  position:absolute;right:16px;bottom:14px;font-size:10px;letter-spacing:.12em;
-  text-transform:uppercase;color:#7e9a8c;pointer-events:none;
-}
+
 .wt-fogsec{padding:0 0 92px}

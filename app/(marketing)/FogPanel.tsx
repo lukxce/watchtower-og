@@ -2,9 +2,9 @@
 import { useRef, useState } from 'react';
 
 // The pitch, as an interaction: your market is dark, and the tower's light is
-// the only thing that reveals it. The veil is a full-cover layer whose mask is
-// a moving hole — pointer position drives it on desktop, and a CSS sweep drives
-// it otherwise, so touch users and anyone who never hovers still see the idea.
+// the only thing that reveals it. The veil covers everything and its mask cuts
+// one soft circular hole; the pointer moves the hole, and an idle CSS sweep
+// moves it otherwise so touch users still see the idea.
 const FINDS = [
   { x: 6,  y: 16, tag: 'buildout', text: 'voice.klue.com appeared on the certificate log' },
   { x: 52, y: 8,  tag: 'hiring',   text: 'crayon.co opened 3 roles' },
@@ -41,7 +41,6 @@ export default function FogPanel() {
         </div>
       ))}
       <div className="fog-veil" aria-hidden="true" />
-      <span className="fog-hint mono">{lit ? 'the tower sees' : 'move the light →'}</span>
     </div>
   );
 }
