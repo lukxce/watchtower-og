@@ -11,7 +11,7 @@ import { DEMO_COOKIE } from '@/lib/demo';
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 const isProtectedRoute = createRouteMatcher([
-  '/overview(.*)', '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/compare(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)', '/newsletters(.*)', '/industry(.*)',
+  '/overview(.*)', '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/compare(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)', '/newsletters(.*)', '/industry(.*)', '/beta(.*)',
 ]);
 
 export default clerkConfigured

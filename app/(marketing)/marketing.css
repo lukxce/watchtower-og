@@ -66,11 +66,14 @@
 /* Two columns: copy left, the product itself right, bleeding off the right
    edge so it reads as part of the hero composition rather than a full-width
    slab dropped underneath it. */
-.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.92fr);gap:44px;align-items:center}
+.wt-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.82fr);gap:40px;align-items:center}
 .wt-hero-copy{max-width:560px}
+/* Capped height with a top-left crop. Without the cap the shot scaled with
+   the viewport and swallowed the hero on wide screens. */
 .wt-hero-shot{position:relative;border-radius:18px 0 0 18px;overflow:hidden;
-  box-shadow:0 34px 80px rgba(16,30,28,.30);margin-right:calc(50% - 50vw)}
-.wt-hero-shot img{display:block;width:100%;height:auto}
+  box-shadow:0 28px 64px rgba(16,30,28,.26);margin-right:calc(50% - 50vw);
+  max-height:392px}
+.wt-hero-shot img{display:block;width:100%;height:100%;max-height:392px;object-fit:cover;object-position:left top}
 @media(max-width:980px){
   .wt-hero-grid{grid-template-columns:1fr;gap:38px}
   .wt-hero-shot{margin-right:0;border-radius:18px}
