@@ -3,7 +3,7 @@
 // resolve nothing (vendor takes the brand/domain), pull recent reviews, ingest.
 // Each defers cleanly without APIFY_TOKEN + its actor env var. Gray sources —
 // gate to paid tiers, degrade gracefully.
-import { hasVendor, runApifyActor } from '@/lib/vendor';
+import { hasVendor, runApifyActor, buildActorInput } from '@/lib/vendor';
 import { ingestItems, recordRun, type Competitor } from '@/db/queries';
 
 interface VendorReview {
@@ -26,7 +26,13 @@ async function collectReviewSource(
     return `deferred (needs vendor)`;
   }
   const actor = process.env[actorEnv] ?? '';
-  const rows = await runApifyActor<VendorReview>(actor, { company: comp.name, domain: comp.domain, maxItems: 25 });
+  const bare = comp.domain.replace(/^www\./, '');
+  const input = buildActorInput(
+    actorEnv.replace('_ACTOR', '_INPUT'),
+    { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
+    { company: comp.name, domain: comp.domain, maxItems: 25 },
+  );
+  const rows = await runApifyActor<VendorReview>(actor, input);
   if (rows === null) {
     await recordRun(comp.id, channel, false, 0, `vendor run failed / ${actorEnv} unset`);
     return 'FAILED (vendor)';
