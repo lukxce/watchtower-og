@@ -31,8 +31,20 @@ CREATE TABLE IF NOT EXISTS pages (
   tier INT NOT NULL,
   active BOOLEAN NOT NULL DEFAULT true,
   discovered_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_fetched_at TIMESTAMPTZ,
+  last_hash TEXT,
   UNIQUE(competitor_id, url)
 );
+
+CREATE TABLE IF NOT EXISTS usage_daily (
+  org_id TEXT NOT NULL,
+  period DATE NOT NULL,          -- day for daily meters, 1st of month for monthly
+  meter TEXT NOT NULL,
+  units INT NOT NULL DEFAULT 0,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (org_id, period, meter)
+);
+CREATE INDEX IF NOT EXISTS idx_usage_org ON usage_daily(org_id, period DESC);
 
 CREATE TABLE IF NOT EXISTS snapshots (
   id SERIAL PRIMARY KEY,
@@ -132,6 +144,11 @@ CREATE TABLE IF NOT EXISTS threat_history (
   captured_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Rolling crawl queue: existing installs need these added, since the CREATE
+-- TABLE above only applies to a fresh database.
+ALTER TABLE pages ADD COLUMN IF NOT EXISTS last_fetched_at TIMESTAMPTZ;
+ALTER TABLE pages ADD COLUMN IF NOT EXISTS last_hash TEXT;
+CREATE INDEX IF NOT EXISTS idx_pages_due ON pages(competitor_id, tier, last_fetched_at NULLS FIRST);
 ALTER TABLE stream_items ADD COLUMN IF NOT EXISTS score INT;
 ALTER TABLE stream_items ADD COLUMN IF NOT EXISTS category TEXT;
 
