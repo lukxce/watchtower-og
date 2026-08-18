@@ -281,6 +281,17 @@ async function collectReviewSource(
   if (rows === null) {
     const actor = process.env[actorEnv] ?? '';
     if (!actor) {
+      // Distinguish "not configured" from "configured and the vendor refused".
+      // Both arrive here as a null run, and reporting a quota rejection as
+      // `deferred (no actor)` sends you to check an env var that is already
+      // set. Measured: an exhausted Apify plan returns HTTP 403
+      // `Monthly usage hard limit exceeded`, and every channel reported it as
+      // a missing actor.
+      const combined = process.env.APIFY_REVIEWS_ACTOR ?? '';
+      if (combined) {
+        await recordRun(comp.id, channel, false, 0, `vendor run failed (actor configured) — check the Apify plan's usage limit and the run log`);
+        return 'FAILED (vendor refused)';
+      }
       await recordRun(comp.id, channel, true, 0, `deferred: set APIFY_REVIEWS_ACTOR or ${actorEnv}`);
       return 'deferred (no actor)';
     }

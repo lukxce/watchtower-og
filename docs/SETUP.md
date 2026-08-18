@@ -104,6 +104,22 @@ Set any future competitor in the app: **Battlecards → Channel sources**, or
 
 ---
 
+## 4b. Apify plan limit — HIT
+
+The free plan's **$5/month hard cap is exhausted** ($5.56 used, 19 Aug 2026).
+While it is over, every Apify channel returns HTTP 403
+`Monthly usage hard limit exceeded`: g2, capterra, trustradius, trustpilot,
+glassdoor, gartner and linkedin_posts.
+
+Glassdoor, Gartner and LinkedIn were all collected before the cap was reached,
+so their data is real. The G2 / Capterra / TrustRadius sweep is the one that
+did not land.
+
+Fix: upgrade to Apify Starter ($29/mo, already in the cost model) or wait for
+the monthly reset. Nothing in the code needs changing.
+
+---
+
 ## 5. Newsletters — highest value, most setup
 
 The secret-shopper channel: a persona inbox subscribes to competitors'
