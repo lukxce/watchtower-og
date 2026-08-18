@@ -80,7 +80,7 @@ export default function KompyteAlternative() {
                 </tr>
                 <tr>
                   <th scope="row">Coverage breadth</th>
-                  <td className="us">22 public channels per competitor</td>
+                  <td className="us">28 public channels per competitor</td>
                   <td>Comparable tracking, positioned as one module inside Semrush&apos;s SEO-first suite</td>
                 </tr>
                 <tr>

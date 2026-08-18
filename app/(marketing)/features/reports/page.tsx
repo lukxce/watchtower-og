@@ -207,6 +207,40 @@ export default function ReportsFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A report pulled ninety minutes before a call</span>
+          <h2 className="wt-h2">Everything on Visualping, compiled in four minutes.</h2>
+          <div className="ftx-story">
+            <span className="mono">report · visualping · deal-scoped pull</span>
+            <h3>&quot;Read once on a second monitor, cited, live.&quot;</h3>
+            <p>
+              A rep prepping for a renewal call against Visualping, ninety minutes out, pulled a deal-scoped report
+              instead of opening five tabs. The report compiled what was already sitting in the feed and
+              Visualping&apos;s battlecard: an 18% Team-tier price cut with no announcement, zero net-new sales
+              postings across the same ninety days, and a funding gap of twenty months.
+            </p>
+            <p>
+              None of the three facts was new — each had surfaced individually over the prior month. What the
+              report did was put them on one page, in the order a rep would actually use them in a live call: the
+              price cut first, since the prospect might already know it, then the two corroborating facts
+              underneath, cited, in case the conversation went deeper than expected.
+            </p>
+            <p>
+              The rep didn&apos;t present a printed deck; they read the report once on a second monitor during the
+              call and referenced the price-cut timing directly. The prospect asked &quot;how do you know
+              that&quot; once, about the funding gap — the rep had the SEC filing link open in ten seconds, already
+              sitting in the report.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> pricing-page diff (18% cut, no announcement) + jobs channel (0 sales postings, 90
+              days) + funding channel (no raise in 20 months), all linked in the report
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -221,6 +255,30 @@ export default function ReportsFeature() {
               cost. It won&apos;t out-design a dedicated report-authoring tool; what it won&apos;t do is invent a
               claim to fill a gap the way a rushed manual deck sometimes does.
             </p>
+          </div>
+          <div className="ftx-cmp">
+            <table className="ftx-cmp-table">
+              <thead>
+                <tr><th>Approach</th><th>How the report gets made</th><th>Fortress HQ</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Klue / Crayon</th>
+                  <td>Polished exports, usually with a dedicated analyst or CS role assembling them.</td>
+                  <td className="us">Same cited signals, compiled into a report shape without a separate analyst step.</td>
+                </tr>
+                <tr>
+                  <th>A hand-built slide deck</th>
+                  <td>Fast to make, easy to quietly pad with a stale or half-remembered fact.</td>
+                  <td className="us">Nothing appears that isn&apos;t already cited in the feed — a pull can&apos;t introduce a new claim.</td>
+                </tr>
+                <tr>
+                  <th>A shared Notion doc</th>
+                  <td>Free, but only as current as whoever last remembered to update it.</td>
+                  <td className="us">Reflects the feed and battlecards at the exact moment you pull it together.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -277,6 +335,30 @@ export default function ReportsFeature() {
                 Not today. A report currently carries Fortress HQ&apos;s own presentation, not a custom brand layer —
                 if that matters for how you&apos;d use it, that&apos;s worth telling us directly rather than us
                 promising it before it exists.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is report-pulling available on Starter, or only higher tiers?</h4>
+              <p>
+                Available on every tier — pulling a per-competitor, per-quarter or per-deal report doesn&apos;t
+                require Growth or Enterprise. What scales with plan is how many competitors you have to pull reports
+                about in the first place.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>If a signal turns out to be wrong after I&apos;ve already shared a report, what happens?</h4>
+              <p>
+                The report itself is a snapshot, so it won&apos;t silently update after you&apos;ve sent it — but
+                the underlying feed and battlecard get corrected the normal way, and a fresh pull afterward reflects
+                that fix. We&apos;d rather you know a report can go stale than pretend it&apos;s a live document.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>How is this different from Crayon&apos;s dashboard export?</h4>
+              <p>
+                Similar end result, different path to it — Crayon&apos;s export typically comes off a configured
+                dashboard someone set up. Ours draws straight from the same cited feed and battlecards you already
+                have, with nothing to configure first.
               </p>
             </div>
           </div>

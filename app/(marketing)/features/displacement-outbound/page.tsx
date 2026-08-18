@@ -204,6 +204,41 @@ export default function DisplacementOutboundFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A quiet capital gap, corroborated by the reviews</span>
+          <h2 className="wt-h2">Crayon went eighteen months without a raise. The reviews said why.</h2>
+          <div className="ftx-story">
+            <span className="mono">displacement · crayon · corporate + reputation</span>
+            <h3>&quot;A funding gap, and reviews increasingly citing a slower roadmap.&quot;</h3>
+            <p>
+              Crayon&apos;s funding channel — reading SEC Form D filings and funding news directly — had shown no
+              new round in eighteen months by mid-July, a long gap for a company that had raised twice in its first
+              three years. A funding gap alone isn&apos;t proof of anything; plenty of healthy companies go long
+              stretches between rounds by choice.
+            </p>
+            <p>
+              What corroborated it was a shift in G2 review language over the same window: four reviews in the
+              prior two months cited &quot;slower roadmap&quot; or &quot;fewer updates than expected,&quot; a theme
+              that hadn&apos;t appeared in Crayon&apos;s reviews before that year. Two independent signals — a
+              capital gap and a product-pace complaint — in the same window, neither proving the other, but
+              pointing the same direction.
+            </p>
+            <p>
+              The Tower surfaced it plainly: &quot;Crayon&apos;s funding has gone quiet for 18 months, and recent
+              reviews increasingly cite a slower roadmap — worth knowing, not confirmed as cause and effect.&quot; A
+              sales rep working a renewal against Crayon used the roadmap-pace angle as a genuine, low-key question
+              rather than a scripted attack line.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> funding channel (no raise in 18 months, checked Jul 14) + 4 G2 reviews citing
+              &quot;roadmap&quot;/&quot;updates&quot; (May–Jul), all linked
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -218,6 +253,30 @@ export default function DisplacementOutboundFeature() {
               shows you the actual reviews and articles behind any pattern it surfaces — closer to Visualping&apos;s
               honesty about showing its source, at a scope none of the single-channel tools attempt.
             </p>
+          </div>
+          <div className="ftx-cmp">
+            <table className="ftx-cmp-table">
+              <thead>
+                <tr><th>Approach</th><th>How weakness gets read</th><th>Fortress HQ</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Klue / Crayon (enterprise tier)</th>
+                  <td>Some editions offer a proprietary displacement or win-probability score, methodology usually undisclosed.</td>
+                  <td className="us">No bespoke score — the same cited reasoning as everywhere else, sources always attached.</td>
+                </tr>
+                <tr>
+                  <th>Visualping</th>
+                  <td>Not attempted — a page-change tool has no concept of &quot;weakness,&quot; only &quot;changed.&quot;</td>
+                  <td className="us">Reads reputation, corporate and voice-and-pr together, specifically for corroborated weak-signal patterns.</td>
+                </tr>
+                <tr>
+                  <th>A CRM&apos;s own win-loss notes</th>
+                  <td>Reactive — captured only after a deal is already lost.</td>
+                  <td className="us">Surfaces the pattern while a deal is still live, the same day it clears the evidence bar.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -274,6 +333,32 @@ export default function DisplacementOutboundFeature() {
                 No, and it&apos;s not meant to. Per Law 1, the Tower reads and hands you the evidence — it never
                 decides what to do with a weak-signal pattern. That call, in a live deal, stays entirely with the
                 rep and their manager.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is displacement-signal detection a Growth- or Enterprise-only feature?</h4>
+              <p>
+                No — it runs on the same reputation, corporate and voice-and-pr channels every tier gets, reading
+                the same way regardless of plan. What Growth and Enterprise add is more competitors watched and, on
+                Enterprise, a formal win-loss program layered on top.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is this the same as a &quot;battle-tested displacement play&quot; some sales tools sell?</h4>
+              <p>
+                Different premise. Some sales tools sell a scripted displacement campaign — talk tracks assuming
+                your competitor is already weak. We don&apos;t assume anything; we surface a specific, cited pattern
+                only when it clears the same evidence bar as every other Fortress HQ read, and you decide what to do
+                with it.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Could a competitor manipulate this by faking reviews about themselves?</h4>
+              <p>
+                Not meaningfully — the Tower requires corroboration across independent channels (reviews plus a
+                departure, or reviews plus a funding gap), and a handful of fabricated reviews on one platform
+                wouldn&apos;t clear that bar alone. It&apos;s a real limit worth naming rather than claiming
+                immunity to manipulation.
               </p>
             </div>
           </div>

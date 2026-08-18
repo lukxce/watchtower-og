@@ -50,7 +50,7 @@ export default function OverviewFeature() {
                 <span className="wt-row-g mono">gap</span>
               </div>
               <div className="wt-row" style={{ animationDelay: '0.38s' }}>
-                <span className="wt-row-t mono">06:22</span>
+                <span className="wt-row-t mono">06:28</span>
                 <span className="wt-row-x">Signal Labs still quotes Team tier on a call</span>
                 <span className="wt-row-g mono">pricing</span>
               </div>
@@ -83,7 +83,7 @@ export default function OverviewFeature() {
                 <span className="mono">overnight</span>
                 <h4>Every scout reports in</h4>
                 <p>
-                  Across the night, all 22 channels get checked for every competitor on your watch — pricing pages,
+                  Across the night, all 28 channels get checked for every competitor on your watch — pricing pages,
                   ad libraries, job boards, certificate-transparency logs, review sites, sitemaps. Each scout files
                   its own honest report, including the ones that found nothing.
                 </p>
@@ -285,6 +285,41 @@ export default function OverviewFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A rating that moved for a quiet reason</span>
+          <h2 className="wt-h2">Kompyte&apos;s Threat Index fell to an 8, and that was the story.</h2>
+          <div className="ftx-story">
+            <span className="mono">overview · week of jul 20</span>
+            <h3>&quot;Kompyte&apos;s rating keeps falling — no independent GTM activity in three months.&quot;</h3>
+            <p>
+              On July 20th, the ratings panel on Overview showed Kompyte&apos;s Threat Index drop from 34 to 8 in a
+              single week — the kind of move that would look alarming on a page that treats every number the same
+              way. Opening the card showed why: no independent ad spend for the third straight month, a careers page
+              still returning a 404, and zero press mentions since the Semrush acquisition over a year earlier. None
+              of that was new that week; the drop reflected a slow bleed the Tower had been tracking for months.
+            </p>
+            <p>
+              What made it worth a line on Overview wasn&apos;t the number itself — it was the direction, against
+              the other five competitors on the same watch, all of whom held steady or climbed that week. A single
+              rating falling while everything else stays flat is itself a pattern: evidence that one competitor
+              specifically had stopped operating as an independent threat, not that the market had gone quiet.
+            </p>
+            <p>
+              The Tower wrote it calmly, no beacon: &quot;Kompyte&apos;s rating keeps falling — down to an 8, no
+              independent GTM activity in three months.&quot; A founder reading Overview that morning took it as
+              permission to stop spending attention on a competitor that had effectively stopped competing, and put
+              it toward the two names that were actually moving.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> Threat Index history (34 → 8, Jul 13–20) + 0 independent ad accounts + careers
+              page 404, all linked from the card
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -300,6 +335,35 @@ export default function OverviewFeature() {
               competitive surface. Visualping doesn&apos;t attempt this at all — it tells you a page changed, not
               what it means alongside five other channels.
             </p>
+          </div>
+          <div className="ftx-cmp">
+            <table className="ftx-cmp-table">
+              <thead>
+                <tr><th>Vendor</th><th>Their opening screen</th><th>Overview</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Klue</th>
+                  <td>Configurable widgets, set up after a demo call, filters you own and maintain.</td>
+                  <td className="us">One fixed shape — biggest threat first — no config, live the day you sign up.</td>
+                </tr>
+                <tr>
+                  <th>Crayon</th>
+                  <td>Broad dashboard, similar enterprise setup motion, priced accordingly.</td>
+                  <td className="us">Same fixed shape, from $149/mo, no onboarding call required to see it work.</td>
+                </tr>
+                <tr>
+                  <th>Kompyte</th>
+                  <td>Now runs inside Semrush&apos;s own dashboard, not a purpose-built CI surface.</td>
+                  <td className="us">A dedicated page, built only around the competitors you actually named.</td>
+                </tr>
+                <tr>
+                  <th>Visualping</th>
+                  <td>No market-wide dashboard at all — a per-page alert, one competitor, one URL.</td>
+                  <td className="us">One page synthesizing all 28 channels across every competitor at once.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -344,9 +408,9 @@ export default function OverviewFeature() {
               </p>
             </div>
             <div className="ftx-faq-item">
-              <h4>Does Overview miss things that happen outside the 22 channels?</h4>
+              <h4>Does Overview miss things that happen outside the 28 channels?</h4>
               <p>
-                Yes, by definition — anything not public, or not on one of the 22 channels, doesn&apos;t exist in the
+                Yes, by definition — anything not public, or not on one of the 28 channels, doesn&apos;t exist in the
                 product. We&apos;d rather be honest about that boundary than imply broader coverage than we actually
                 have. See the full inventory on the data sources page.
               </p>
@@ -357,6 +421,32 @@ export default function OverviewFeature() {
                 It can misjudge significance — that&apos;s a reasoning layer, not an oracle. What it won&apos;t do is
                 assert something without a source: every line traces back to a scout&apos;s report you can open and
                 check. If a read looks off, the evidence underneath it is exactly where you&apos;d find out why.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Does Overview look different depending on which plan I&apos;m on — Starter versus Growth?</h4>
+              <p>
+                The page shape is identical on every tier — biggest threat first, ratings, Launch Radar. What
+                changes is how many competitors it&apos;s built from: 3 on Starter ($149/mo), 10 on Growth
+                ($399/mo). Nobody gets a stripped-down version of the reasoning; they get a smaller market to reason
+                over.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What happens on Overview if a scout can&apos;t reach one of a competitor&apos;s pages that day?</h4>
+              <p>
+                It&apos;s reported as unreachable in that competitor&apos;s file, not silently dropped. If enough of
+                a competitor&apos;s channels went quiet in a given week that the picture is genuinely thin, Overview
+                would rather show a shorter, honestly incomplete read than pad it with old data dressed up as
+                current.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is Overview meant to replace a weekly competitive-intel meeting entirely?</h4>
+              <p>
+                It&apos;s meant to make that meeting shorter and better-informed, not to replace judgment. Overview
+                compiles the read; deciding what to do about it — reprice, brief a rep, greenlight a feature — is
+                still a human call. That split is Law 1, not a hedge.
               </p>
             </div>
           </div>

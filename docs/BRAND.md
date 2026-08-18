@@ -48,11 +48,11 @@ It stops at anything that implies **secrecy, intrusion or aggression**. We are n
 
 ### Positioning statement
 
-> For **B2B teams who have to act on what their competitors do** — sales, product marketing, founders — **Fortress HQ** is a **competitive-intelligence platform** that **watches every public channel continuously and returns one briefing that says what changed, why it matters and what to do**. Unlike **alert tools that forward raw page-diffs, or enterprise CI suites that cost five figures and still need a full-time analyst**, Fortress HQ **reads signals together, cites every claim, and starts at $99 a month.**
+> For **B2B teams who have to act on what their competitors do** — sales, product marketing, founders — **Fortress HQ** is a **competitive-intelligence platform** that **watches every public channel continuously and returns one briefing that says what changed, why it matters and what to do**. Unlike **alert tools that forward raw page-diffs, or enterprise CI suites that cost five figures and still need a full-time analyst**, Fortress HQ **reads signals together, cites every claim, and starts at $149 a month.**
 
 ### The three-sentence version (for a call)
 
-Most teams find out a competitor cut their price or shipped a feature from a lost deal, three weeks late. The tools that exist either forward raw detections you still have to interpret, or cost fifteen thousand a year and need someone to run them. Fortress HQ watches 22 public channels a day, reads them together, and writes the briefing — every fact cited, from $99.
+Most teams find out a competitor cut their price or shipped a feature from a lost deal, three weeks late. The tools that exist either forward raw detections you still have to interpret, or cost fifteen thousand a year and need someone to run them. Fortress HQ watches 28 public channels a day, reads them together, and writes the briefing — every fact cited, from $149.
 
 ### Category
 
@@ -67,7 +67,7 @@ What we *do* claim inside the category is a stance: **verifiable competitive int
 | **Klue** | Enterprise CI, sales-enablement led. Strong battlecards, deep CRM integration. Quote after a demo call. | We publish pricing. You are live today, not after procurement. |
 | **Crayon** | The category's brand name. Broad tracking, enterprise motion, expensive. | Same coverage class, an order of magnitude cheaper, and every claim cites a source instead of a confidence score. |
 | **Kompyte** | Acquired by Semrush; now runs on Semrush's distribution rather than as an independent product. | We are a company whose only job is this. Independence is a feature when the roadmap is someone else's. |
-| **Visualping** | Page-change monitoring. Cheap, useful, and genuinely good at one channel. | Page changes are one of 22 channels, and a change is not an insight. We tell you what it means. |
+| **Visualping** | Page-change monitoring. Cheap, useful, and genuinely good at one channel. | Page changes are one of 28 channels, and a change is not an insight. We tell you what it means. |
 | **Signal Labs** | Newer, quotes Team tier on a call. | Published pricing, live demo, no gate. |
 | **A shared Notion doc** | Free. **This is the real competitor.** | It is six months stale and you know it. |
 
@@ -237,7 +237,7 @@ Three courses of stone with staggered joints, the way masonry is actually laid.
 
 The **offset is load-bearing**, not a stylistic choice. Centred bars read as a bar chart; a centred stack under a dot reads as a person. The 4-unit stagger is what makes it read as *structure* — a wall, built, solid. It needed no redesign for the rename: offset stone courses are fortress coursework before they're anything else.
 
-**Construction:** three rects, 16 units wide, 6 tall, 1.4 corner radius, on a 34×34 viewBox. Top at x=7, middle at x=11, base at x=7. Vertical rhythm 5.5 / 14 / 22.5.
+**Construction:** three rects, 16 units wide, 6 tall, 1.4 corner radius, on a 34×34 viewBox. Top at x=7, middle at x=11, base at x=7. Vertical rhythm 5.5 / 14 / 28.5.
 
 **Colour behaviour:** the structure is `currentColor` at descending opacity so the mark inverts anywhere. **Only the top course takes the highlighter** — it is the lit course, the beacon, and it is the single place the accent appears in the lockup.
 

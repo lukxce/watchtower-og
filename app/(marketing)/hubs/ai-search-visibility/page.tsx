@@ -6,22 +6,35 @@ export const metadata = {
     "We don't track your ChatGPT or Perplexity citations yet. Here's what we track today that gets most of the way there, and why we think we're the right team to build the rest.",
 };
 
+const PERSONAS = [
+  { role: 'Founder / CEO · 10–150 staff', h: 'Kept up by being the last to know', p: 'Increasingly that includes not knowing what an AI tool told a buyer about you five minutes before they emailed. This hub is the honest version of that worry — what we already track that\'s adjacent, and what we genuinely don\'t track yet.' },
+  { role: 'Product marketing · often a team of one', h: 'Kept up by a question nobody can answer yet', p: '"Are we winning inside ChatGPT\'s answers" is a real question with no honest tool-backed answer today, ours included. What is live — classified brand mentions, verified press tracking — is the foundation any real answer to that question would need.' },
+];
+
+const CHANNEL_SAMPLE = ['News & press', 'YouTube', 'Podcasts', 'Reddit', 'Product Hunt', 'LinkedIn company posts', 'Newsletters & sequences', 'Funding & M&A'];
+
+const TIERS = [
+  { name: 'Starter', price: '$149/mo', note: '3 competitors · watched daily', items: ['News & press, YouTube, podcasts, Reddit, Product Hunt, newsletters — all live from day one', 'Funding & M&A, keyless', 'Every mention classified before it reaches your feed'] },
+  { name: 'Growth', price: '$399/mo', note: '10 competitors · full coverage', items: ['Adds LinkedIn company posts — the one Voice & PR channel that needs a licensed vendor, the same way G2 and Capterra do'] },
+  { name: 'Enterprise', price: 'Talk to us', note: 'Unlimited competitors', items: ['Same channel set as Growth, at scale', 'No AI-citation feature exists at any tier yet — there is nothing extra to gate here, and we won\'t pretend otherwise'] },
+];
+
 const MECH = [
   {
     h: 'It would start as a scout, not a shortcut',
-    p: 'One more collector reporting into the same Tower, following the identical pattern the 22 live channels already follow — it does its job, or it says plainly why it didn\'t. No special-cased AI feature that plays by different rules than website & pricing or subdomains does.',
+    p: 'One more collector reporting into the same Tower, following the identical pattern the 28 live channels already follow — it does its job, or it says plainly why it didn\'t. No special-cased AI feature that plays by different rules than website & pricing or subdomains does. If it can\'t reach an answer engine on a given run, it reports that honestly, the same way subdomains reports a rate-limited certificate log rather than pretending nothing changed.',
   },
   {
     h: 'It would need repeatable, verifiable queries — not a screenshot',
-    p: 'A screenshot of a ChatGPT answer to one prompt on one day is a sample, not a channel. Any real citation-tracking scout would need a defined, repeatable query set and a way to log what came back, or it isn\'t a monitoring capability, it\'s a party trick.',
+    p: 'A screenshot of a ChatGPT answer to one prompt on one day is a sample, not a channel. Any real citation-tracking scout would need a defined, repeatable query set and a way to log what came back each time, timestamped, so a change in the answer is a tracked event rather than something someone half-remembers noticing once. Without that discipline it isn\'t a monitoring capability, it\'s a party trick dressed up as one.',
   },
   {
     h: 'Every mention would go through the same classification pass',
-    p: 'A brand name surfacing inside an AI answer would need to be checked — is this actually the client, a same-named entity, or noise — the identical corollary work every other channel already does before anything reaches your feed. We wouldn\'t ship a channel that skips the discipline the other 22 don\'t get to skip.',
+    p: 'A brand name surfacing inside an AI answer would need to be checked — is this actually the client, a same-named entity, or noise — the identical corollary work every other channel already does before anything reaches your feed. We wouldn\'t ship a channel that skips the discipline the other 28 don\'t get to skip.',
   },
   {
     h: 'It would compose into the existing read, not live in its own silo',
-    p: 'An AI-citation signal would sit alongside pricing, hiring, ads and reviews in the same per-competitor synthesis the Tower already runs — not a separate "AI visibility" dashboard bolted on the side that nobody reads together with the rest.',
+    p: 'An AI-citation signal would sit alongside pricing, hiring, ads and reviews in the same per-competitor synthesis the Tower already runs — not a separate "AI visibility" dashboard bolted on the side that nobody reads together with the rest. The whole point of reading channels together instead of separately is that a citation shift means more next to a pricing change or a launch than it does sitting alone on its own screen.',
   },
   {
     h: 'It would carry a source, or it wouldn\'t be shown at all',
@@ -29,7 +42,7 @@ const MECH = [
   },
   {
     h: 'Internals before the interface — the same order as everything else',
-    p: 'Every one of the 22 live channels was built quiet infrastructure first, customer-facing claim second. This would be no different: we\'d rather take longer and say "not yet" than ship a page implying more than the collector actually does.',
+    p: 'Every one of the 28 live channels was built quiet infrastructure first, customer-facing claim second, and this page is itself evidence of that habit rather than an exception to it. This would be no different: we\'d rather take longer and say "not yet" than ship a page implying more than the collector actually does, the same way we\'d rather publish this page than a features list that quietly rounds "not built" up to "built."',
   },
 ];
 
@@ -44,11 +57,11 @@ const AISV_FAQ = [
   },
   {
     q: 'What exactly would need to be true before you\'d ship this?',
-    a: 'A query methodology we could stand behind as repeatable rather than a one-off prompt — the same discipline every other channel already has. Until we can build a scout that meets the same evidence bar as the 22 running today, we\'d rather not ship a weaker version just to have a checkbox.',
+    a: 'A query methodology we could stand behind as repeatable rather than a one-off prompt — the same discipline every other channel already has. Until we can build a scout that meets the same evidence bar as the 28 running today, we\'d rather not ship a weaker version just to have a checkbox.',
   },
   {
     q: 'Are you tracking anything AI-related today, even partially?',
-    a: 'Not citations inside an AI answer engine, no. What is live is the discipline that any AI-citation channel would need to sit on top of: verified sources, classified mentions, disclosed gaps. That is not a consolation feature — it is the hard part of building this correctly, and it is already running underneath the 22 channels we do have.',
+    a: 'Not citations inside an AI answer engine, no. What is live is the discipline that any AI-citation channel would need to sit on top of: verified sources, classified mentions, disclosed gaps. That is not a consolation feature — it is the hard part of building this correctly, and it is already running underneath the 28 channels we do have.',
   },
   {
     q: 'Is anyone else in this category actually doing this today, that you can verify?',
@@ -60,7 +73,11 @@ const AISV_FAQ = [
   },
   {
     q: 'When will this ship?',
-    a: 'We\'re not going to give you a date we can\'t hold to. What we can tell you is the order: the discipline underneath it (verified sourcing, classification, disclosed gaps) is already built and running for 22 other channels, which is the hard, unglamorous part. Building the specific collector for AI answer engines on top of that foundation is the next real step — we just haven\'t said "shipped" until it\'s actually shipped.',
+    a: 'We\'re not going to give you a date we can\'t hold to. What we can tell you is the order: the discipline underneath it (verified sourcing, classification, disclosed gaps) is already built and running for 28 other channels, which is the hard, unglamorous part. Building the specific collector for AI answer engines on top of that foundation is the next real step — we just haven\'t said "shipped" until it\'s actually shipped.',
+  },
+  {
+    q: 'Could I get early access or join a beta for this?',
+    a: 'There isn\'t a formal beta program for this specific capability right now — it wouldn\'t be honest to invite people into a waitlist for something that hasn\'t reached a design we\'d stand behind yet. If that changes, it\'ll be announced the same way everything else on this page is written: plainly, and only once it\'s real.',
   },
 ];
 
@@ -85,7 +102,7 @@ export default function AiSearchVisibilityHub() {
       <section className="hbx-stats">
         <div className="wrap">
           <div className="hbx-stat-grid">
-            <div className="hbx-stat"><span className="n">22</span><span className="l">Public channels watched daily, today &mdash; none of them an AI answer engine, yet</span></div>
+            <div className="hbx-stat"><span className="n">28</span><span className="l">Public channels watched daily, today &mdash; none of them an AI answer engine, yet</span></div>
             <div className="hbx-stat"><span className="n">7</span><span className="l">Voice &amp; PR channels already tracking how competitors are talked about in public</span></div>
             <div className="hbx-stat"><span className="n">100%</span><span className="l">Of mentions classified as client, same-name, or noise before they reach your feed</span></div>
             <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published &mdash; the same price whether a feature is shipped or roadmap</span></div>
@@ -167,10 +184,52 @@ export default function AiSearchVisibilityHub() {
         </div>
       </section>
 
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">Who this is actually for</span>
+          <h2 className="wt-h2">Two roles asking a question nobody can fully answer yet.</h2>
+          <div className="hbx-persona-grid">
+            {PERSONAS.map((per) => (
+              <div className="hbx-persona-card" key={per.role}>
+                <span className="role">{per.role}</span>
+                <h4>{per.h}</h4>
+                <p>{per.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-chansec">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s live today, by channel</span>
+          <h2 className="wt-h2">The eight channels closest to this problem, already running.</h2>
+          <div className="hbx-chips">
+            {CHANNEL_SAMPLE.map((c) => <span className="hbx-chip" key={c}>{c}</span>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s included, by tier</span>
+          <h2 className="wt-h2">No AI-visibility tier exists, because no AI-visibility feature does.</h2>
+          <div className="hbx-callout-grid">
+            {TIERS.map((t) => (
+              <div className="hbx-callout-card" key={t.name}>
+                <h4>{t.name} &middot; {t.price}</h4>
+                <p>{t.note}</p>
+                <p className="us">{t.items.join(' · ')}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="hbx-mech">
         <div className="wrap">
           <span className="wt-eyebrow">How this would actually be built</span>
-          <h2 className="wt-h2">Not a promise &mdash; the same six-step discipline the other 22 channels already follow.</h2>
+          <h2 className="wt-h2">Not a promise &mdash; the same six-step discipline the other 28 channels already follow.</h2>
           <div className="hbx-mech-list">
             {MECH.map((m, i) => (
               <div className="hbx-mech-step" key={m.h}>
@@ -201,7 +260,7 @@ export default function AiSearchVisibilityHub() {
             </p>
             <p>
               That is precisely the failure mode the rest of this product exists to avoid. A pricing page, a subdomain,
-              a review pattern &mdash; every one of the 22 channels we already run returns something we can point to,
+              a review pattern &mdash; every one of the 28 channels we already run returns something we can point to,
               timestamp, and re-check. <span className="accent">A single hand-typed prompt into a chat window has none
               of that</span>, which is exactly why we won&apos;t sell you a feature built on it. Faking this with a
               screenshot and a confident label would be easy. It would also be the first thing on this site that
@@ -261,7 +320,7 @@ export default function AiSearchVisibilityHub() {
       <section className="hbx-cta">
         <div className="wrap">
           <div className="wt-inline-cta">
-            <p>See the 22 channels that are live today, in the workspace we run on our own market.</p>
+            <p>See the 28 channels that are live today, in the workspace we run on our own market.</p>
             <div className="wt-cta">
               <Link href="/demo" className="btn btn-primary">Try the live demo &rarr;</Link>
               <Link href="/pricing" className="btn btn-ghost">See pricing</Link>

@@ -247,6 +247,42 @@ export default function CampaignIntelligenceFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">The message that arrived before the product</span>
+          <h2 className="wt-h2">Klue&apos;s events page shifted to AI, three weeks before the buildout showed up.</h2>
+          <div className="ftx-story">
+            <span className="mono">campaign intelligence · klue · events &amp; webinars</span>
+            <h3>&quot;State of CI: Where AI Actually Fits&quot; — a tell, not a coincidence.</h3>
+            <p>
+              In early July, the events scout picked up a new listing on Klue&apos;s page: a webinar titled
+              &quot;State of CI: Where AI Actually Fits,&quot; scheduled for the end of the month. On its own, a
+              single webinar title is a data point, not a story — competitors run themed webinars constantly without
+              it signaling anything strategic.
+            </p>
+            <p>
+              What made it worth tracking was the pattern across the prior six weeks: three new listings, all
+              touching AI positioning in the title or description, a sharp break from the previous quarter&apos;s
+              calendar, which had split evenly between sales-enablement and competitive-basics themes. The ad
+              libraries stayed quiet the whole time — no paid push behind any of it — which the Tower read as a
+              field-marketing test running ahead of a wider campaign, not a launch yet.
+            </p>
+            <p>
+              Three weeks later, the subdomains channel independently caught <code>interview.klue.com</code> — the
+              AI-interviewer buildout. Read backward, the events page had been telegraphing the theme a month before
+              any product signal broke: &quot;Klue&apos;s events page shifted to AI messaging in early July, three
+              weeks ahead of the first product signal.&quot; A PMM using Fortress HQ had already flagged the theme
+              internally before the story became public anywhere else.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> 3 new events listings tagged &quot;AI&quot; (Jun 28–Jul 9) + subdomain buildout
+              signal (Jul 29), both linked
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -261,6 +297,30 @@ export default function CampaignIntelligenceFeature() {
               channels, and a change alone was never the insight. Fortress HQ reads all three GTM channels as one
               story, cited, from day one.
             </p>
+          </div>
+          <div className="ftx-cmp">
+            <table className="ftx-cmp-table">
+              <thead>
+                <tr><th>Vendor</th><th>Their campaign tracking</th><th>Fortress HQ</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Klue</th>
+                  <td>Ad-tracking bundled into the enterprise tier, configured after a demo call.</td>
+                  <td className="us">Meta, Google and LinkedIn libraries, events and logos live from $149/mo.</td>
+                </tr>
+                <tr>
+                  <th>Crayon</th>
+                  <td>Similar breadth claim, at the same enterprise price and demo gate.</td>
+                  <td className="us">Same three ad libraries plus events and logo walls, published price, no gate.</td>
+                </tr>
+                <tr>
+                  <th>Visualping</th>
+                  <td>Could diff a single ad-library page — one library, one competitor, one URL.</td>
+                  <td className="us">All three ad libraries, events and logo walls, read together, daily, for every competitor.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -317,6 +377,30 @@ export default function CampaignIntelligenceFeature() {
                 The scout logs what the public library shows on each run — generally active listings. A campaign
                 that&apos;s already been pulled before a scheduled check may not appear, which is exactly the kind of
                 honest gap the coverage map discloses rather than papering over.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Does Growth or Enterprise get more ad-library coverage than Starter?</h4>
+              <p>
+                Starter ($149/mo) already gets all three ad libraries, events and logo walls for its competitors.
+                Growth ($399/mo) adds more competitors and 3× the page-fetch capacity, not a bigger ad-tracking
+                feature set — nobody is missing a channel because of their plan.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>How is this different from Crayon&apos;s or Klue&apos;s own ad-monitoring module?</h4>
+              <p>
+                Similar surface area, different gate: theirs typically sits behind an enterprise tier and a demo
+                call. Ours ships live on the entry plan, with the same cited approach the rest of the product uses —
+                a count and a creative always trace to the library entry that produced them.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What happens if a competitor runs ads under a different legal entity or brand name?</h4>
+              <p>
+                That&apos;s a real limit. The ad libraries match on the advertiser account or page name a competitor
+                actually used, and a genuinely disguised account can be missed. If you know of one, naming it to us
+                directly closes the gap faster than the scout alone would.
               </p>
             </div>
           </div>

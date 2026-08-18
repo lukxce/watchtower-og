@@ -88,7 +88,7 @@ export default function ProductMarketingPage() {
               <span className="tmx-card-k">Signal feed</span>
               <h3>Everything, before it&apos;s a Slack question</h3>
               <p>
-                Pricing, product, hiring and reputation activity across 22 public channels, dated and sourced — so
+                Pricing, product, hiring and reputation activity across 28 public channels, dated and sourced — so
                 &quot;what&apos;s new with X&quot; has an answer before someone asks it.
               </p>
             </div>

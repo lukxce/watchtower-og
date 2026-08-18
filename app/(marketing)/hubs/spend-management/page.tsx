@@ -14,26 +14,39 @@ const SPEND_FRAME = [
   { name: 'Signal Labs', theirs: 'Team-tier pricing quoted on a call.', us: 'Published pricing at every tier, and the same honest line on why we don\'t model a dollar figure.' },
 ];
 
+const PERSONAS = [
+  { role: 'Founder / CEO · 10–150 staff', h: 'Kept up by being the last to know who\'s spending to acquire', p: 'Who\'s hunting and who\'s defending should be readable in ten seconds, not require a separate ad-intelligence subscription on top of everything else.' },
+  { role: 'Product marketing · often a team of one', h: 'Kept up by not having a real answer to "are they outspending us"', p: 'A platform-level read — which networks, how many creatives, how the mix shifts — is a real answer to that question. A guessed dollar figure dressed up as precise isn\'t.' },
+];
+
+const CHANNEL_SAMPLE = ['Meta ads', 'Google ads', 'LinkedIn ads', 'Events & webinars', 'Customer logos', 'Traffic & SEO', 'Search interest'];
+
+const TIERS = [
+  { name: 'Starter', price: '$149/mo', note: '3 competitors', items: ['Meta, Google and LinkedIn ad libraries — all live from day one, no paid vendor needed', 'Events & webinars, customer logos'] },
+  { name: 'Growth', price: '$399/mo', note: '10 competitors', items: ['Adds Traffic & SEO and Search interest — the paid-source DataForSEO estimates'] },
+  { name: 'Enterprise', price: 'Talk to us', note: '30 competitors, standard config', items: ['Same full channel set at scale', 'Dedicated onboarding'] },
+];
+
 const MECH = [
   {
     h: 'Three ad-library channels, each read directly against the platform',
-    p: 'ads_meta pulls the Ad Library Graph API by page ID (free, needs a token to activate). ads_google reads the Transparency Center by domain, keyless and active by default. ads_linkedin reads the LinkedIn Ad Library, advertiser-exact. Each one is a direct read of what the platform itself discloses — not a modeled inference layered on top of scraped impressions.',
+    p: 'ads_meta pulls the Ad Library Graph API by page ID (free, needs a token to activate). ads_google reads the Transparency Center by domain, keyless and active by default. ads_linkedin reads the LinkedIn Ad Library, advertiser-exact. Each one is a direct read of what the platform itself discloses — not a modeled inference layered on top of scraped impressions, and not a number we had to estimate from the outside looking in.',
   },
   {
     h: 'Creative counts and platform presence, tracked over time',
-    p: 'What gets recorded is how many ads are live on each platform and how that count moves — a competitor going from two Meta ads to eleven in a week is a real, verifiable posture change, sourced to the ad library itself, not a currency figure with no way to check it.',
+    p: 'What gets recorded is how many ads are live on each platform and how that count moves — a competitor going from two Meta ads to eleven in a week is a real, verifiable posture change, sourced to the ad library itself, not a currency figure with no way to check it. The direction of the change usually matters more than the raw count on any single day.',
   },
   {
     h: 'Organic signal runs alongside paid, clearly labelled as an estimate',
-    p: 'traffic and trends read DataForSEO for estimated organic traffic and Google Trends search interest. We label these as estimates because that\'s what they honestly are — a third-party model, cited to its source — which is a different thing from inventing a precise-looking dollar figure and presenting it as fact.',
+    p: 'traffic and trends read DataForSEO for estimated organic traffic and Google Trends search interest. We label these as estimates because that\'s what they honestly are — a third-party model, cited to its source — which is a different thing from inventing a precise-looking dollar figure and presenting it as fact. The distinction is between a labelled estimate and an unlabelled guess, not between an estimate and a fact.',
   },
   {
     h: 'Events and customer logos add where field effort is going',
-    p: 'events reads field-marketing themes off events and webinar pages; logos tracks customer wins and losses off logo walls captured during the same site crawl. Both sit in the same GTM & ads group as the ad-library channels, because spend posture and field-marketing posture are the same underlying question — where is effort going right now.',
+    p: 'events reads field-marketing themes off events and webinar pages; logos tracks customer wins and losses off logo walls captured during the same site crawl. Both sit in the same GTM & ads group as the ad-library channels, because spend posture and field-marketing posture are the same underlying question — where is a competitor actually choosing to put its effort right now, across every channel that shows up publicly.',
   },
   {
     h: 'The Tower reads platform, creative and organic signal together',
-    p: 'None of these five channels means much alone. A creative-count spike on LinkedIn plus flat organic traffic plus a new events page reads differently than the same ad spike paired with rising search interest — the Tower composes the narrative across all of it, per competitor, instead of listing each channel\'s number separately.',
+    p: 'None of these five channels means much alone. A creative-count spike on LinkedIn plus flat organic traffic plus a new events page reads differently than the same ad spike paired with rising search interest — the Tower composes the narrative across all of it, per competitor, instead of listing each channel\'s number separately and leaving the connecting work to whoever\'s reading the feed that morning.',
   },
   {
     h: 'What comes out is a posture, not a currency figure',
@@ -60,7 +73,7 @@ const SPEND_FAQ = [
   },
   {
     q: 'What happens if Meta, Google or LinkedIn rate-limit the ad library or change the format?',
-    a: 'The channel reports that plainly rather than silently returning stale or wrong data — the same honest-gap discipline that runs across all 22 channels. A channel that can\'t reach its source says so; it doesn\'t quietly keep showing yesterday\'s number as if it were current.',
+    a: 'The channel reports that plainly rather than silently returning stale or wrong data — the same honest-gap discipline that runs across all 28 channels. A channel that can\'t reach its source says so; it doesn\'t quietly keep showing yesterday\'s number as if it were current.',
   },
   {
     q: 'Which plan includes this?',
@@ -69,6 +82,10 @@ const SPEND_FAQ = [
   {
     q: 'Can I see this running on a real competitor before I pay for anything?',
     a: 'Yes — the live demo workspace shows real ad-library and traffic signal on our own market, including the exact kind of posture read (acquiring versus defending) described above, before you enter a card number anywhere.',
+  },
+  {
+    q: 'Do you track spend on channels outside Meta, Google and LinkedIn — TikTok, programmatic, connected TV?',
+    a: 'Not today. The three ad libraries we read are the ones with a public, queryable transparency API a scout can hit directly. If a platform without one becomes important enough to a customer base to justify building against, we\'d evaluate it the same way we evaluate any new channel — starting from what\'s actually verifiable, not from what would look complete on a features page.',
   },
 ];
 
@@ -161,6 +178,48 @@ export default function SpendManagementHub() {
                 metric.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">Who this is actually for</span>
+          <h2 className="wt-h2">Two roles asking the same question, differently.</h2>
+          <div className="hbx-persona-grid">
+            {PERSONAS.map((per) => (
+              <div className="hbx-persona-card" key={per.role}>
+                <span className="role">{per.role}</span>
+                <h4>{per.h}</h4>
+                <p>{per.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-chansec">
+        <div className="wrap">
+          <span className="wt-eyebrow">Every channel this hub draws on</span>
+          <h2 className="wt-h2">All seven, named &mdash; nothing held back.</h2>
+          <div className="hbx-chips">
+            {CHANNEL_SAMPLE.map((c) => <span className="hbx-chip" key={c}>{c}</span>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s included, by tier</span>
+          <h2 className="wt-h2">Where the paid-source estimate channels actually sit.</h2>
+          <div className="hbx-callout-grid">
+            {TIERS.map((t) => (
+              <div className="hbx-callout-card" key={t.name}>
+                <h4>{t.name} &middot; {t.price}</h4>
+                <p>{t.note}</p>
+                <p className="us">{t.items.join(' · ')}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -10,8 +10,21 @@ const GTM_FRAME = [
   { name: 'Klue', theirs: 'Deep CRM integration is a core, shipped part of their product.', us: 'No public API or CRM surface yet. The record shape underneath is API-ready; the pipe out isn\'t built.' },
   { name: 'Crayon', theirs: 'Enterprise integrations, sold as part of the enterprise motion, priced after a demo call.', us: 'Everything we do have — the feed, the battlecard — is source-linked in-product, with a published price, before any integration conversation.' },
   { name: 'Kompyte', theirs: 'Runs on Semrush\'s distribution now; any integration surface belongs to the suite, not an independent roadmap.', us: 'A dedicated CI product with one job. Whatever ships next is chosen for this product, not folded in around a larger suite\'s priorities.' },
-  { name: 'Visualping', theirs: 'A single-purpose page-change tool; not aiming to be a structured data platform.', us: 'The underlying record is already structured across 22 channels — the piece that\'s missing is exposing it externally, not building the structure itself.' },
+  { name: 'Visualping', theirs: 'A single-purpose page-change tool; not aiming to be a structured data platform.', us: 'The underlying record is already structured across 28 channels — the piece that\'s missing is exposing it externally, not building the structure itself.' },
   { name: 'Signal Labs', theirs: 'Team-tier pricing quoted on a call; integration scope unclear without one.', us: 'Published pricing at every tier, and the same honest "not yet" on API access instead of a quote-gated answer.' },
+];
+
+const PERSONAS = [
+  { role: 'Product', h: 'Kept up by discovering a competitor shipped the roadmap item', p: 'The structured record described below is what would eventually let a product team pull buildout signals — hostnames, hiring clusters — into their own tools instead of reading them one-by-one in the app.' },
+  { role: 'Whoever ends up wiring the pipes', h: 'Not a named BRAND.md persona — said plainly', p: 'BRAND.md\'s audience table names four roles (Founder/CEO, product marketing, sales lead, product), not a dedicated "GTM engineer." This hub speaks to whichever of those four ends up setting up an integration, most often product or a revenue-ops lead working alongside sales or marketing.' },
+];
+
+const CHANNEL_SAMPLE = ['Website & pricing', 'Subdomain watch', 'Job postings', 'Meta ads', 'G2 reviews', 'Funding & M&A'];
+
+const TIERS = [
+  { name: 'Starter', price: '$149/mo', note: '3 competitors', items: ['600 page-fetches/day workspace budget', '3,000 monitored pages per competitor', '0 licensed-vendor runs/month'] },
+  { name: 'Growth', price: '$399/mo', note: '10 competitors', items: ['2,000 page-fetches/day', '320 licensed-vendor runs/month for paid-source channels'] },
+  { name: 'Enterprise', price: 'Talk to us', note: '30 competitors, standard config', items: ['7,000 page-fetches/day', '6,000 monitored pages per competitor', '960 licensed-vendor runs/month'] },
 ];
 
 const MECH = [
@@ -25,15 +38,15 @@ const MECH = [
   },
   {
     h: 'Records accumulate per competitor, tagged and timestamped',
-    p: 'Every fact lands against the competitor it belongs to, carrying its channel, category and source URL. A pricing change and a hiring cluster live in the same structured space, which is what lets the next step read them together instead of requiring someone to stitch spreadsheets by hand.',
+    p: 'Every fact lands against the competitor it belongs to, carrying its channel, category and source URL. A pricing change from website and a hiring cluster from jobs live in the same structured space, which is what lets the next step read them together instead of requiring someone to stitch spreadsheets by hand every Monday morning.',
   },
   {
     h: 'The Tower composes an auditable score on top',
-    p: 'The Threat Index is a weighted composite over five dimensions — GTM, talent, product, market, corporate, at 25/25/20/20/10 — stored per-dimension with a week-over-week delta tracked against the prior snapshot. Nothing about this composition is hidden; it\'s just not exposed outside the product yet.',
+    p: 'The Threat Index is a weighted composite over five dimensions — GTM, talent, product, market, corporate, at 25/25/20/20/10 — stored per-dimension with a week-over-week delta tracked against the prior snapshot. Nothing about this composition is hidden; you can always see which dimension moved and by how much. It\'s just not exposed outside the product yet, which is the entire subject of this page.',
   },
   {
     h: 'Today, the only egress is the product surface itself',
-    p: 'The daily feed and the battlecard are where the structured record currently turns into something a person reads — both source-linked, every line traceable back to the record behind it. That\'s the whole delivery layer as it stands: in-app, for a person, not yet for a system.',
+    p: 'The daily feed and the battlecard are where the structured record currently turns into something a person reads — both source-linked, every line traceable back to the record behind it. That\'s the whole delivery layer as it stands: in-app, for a person, not yet for a system, a webhook listener, or a warehouse job running on a schedule.',
   },
   {
     h: 'The pipe out is next, in a specific order — not shipped yet',
@@ -56,7 +69,7 @@ const GTM_FAQ = [
   },
   {
     q: 'Then what\'s actually true today, structurally?',
-    a: 'Every one of the 22 channels writes back a structured record — competitor, channel, timestamp, category, source URL — the moment it runs. The Tower reads those records together and composes a Threat Index and a battlecard from them. All of that is real and running. What isn\'t real yet is a way to pull any of it out of the product programmatically.',
+    a: 'Every one of the 28 channels writes back a structured record — competitor, channel, timestamp, category, source URL — the moment it runs. The Tower reads those records together and composes a Threat Index and a battlecard from them. All of that is real and running. What isn\'t real yet is a way to pull any of it out of the product programmatically.',
   },
   {
     q: 'Why does any of this matter if I can\'t access it externally yet?',
@@ -69,6 +82,10 @@ const GTM_FAQ = [
   {
     q: 'Is this the same kind of "not built yet" as the AI search visibility page, or different?',
     a: 'Same honesty standard, different reason for the gap. AI-citation tracking doesn\'t exist because the underlying methodology hasn\'t been built to a bar we\'d trust. The API doesn\'t exist because we chose to build the in-product query and delivery layers first — the data has been structured correctly since day one, we just haven\'t built the door to hand it to you directly.',
+  },
+  {
+    q: 'Will the eventual API be free, or a paid add-on on top of a plan?',
+    a: 'We haven\'t decided, and we\'re not going to announce pricing for something that isn\'t built — that\'s the exact kind of claim this page is trying not to make. What we can say is that the underlying plan limits (page-fetch budgets, licensed-vendor runs) are already metered per tier, so an API would plausibly sit on top of that existing metering rather than invent a separate pricing model from nothing.',
   },
 ];
 
@@ -93,7 +110,7 @@ export default function GtmEngineeringHub() {
       <section className="hbx-stats">
         <div className="wrap">
           <div className="hbx-stat-grid">
-            <div className="hbx-stat"><span className="n">22</span><span className="l">Public channels, each collector self-defers cleanly when its own credential is absent</span></div>
+            <div className="hbx-stat"><span className="n">28</span><span className="l">Public channels, each collector self-defers cleanly when its own credential is absent</span></div>
             <div className="hbx-stat"><span className="n">7</span><span className="l">Channel groups every signal is tagged with &mdash; Product, GTM &amp; ads, Talent, Voice &amp; PR, Reputation, Market, Corporate</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Weighted dimensions behind the Threat Index, stored per-dimension for audit, not a black box</span></div>
             <div className="hbx-stat"><span className="n">1</span><span className="l">Source URL required on every conclusion, or it isn&apos;t shown</span></div>
@@ -139,7 +156,7 @@ export default function GtmEngineeringHub() {
               <span className="step">01 · Every signal is a record</span>
               <h3>Not a blob of text</h3>
               <p>
-                Each of the 22 channels &mdash; <code>ads_meta</code>, <code>subdomains</code>, <code>jobs</code>,
+                Each of the 28 channels &mdash; <code>ads_meta</code>, <code>subdomains</code>, <code>jobs</code>,
                 <code> funding</code>, and the rest &mdash; writes back competitor, channel key, timestamp, category and
                 source URL. Status is computed at runtime from which credentials are present, so the record of what
                 ran is always accurate.
@@ -164,6 +181,55 @@ export default function GtmEngineeringHub() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">Who this is actually for</span>
+          <h2 className="wt-h2">Two ways to read this page, honestly labelled.</h2>
+          <div className="hbx-persona-grid">
+            {PERSONAS.map((per) => (
+              <div className="hbx-persona-card" key={per.role}>
+                <span className="role">{per.role}</span>
+                <h4>{per.h}</h4>
+                <p>{per.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-chansec">
+        <div className="wrap">
+          <span className="wt-eyebrow">Six channels, one record shape</span>
+          <h2 className="wt-h2">Different sources, identical structure underneath.</h2>
+          <div className="hbx-chips">
+            {CHANNEL_SAMPLE.map((c) => <span className="hbx-chip" key={c}>{c}</span>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s included, by tier</span>
+          <h2 className="wt-h2">Scale, not features — nothing API-shaped differs by plan yet.</h2>
+          <div className="hbx-callout-grid">
+            {TIERS.map((t) => (
+              <div className="hbx-callout-card" key={t.name}>
+                <h4>{t.name} &middot; {t.price}</h4>
+                <p>{t.note}</p>
+                <p className="us">{t.items.join(' · ')}</p>
+              </div>
+            ))}
+          </div>
+          <p className="wt-fine">
+            One more honest detail for anyone reading this closely: Ask-the-Tower question quotas are already budgeted
+            per plan in the code &mdash; 50 a month on Starter, 300 on Growth, 2,000 on Enterprise &mdash; even though the
+            feature itself shows a &ldquo;coming soon&rdquo; state in the product today. The unit economics were modeled
+            before the feature shipped, not after. That&apos;s the same &ldquo;structured underneath, product-only on
+            top&rdquo; pattern this whole hub is describing, one layer further down.
+          </p>
         </div>
       </section>
 

@@ -287,6 +287,80 @@ export default function InsightsFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">Where disambiguation stopped a false hit</span>
+          <h2 className="wt-h2">&quot;Kompyte&quot; the fitness app wasn&apos;t a signal.</h2>
+          <div className="ftx-story">
+            <span className="mono">insights · kompyte · disambiguation</span>
+            <h3>A funding headline that never reached the feed.</h3>
+            <p>
+              In late June, the news scout returned a hit: &quot;Kompyte raises seed round for gamified fitness
+              app.&quot; Read as a bare keyword match, that&apos;s a funding event for a company on the watch —
+              exactly the kind of headline that could get forwarded around before anyone checked it.
+            </p>
+            <p>
+              Before it reached anyone&apos;s feed, the disambiguation step ran first. The article named a
+              two-person startup building a workout-tracking app — different founders, different domain, no
+              connection to the competitive-intelligence platform Kompyte that Fortress HQ customers actually watch.
+              The Tower classified the mention as same-name, different entity, and logged it as noise instead of
+              filing it against the real Kompyte&apos;s record.
+            </p>
+            <p>
+              Nothing about that article ever reached a battlecard or Overview. The only trace of it is in the
+              classification log, not the feed — which is the whole point: a name match isn&apos;t a mention, and
+              this step exists so a customer never has to independently verify that a &quot;funding round&quot;
+              headline actually belongs to the company they&apos;re watching.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> news article (Jun 24), classified same-name / different-entity — logged, not
+              filed, no card touched
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- what could go wrong ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">Honest limits</span>
+          <h2 className="wt-h2">What happens when the evidence doesn&apos;t corroborate.</h2>
+          <div className="ftx-risk-grid">
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">a lone fact</span>
+                <p>A real fact shows up, but nothing else on file for that competitor points the same direction that week.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>No conclusion gets written. The fact stays visible on the raw feed, but it doesn&apos;t earn a sentence or the beacon — an honest &quot;not enough evidence yet&quot; beats a confident guess.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">conflicting signals</span>
+                <p>Two facts point in different directions — a price cut and a hiring surge that don&apos;t obviously fit one story.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>The Tower says so rather than forcing a tidy narrative — a conflicting-signal note gets written plainly instead of picking whichever story sounds better.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">coincidental timing</span>
+                <p>Corroboration itself can be a coincidence — two unrelated things genuinely happening the same week.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>Judgment isn&apos;t certainty. The read is offered as worth attention, every fact cited, so you can independently judge whether the timing is meaningful.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -358,6 +432,30 @@ export default function InsightsFeature() {
                 No. Every fact it reasons over came from a public channel — the same boundary the scouts themselves
                 are built around. If a page can&apos;t be reached publicly, it&apos;s reported as unreachable, not
                 worked around.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Does a higher-priced plan get smarter reasoning, or just more competitors?</h4>
+              <p>
+                Just more competitors and more page-fetch capacity. The reasoning layer runs the same way on every
+                tier — Starter&apos;s three competitors get the identical corroboration logic Growth&apos;s ten do.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>How far back does &quot;everything on file&quot; actually go?</h4>
+              <p>
+                As far back as your watch has been running for that competitor — from the day you mustered them. It
+                has no visibility into activity from before that, so a brand-new watch starts with a thinner history
+                than one that&apos;s been running for months.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is this the same thing as Crayon&apos;s or Klue&apos;s AI summarization feature?</h4>
+              <p>
+                Not quite. A general summarizer condenses whatever text it&apos;s fed. The Tower specifically checks
+                whether independent signal types corroborate each other before writing anything, and refuses to
+                write a conclusion when they don&apos;t — summarization compresses; this decides whether there&apos;s
+                enough to say anything at all.
               </p>
             </div>
           </div>

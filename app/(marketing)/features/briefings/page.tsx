@@ -112,7 +112,7 @@ export default function BriefingsFeature() {
                 <span className="mono">standing watch</span>
                 <h4>Scouts never stop</h4>
                 <p>
-                  The 22 channels get checked continuously, day and night, for every competitor you&apos;re watching.
+                  The 28 channels get checked continuously, day and night, for every competitor you&apos;re watching.
                   A briefing is a moment where the watch gets handed to you — it is not a separate process running on
                   its own schedule, disconnected from what the scouts are actually finding.
                 </p>
@@ -299,6 +299,40 @@ export default function BriefingsFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A week relief connected that no single morning did</span>
+          <h2 className="wt-h2">Visualping&apos;s price cut, hiring pause and softened copy, folded into one line.</h2>
+          <div className="ftx-story">
+            <span className="mono">relief · week of aug 10</span>
+            <h3>&quot;Likely one decision, not three.&quot;</h3>
+            <p>
+              The week of August 10th, Visualping&apos;s file picked up three separate first-light mentions across
+              four days: an 18% Team-tier price cut on Monday, an SDR hiring pause the jobs channel had already
+              flagged the week before, and a two-word homepage headline change the sitemap scout caught on Thursday.
+              None of those three mornings got the beacon individually — each read alone, stayed in the calm section
+              of that day&apos;s order.
+            </p>
+            <p>
+              Relief, compiled that Sunday, read all three together across the week instead of day by day, and a
+              pattern the daily briefings hadn&apos;t been asked to connect became visible: a company quietly
+              trimming price and headcount while softening its own messaging, all in the same seven days. That&apos;s
+              a posture, not three unrelated events on three different days.
+            </p>
+            <p>
+              The digest wrote it as one line: &quot;Visualping cut price, paused SDR hiring, and softened its
+              homepage copy — all in the same week, likely one decision, not three.&quot; A product marketing lead
+              who only checks in on Sundays got the week&apos;s real story without having read a single daily order.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> pricing diff (Aug 10) + jobs channel (0 postings, flagged Aug 3) + homepage
+              headline diff (Aug 13), compiled together in that week&apos;s relief digest
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -312,6 +346,30 @@ export default function BriefingsFeature() {
               interpret yourself into a narrative. First light and relief are already the narrative: read together,
               conclusion first, evidence attached, so the reading is done before you open the page.
             </p>
+          </div>
+          <div className="ftx-cmp">
+            <table className="ftx-cmp-table">
+              <thead>
+                <tr><th>Approach</th><th>What you get each morning</th><th>Fortress HQ</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Klue / Crayon</th>
+                  <td>Raw detections forwarded into a feed you interpret yourself.</td>
+                  <td className="us">First light and relief are already the narrative — conclusion first, evidence attached.</td>
+                </tr>
+                <tr>
+                  <th>A shared Notion doc</th>
+                  <td>Free, updated whenever someone on the team remembers to.</td>
+                  <td className="us">Compiled automatically, every morning, whether or not anyone remembers to check.</td>
+                </tr>
+                <tr>
+                  <th>A Slack alert forward</th>
+                  <td>Instant, but every message arrives equally loud, urgent or not.</td>
+                  <td className="us">The beacon is reserved for what clears the evidence bar — most rows stay calm on purpose.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -359,6 +417,37 @@ export default function BriefingsFeature() {
                 It compiles them into one handover rather than re-pasting five separate mornings — the point is the
                 shape of the week for someone who doesn&apos;t have time to read five daily orders, not a duplicate
                 feed.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Do all tiers get both first light and relief, or is one gated?</h4>
+              <p>
+                Both come standard on every tier, Starter through Enterprise. What scales with plan is how many
+                competitors feed into them, not which briefing you&apos;re allowed to read.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What does a briefing look like if half the scouts had a rough night — outages, blocked pages?</h4>
+              <p>
+                The order of the day reports what it actually has, and flags the channels that came back
+                unreachable rather than guessing at what they might have found. A rough night for the scouts means a
+                shorter, honestly-labeled briefing, not a fabricated one.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is this basically the same as a daily email digest from another CI tool?</h4>
+              <p>
+                The format rhymes, but most digests forward raw detections for you to interpret. First light is
+                already read together per competitor with a conclusion at the top — the interpretation is done, and
+                the evidence is still attached underneath if you want to check it.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What does a genuinely quiet week&apos;s relief digest actually look like?</h4>
+              <p>
+                Short, and it says so — a line or two per competitor, no beacon anywhere, and an honest note that
+                nothing this week cleared the evidence bar. That&apos;s a real, useful outcome, not the digest
+                failing to find something to report.
               </p>
             </div>
           </div>

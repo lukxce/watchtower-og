@@ -122,7 +122,7 @@ export default function CompareChatGPT() {
               <tbody>
                 <tr>
                   <th scope="row">Continuous monitoring</th>
-                  <td className="us">Watches 22 public channels every day, on its own</td>
+                  <td className="us">Watches 28 public channels every day, on its own</td>
                   <td>Answers once, only when you remember to ask</td>
                 </tr>
                 <tr>
@@ -147,7 +147,7 @@ export default function CompareChatGPT() {
                 </tr>
                 <tr>
                   <th scope="row">Breadth per competitor</th>
-                  <td className="us">22 defined public channels, the same set every time</td>
+                  <td className="us">28 defined public channels, the same set every time</td>
                   <td>Whatever a web search happens to surface that day — not a fixed or repeatable set</td>
                 </tr>
                 <tr>

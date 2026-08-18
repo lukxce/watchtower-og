@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Competitive Intelligence — Fortress HQ',
   description:
-    'Verifiable competitive intelligence: 22 public channels watched daily, read together, cited, and published from $149/mo — no demo call required.',
+    'Verifiable competitive intelligence: 28 public channels watched daily, read together, cited, and published from $149/mo — no demo call required.',
 };
 
 const FRAME = [
@@ -37,13 +37,13 @@ const MECH = [
   },
   {
     h: 'You get a briefing or a battlecard, never a raw diff',
-    p: '"Klue is shipping an AI interviewer" beats "subdomain observed: interview-v2.klue.com." The observation stays underneath, one click away, as the how-we-know line — but what you read first is the conclusion. That ordering is brand law 1 enforced in the interface, not just claimed in copy.',
+    p: '"Klue is shipping an AI interviewer" beats "subdomain observed: interview-v2.klue.com." The observation stays underneath, one click away, as the how-we-know line — but what you read first is the conclusion. That ordering is brand law 1 enforced in the interface, not just claimed in copy. It holds whether the surface is the daily feed, a competitor\'s battlecard, or the discovery-call question at the bottom of one — the same read, presented for whoever needs to act on it next.',
   },
 ];
 
 const PERSONAS = [
   { role: 'Founder / CEO · 10–150 staff', h: 'Kept up by being the last to know', p: 'A competitor\'s move surfacing in a board meeting before it surfaced anywhere else. This hub gives the state of the market in the time it takes to read one page, without assigning anyone to compile it by hand.' },
-  { role: 'Product marketing · often a team of one', h: 'Kept up by battlecards going stale', p: 'Being asked "what\'s new with X" and not having a good answer, and watching a hand-built card go out of date the week after it\'s written. The signal underneath comes from the same 22 channels a full research team would otherwise have to check manually.' },
+  { role: 'Product marketing · often a team of one', h: 'Kept up by battlecards going stale', p: 'Being asked "what\'s new with X" and not having a good answer, and watching a hand-built card go out of date the week after it\'s written. The signal underneath comes from the same 28 channels a full research team would otherwise have to check manually.' },
   { role: 'Sales lead / enablement', h: 'Kept up by reps losing deals on unbriefed objections', p: '"How we win against X" gets written from what a competitor is actually doing right now, not a memory of last quarter\'s deal review — see the sales-intelligence hub for the battlecard-specific version of this.' },
   { role: 'Product', h: 'Kept up by discovering a competitor shipped the roadmap item', p: 'Early buildout signals — a new hostname on the certificate log, a hiring cluster in a specific role — show up before the launch post does, not after, the way the Klue example above played out.' },
 ];
@@ -59,11 +59,11 @@ const TIERS = [
 const CI_FAQ = [
   {
     q: 'What actually counts as a "public channel" here?',
-    a: 'Anything reachable without a login and without paying for private data — a pricing page, a job board, an ad library, a certificate-transparency log, a review site, a sitemap. Nothing behind a paywall, nothing scraped from an account we don’t have permission to be in. The 22 channels split across seven groups: Product, GTM & ads, Talent, Voice & PR, Reputation, Market, and Corporate. Every one of them is named on the data-sources page, not just gestured at.',
+    a: 'Anything reachable without a login and without paying for private data — a pricing page, a job board, an ad library, a certificate-transparency log, a review site, a sitemap. Nothing behind a paywall, nothing scraped from an account we don’t have permission to be in. The 28 channels split across seven groups: Product, GTM & ads, Talent, Voice & PR, Reputation, Market, and Corporate. Every one of them is named on the data-sources page, not just gestured at.',
   },
   {
     q: 'How is this different from putting a Visualping watch or a Google Alert on a competitor?',
-    a: 'Those tools are honest about being one channel, and a good one — page-change monitoring is genuinely useful. Page changes are one of our 22 channels, run alongside pricing, hiring, ads, reviews, hostnames and funding. The difference isn’t volume, it’s synthesis: an alert tells you a page changed, we tell you what it means once it’s read against everything else on file for that competitor.',
+    a: 'Those tools are honest about being one channel, and a good one — page-change monitoring is genuinely useful. Page changes are one of our 28 channels, run alongside pricing, hiring, ads, reviews, hostnames and funding. The difference isn’t volume, it’s synthesis: an alert tells you a page changed, we tell you what it means once it’s read against everything else on file for that competitor.',
   },
   {
     q: 'What happens when a page can’t be reached, or a source is unverifiable?',
@@ -79,7 +79,7 @@ const CI_FAQ = [
   },
   {
     q: 'Is any of this actually reasoning, or is it scraping dressed up with better formatting?',
-    a: 'Both, honestly, and we’d rather say which part is which than blur it. The 22 collectors are exactly what they sound like — deterministic programs hitting public sources, no AI involved in the fetch. The synthesis on top — the Tower reading everything on file for a competitor and writing what’s happening — is where the reasoning sits, and it’s grounded in the retrieved facts on file rather than a freeform guess. We won’t claim "AI magic" because that’s not what’s running, and BRAND.md says so on purpose.',
+    a: 'Both, honestly, and we’d rather say which part is which than blur it. The 28 collectors are exactly what they sound like — deterministic programs hitting public sources, no AI involved in the fetch. The synthesis on top — the Tower reading everything on file for a competitor and writing what’s happening — is where the reasoning sits, and it’s grounded in the retrieved facts on file rather than a freeform guess. We won’t claim "AI magic" because that’s not what’s running, and BRAND.md says so on purpose.',
   },
   {
     q: 'Can I try this on real competitors before I pay for anything?',
@@ -87,7 +87,7 @@ const CI_FAQ = [
   },
   {
     q: 'I only care about one or two competitors — is this overkill?',
-    a: 'No — Starter is priced for exactly that. It covers up to 3 competitors, not a minimum of 3. Watching one competitor across 22 channels, read together, is still a meaningfully different thing than a shared doc or a single page-change alert on that same one company.',
+    a: 'No — Starter is priced for exactly that. It covers up to 3 competitors, not a minimum of 3. Watching one competitor across 28 channels, read together, is still a meaningfully different thing than a shared doc or a single page-change alert on that same one company.',
   },
 ];
 
@@ -104,7 +104,7 @@ export default function CompetitiveIntelligenceHub() {
             We compete in the category buyers already search for &mdash; &ldquo;competitive intelligence software,&rdquo;
             &ldquo;Klue pricing,&rdquo; &ldquo;Crayon alternative.&rdquo; What we claim inside it is a stance: every signal
             comes from a named public source, every conclusion cites the evidence behind it, and the price is on this
-            site instead of behind a form. Fortress HQ watches 22 public channels a day, reads them together, and
+            site instead of behind a form. Fortress HQ watches 28 public channels a day, reads them together, and
             writes the briefing &mdash; from $149/mo.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function CompetitiveIntelligenceHub() {
       <section className="hbx-stats">
         <div className="wrap">
           <div className="hbx-stat-grid">
-            <div className="hbx-stat"><span className="n">22</span><span className="l">Public channels watched, from pricing pages to certificate-transparency logs</span></div>
+            <div className="hbx-stat"><span className="n">28</span><span className="l">Public channels watched, from pricing pages to certificate-transparency logs</span></div>
             <div className="hbx-stat"><span className="n">7</span><span className="l">Channel groups &mdash; Product, GTM &amp; ads, Talent, Voice &amp; PR, Reputation, Market, Corporate</span></div>
             <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter tier, published &mdash; no demo call to see a price</span></div>
             <div className="hbx-stat"><span className="n">3 &rarr; 10</span><span className="l">Competitors watched daily on Starter, 10 on Growth ($399/mo)</span></div>
@@ -225,7 +225,7 @@ export default function CompetitiveIntelligenceHub() {
       <section className="hbx-chansec">
         <div className="wrap">
           <span className="wt-eyebrow">A sample of the inventory</span>
-          <h2 className="wt-h2">Fourteen of the 22 channels, named, spanning every group.</h2>
+          <h2 className="wt-h2">Fourteen of the 28 channels, named, spanning every group.</h2>
           <p className="wt-lede">
             Not the full list &mdash; see the <Link href="/features/data-sources">complete data-sources inventory</Link> for
             every channel across all seven groups. This is a sample, chosen to span each one.
@@ -303,7 +303,7 @@ export default function CompetitiveIntelligenceHub() {
           </div>
           <p className="wt-fine">
             We don&apos;t punch down at Visualping &mdash; page-change monitoring is honest about being one channel. Page
-            changes are one of our 22. A change is not an insight; what it means is.
+            changes are one of our 28. A change is not an insight; what it means is.
           </p>
         </div>
       </section>

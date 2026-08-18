@@ -17,7 +17,7 @@ Most teams track competitors by hand: a shared doc someone updates when they rem
 The tools that exist to fix this mostly forward raw detections: "this page changed," "this ad appeared," with no read on whether it matters or what it means together with everything else that competitor is doing.
 
 Fortress HQ does two things differently:
-1. **It watches continuously and broadly** — 22 public channels per competitor, not just their homepage.
+1. **It watches continuously and broadly** — 28 public channels per competitor, not just their homepage.
 2. **It reads signals together, not in isolation.** Ten ads on the same day is one story, not ten alerts. A new hostname plus a hiring cluster plus a funding round in the same window is a launch forecast, not three unrelated pings.
 
 ---
@@ -30,7 +30,7 @@ B2B teams who need to actually act on competitive information: sales (objection 
 
 ## How it works
 
-1. **Scouts collect, daily, across 22 channels**: pricing pages, Google & LinkedIn ad libraries, job boards, certificate transparency logs (catches pre-launch subdomains before they're announced), press & news, G2/Trustpilot reviews, changelogs, sitemaps, tech stack, podcasts, events pages, logos/social-proof pages.
+1. **Scouts collect, daily, across 28 channels**: pricing pages, Google & LinkedIn ad libraries, job boards, certificate transparency logs (catches pre-launch subdomains before they're announced), press & news, G2/Trustpilot reviews, changelogs, sitemaps, tech stack, podcasts, events pages, logos/social-proof pages.
 2. **Signals are bundled, not dumped.** 66 ads observed in a day becomes one card describing the platform/format mix, not 66 separate alerts. Five articles covering the same funding round become one story with five citations.
 3. **The Tower reads each competitor's whole picture** — moves, buildouts, hiring, all considered together — and writes one narrative read per competitor, personalized to your own company (not generic advice pulled off their homepage). Every claim is sourced: a link, a captured timestamp, and if a page can't be fetched, the product says so instead of guessing.
 4. **Launch Radar** fires only when independent signal types genuinely align in the same window (e.g. a new pre-launch hostname *and* a hiring cluster *and* a funding round) — not on any single signal. Confidence is labeled High / Medium / Emerging based on how many independent things corroborate.
@@ -74,9 +74,9 @@ B2B teams who need to actually act on competitive information: sales (objection 
 
 ---
 
-## Pricing (self-serve, from $99/mo)
+## Pricing (self-serve, from $149/mo)
 
-- **Starter — $99/mo**: 3 competitors, bundled feed & Threat Index, comparison-page discovery, weekly digest.
+- **Starter — $149/mo**: 3 competitors, bundled feed & Threat Index, comparison-page discovery, weekly digest.
 - **Growth — $399/mo**: 10 competitors, all channels, reads & auto-generated battlecards, campaign/landing-page tracking, Slack/Teams digest.
 - **Enterprise — custom**: unlimited competitors, SSO, CRM battlecard surface, dedicated onboarding.
 

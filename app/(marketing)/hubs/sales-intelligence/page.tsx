@@ -39,7 +39,7 @@ const MECH = [
   },
   {
     h: 'GTM, ads and talent channels add momentum context',
-    p: 'ads_meta, ads_google and ads_linkedin show whether a competitor is spending to acquire, or quiet and defending an installed base. jobs shows whether they\'re hiring aggressively into a segment. None of these alone tells a rep how to win a call — together, they tell the Tower whether this competitor is hunting or holding.',
+    p: 'ads_meta, ads_google and ads_linkedin show whether a competitor is spending to acquire, or quiet and defending an installed base — the same read used in the sales-intelligence Crayon example below. jobs shows whether they\'re hiring aggressively into a segment, which usually means new budget behind it. None of these alone tells a rep how to win a call — together, they tell the Tower whether this competitor is hunting for new logos or holding the ones it already has.',
   },
   {
     h: 'The Tower composes one read per competitor',
@@ -47,11 +47,11 @@ const MECH = [
   },
   {
     h: 'The battlecard writes itself, scored',
-    p: 'The finished card carries a hook, the Tower\'s read with its evidence lines, a how-we-win list, and one discovery-call question — alongside a Threat Index scored across five weighted dimensions, always shown with its inputs rather than as a bare number a rep has to trust blind.',
+    p: 'The finished card carries a hook, the Tower\'s read with its evidence lines, a how-we-win list, and one discovery-call question — alongside a Threat Index scored across five weighted dimensions, always shown with its inputs rather than as a bare number a rep has to trust blind. A rep opening the card gets the whole shape of the account in the time it takes to scroll once, not a wall of raw detections to interpret alone.',
   },
   {
     h: 'It rebuilds as the signal changes, not on a schedule',
-    p: 'A battlecard written by hand goes stale the week after someone writes it. This one rebuilds when the underlying signal moves — a new review cluster, a funding event, a pricing change — rather than waiting for the next quarterly enablement review nobody actually runs on time.',
+    p: 'A battlecard written by hand goes stale the week after someone writes it, usually right around the point a competitor actually does something worth knowing. This one rebuilds when the underlying signal moves — a new review cluster, a funding event, a pricing change — rather than waiting for the next quarterly enablement review that, in most teams, quietly slips a quarter or two behind.',
   },
 ];
 

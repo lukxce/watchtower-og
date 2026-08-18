@@ -48,7 +48,7 @@ export default function Radar() {
         <h1>Point it at any competitor.</h1>
         <p>
           We&apos;ll pull their sitemap outline and check the public certificate log for anything new in the last
-          90 days. Two of the 22 channels Fortress HQ watches every day — real, live, right now.
+          90 days. Two of the 28 channels Fortress HQ watches every day — real, live, right now.
         </p>
       </div>
 
@@ -129,7 +129,7 @@ export default function Radar() {
         <h2 style={{ margin: '0 0 12px', fontSize: 22, fontWeight: 800, letterSpacing: '-.02em' }}>
           That&apos;s a fraction of what Fortress HQ watches continuously.
         </h2>
-        <p>See all 22 channels, cited, every morning — pricing, ads, hiring, reviews, launches, and more.</p>
+        <p>See all 28 channels, cited, every morning — pricing, ads, hiring, reviews, launches, and more.</p>
         <div className="wt-cta">
           <Link href="/pricing" className="btn btn-primary">See pricing</Link>
           <Link href="/demo" className="btn btn-ghost">Try the live demo</Link>
@@ -170,7 +170,7 @@ export default function Radar() {
 
       <section className="cpx-section">
         <div className="wrap">
-          <h2>This is 2 of the 22 channels Fortress HQ watches</h2>
+          <h2>This is 2 of the 28 channels Fortress HQ watches</h2>
           <p className="lede">
             Sitemap structure and certificate transparency are real, useful channels — and also two of the easiest to
             check without an account, which is exactly why we built the free version around them. The other 20 in
@@ -178,7 +178,7 @@ export default function Radar() {
             and tier changes, ad libraries on Google and LinkedIn, job boards for hiring clusters, review sites for
             reputation patterns, press and funding news, launch and changelog pages, and more — each read daily, on
             a schedule, and reasoned about together rather than reported as a raw list of diffs. What you get here is
-            a snapshot of two channels, once. What the product does is watch all 22, every day, and tell you what a
+            a snapshot of two channels, once. What the product does is watch all 28, every day, and tell you what a
             change actually means.
           </p>
         </div>
@@ -239,7 +239,7 @@ export default function Radar() {
               <p>
                 It&apos;s a deliberately trimmed-down version of two real collectors from the full product, built to
                 run standalone without an account or a database. The full product runs these same kinds of checks on
-                a schedule, across 22 channels, and reasons about what they mean together — this page runs two of
+                a schedule, across 28 channels, and reasons about what they mean together — this page runs two of
                 them, once, on request.
               </p>
             </details>

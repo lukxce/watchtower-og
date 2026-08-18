@@ -78,7 +78,7 @@ export default function BattlecardsFeature() {
                 <span className="mono">muster</span>
                 <h4>A competitor is mustered onto the watch</h4>
                 <p>
-                  You name a competitor, or let the Tower suggest one from your market. From that moment, all 22
+                  You name a competitor, or let the Tower suggest one from your market. From that moment, all 28
                   channels start reporting on them, and a blank battlecard is created with the frame the rest of this
                   page fills in.
                 </p>
@@ -167,7 +167,7 @@ export default function BattlecardsFeature() {
               <p>The same competitor fact is framed differently depending on your own pricing and claims — never a generic template.</p>
             </div>
             <div className="ftx-inc">
-              <b>All 22 channels feed it</b>
+              <b>All 28 channels feed it</b>
               <p>Product, GTM &amp; ads, talent, voice &amp; PR, reputation and market signals all land on the same card, not separate silos.</p>
             </div>
             <div className="ftx-inc">
@@ -264,6 +264,82 @@ export default function BattlecardsFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A sales angle that rewrote itself</span>
+          <h2 className="wt-h2">Signal Labs published one tier&apos;s price, and hired to gate the rest.</h2>
+          <div className="ftx-story">
+            <span className="mono">battlecard · signal labs · sales angle</span>
+            <h3>&quot;They still gate their own price above Team — ask why.&quot;</h3>
+            <p>
+              For most of the year, Signal Labs&apos; battlecard sales angle had nothing sharp to say — a competent,
+              newer entrant, no obvious gap. That changed in one week in August, when two signals landed on the card
+              four days apart: the website scout caught Signal Labs quietly publishing a Team-tier price for the
+              first time, and the jobs scout flagged two new sales-development postings, the first hiring in that
+              function in over ninety days.
+            </p>
+            <p>
+              Neither fact alone rewrites a sales angle. A published price is progress, not a weakness. New SDR
+              hires could just be normal headcount growth. Read against Fortress HQ&apos;s own positioning —
+              published pricing on every tier, no sales call required above entry-level — the Tower found the actual
+              gap: Signal Labs had opened one tier while still gating everything above it, and was hiring the exact
+              function needed to staff that gate.
+            </p>
+            <p>
+              The card&apos;s sales angle rewrote itself the same day: &quot;Signal Labs published one tier&apos;s
+              price and is hiring SDRs to staff the rest — ask what a prospect actually pays above Team before
+              assuming it&apos;s public.&quot; A rep working a competitive deal two days later used the question
+              almost verbatim, and the prospect didn&apos;t have a ready answer.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> website pricing diff (Aug 6) + 2 SDR job postings (Aug 8) + comparison against
+              Fortress HQ&apos;s own published-pricing positioning, all linked on the card
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- what could go wrong ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">Honest limits</span>
+          <h2 className="wt-h2">What could go wrong, and how the card handles it.</h2>
+          <div className="ftx-risk-grid">
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">quiet competitor</span>
+                <p>A genuinely low-activity competitor produces a card with little new to say for weeks at a time.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>The card says an angle hasn&apos;t changed rather than inventing one to look active — an unchanged card is itself an honest signal, not a bug.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">positioning drift</span>
+                <p>The Tower reads your positioning from what&apos;s public on your own site and pricing — not an internal deck or a sales-only pitch.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>If your positioning changes somewhere the scouts don&apos;t watch, the card won&apos;t reflect it until that shows up publicly — worth telling us directly rather than assuming it&apos;s synced.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">uneven angles</span>
+                <p>Sales, marketing and product don&apos;t always have equally strong material in a given week.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>A thin product angle stays thin rather than getting padded to look symmetrical with a stronger sales angle that week — the imbalance is shown honestly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -334,6 +410,31 @@ export default function BattlecardsFeature() {
                 Not yet — that&apos;s a standing order, and standing-order delivery to Slack, email or a webhook is
                 in build, not shipped. Today, the card updates in the app and shows up in that day&apos;s order of
                 the day; you check it there rather than getting pushed a notification.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Is a Fortress HQ sales angle the same as Klue&apos;s objection-handling scripts?</h4>
+              <p>
+                Not quite, and the difference is honest on both sides. A Klue card is built and tuned by a person,
+                usually after a demo call, with deep enablement polish. Ours is written by the Tower from cited
+                signals and rewrites itself the same day something changes. The tradeoff is real: less hand-tuned
+                polish, more currency.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Does a lower-tier plan get shorter or less-cited battlecards?</h4>
+              <p>
+                No — every card on every tier carries all three angles and the same how-we-know citations. Starter
+                ($149/mo) limits how many competitors get cards at all, not how complete any single card is once
+                it&apos;s built.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What happens to a card if a competitor&apos;s site gets a full redesign overnight?</h4>
+              <p>
+                The scouts re-baseline against the new site on their next run and report what changed since the
+                last known state. If a page briefly can&apos;t be parsed mid-transition, that&apos;s disclosed as a
+                gap on the card, not silently carried over from the old design.
               </p>
             </div>
           </div>

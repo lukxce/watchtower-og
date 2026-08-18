@@ -78,7 +78,7 @@ export default function CrayonAlternative() {
                 </tr>
                 <tr>
                   <th scope="row">Coverage breadth</th>
-                  <td className="us">22 public channels per competitor</td>
+                  <td className="us">28 public channels per competitor</td>
                   <td>Broad tracking across a comparable set of public channels</td>
                 </tr>
                 <tr>
@@ -176,7 +176,7 @@ export default function CrayonAlternative() {
             <details className="cpx-faq-item">
               <summary>Is Fortress HQ&apos;s coverage really comparable to Crayon&apos;s?</summary>
               <p>
-                We watch 22 public channels per competitor — pricing, ads, hiring, reviews, launches, press,
+                We watch 28 public channels per competitor — pricing, ads, hiring, reviews, launches, press,
                 certificate logs and more. Crayon&apos;s breadth is comparable in scope; the difference we&apos;re
                 claiming is price and citation discipline, not a bigger channel count on our side.
               </p>

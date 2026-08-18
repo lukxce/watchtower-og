@@ -53,6 +53,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/features/displacement-outbound">Displacement &amp; Outbound</Link>
             <Link href="/features/reports">Reports</Link>
             <Link href="/features/briefings">Briefings</Link>
+            <Link href="/features/newsletters">Newsletters</Link>
           </div>
           <div className="fcol">
             <h5>Teams</h5>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Data Sources — Fortress HQ',
   description:
-    'The full inventory: 22 public channels across Product, GTM & ads, Talent, Voice & PR, Reputation and Market, watched continuously.',
+    'The full inventory: 28 public channels across Product, GTM & ads, Talent, Voice & PR, Reputation and Market, watched continuously.',
 };
 
 export default function DataSourcesFeature() {
@@ -14,10 +14,10 @@ export default function DataSourcesFeature() {
         <div className="wrap wt-hero-grid">
           <div className="wt-hero-copy">
             <span className="wt-over">Feature · Data sources</span>
-            <span className="kicker">22 public channels · always on</span>
+            <span className="kicker">28 public channels · always on</span>
             <h1 className="wt-h1">Every channel we watch, named.</h1>
             <p className="wt-dek">
-              Fortress HQ tracks competitors across 22 public channels, grouped into six areas of a business. Nothing
+              Fortress HQ tracks competitors across 28 public channels, grouped into six areas of a business. Nothing
               private, nothing scraped from behind a login, nothing implied. Here is the honest inventory — not a
               feature list, an actual accounting of where the scouts go.
             </p>
@@ -66,7 +66,7 @@ export default function DataSourcesFeature() {
       <section className="mkt-section tight">
         <div className="wrap">
           <span className="wt-eyebrow">The inventory</span>
-          <h2 className="wt-h2">22 channels, six groups, watched daily.</h2>
+          <h2 className="wt-h2">28 channels, six groups, watched daily.</h2>
           <p className="wt-lede">
             This is the actual list. If a channel isn&apos;t here, we don&apos;t watch it — and we&apos;d rather say
             that plainly than imply more than the product does.
@@ -214,7 +214,7 @@ export default function DataSourcesFeature() {
           <span className="wt-eyebrow">What coverage actually means</span>
           <h2 className="wt-h2">Not a channel count. A set of guarantees.</h2>
           <p className="wt-lede">
-            &quot;22 channels&quot; is a headline number. This is what it actually buys you, operationally.
+            &quot;28 channels&quot; is a headline number. This is what it actually buys you, operationally.
           </p>
           <div className="ftx-included">
             <div className="ftx-inc">
@@ -307,6 +307,81 @@ export default function DataSourcesFeature() {
         </div>
       </section>
 
+      {/* ---------- second worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">What two unrelated channels caught together</span>
+          <h2 className="wt-h2">Signal Labs&apos; hiring freeze, seen from Talent and Reputation.</h2>
+          <div className="ftx-story">
+            <span className="mono">data sources · talent + reputation</span>
+            <h3>&quot;Paused hiring, and sentiment turning toward restructuring.&quot;</h3>
+            <p>
+              In early August, the jobs channel logged something quiet: Signal Labs had zero net-new postings across
+              all functions for the sixth straight week, after averaging four to six a month most of the year. A
+              hiring lull alone isn&apos;t a story — companies pause hiring for ordinary reasons, and one channel
+              reporting silence proves nothing by itself.
+            </p>
+            <p>
+              The Glassdoor sentiment channel, watched independently under Talent, told a different piece of the
+              same period: three new reviews in those six weeks, each mentioning &quot;restructuring&quot; or
+              &quot;uncertainty,&quot; a sharp shift from the mostly neutral reviews in the prior two quarters.
+              Neither the jobs freeze nor the sentiment dip would have justified a line on its own.
+            </p>
+            <p>
+              Read together across two channel groups the Tower doesn&apos;t usually pair, the conclusion became
+              specific: &quot;Signal Labs has paused hiring for six weeks while internal sentiment turned toward
+              restructuring — worth watching before assuming it&apos;s just a quiet quarter.&quot; A sales lead
+              using Fortress HQ treated it as a reason to check in on a stalled deal rather than assume the silence
+              was routine.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> jobs channel (0 postings, 6 weeks) + 3 Glassdoor reviews mentioning
+              &quot;restructuring&quot;/&quot;uncertainty&quot; (Jul 8–Aug 15), both linked
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- what could go wrong ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">Honest limits</span>
+          <h2 className="wt-h2">What could go wrong with coverage, and how it&apos;s handled.</h2>
+          <div className="ftx-risk-grid">
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">unconfigured paid channel</span>
+                <p>A licensed-vendor channel — G2, Capterra, TrustRadius, Gartner Peer Insights, Glassdoor, LinkedIn posts — isn&apos;t configured on your account yet.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>It shows &quot;needs a key&quot; in the coverage map, not a silently missing row. The rest of the 28 channels keep running regardless.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">missing free-tier key</span>
+                <p>A free channel — Meta ads, Reddit, Product Hunt, news — needs a developer key you haven&apos;t set yourself yet.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>It self-defers cleanly and reports its own status honestly instead of erroring or quietly skipping a competitor — setting the key later brings it active without losing history.</p>
+              </div>
+            </div>
+            <div className="ftx-risk">
+              <div className="ftx-risk-what">
+                <span className="mono">a source is unreachable</span>
+                <p>A public page is temporarily down, blocked, or rate-limited on a given scout run.</p>
+              </div>
+              <div className="ftx-risk-how">
+                <span className="mono">how we handle it</span>
+                <p>That run logs &quot;unreachable,&quot; not &quot;nothing found&quot; — the two are treated differently on purpose, because conflating them is exactly the false confidence Law 3 exists to prevent.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- comparison ---------- */}
       <section className="mkt-section tight">
         <div className="wrap">
@@ -316,7 +391,7 @@ export default function DataSourcesFeature() {
             <span className="mono">how the others do it</span>
             <p>
               Visualping is honest about what it is — a page-change monitor, and a genuinely good one at that single
-              job. It just isn&apos;t 22 channels; page changes are one of ours, not the whole product. Klue and
+              job. It just isn&apos;t 28 channels; page changes are one of ours, not the whole product. Klue and
               Crayon claim broad tracking too, but at a price built for an enterprise motion and a demo call before
               you can see the list. Fortress HQ publishes the inventory on this page, in full, before you&apos;ve
               paid anything.
@@ -365,7 +440,7 @@ export default function DataSourcesFeature() {
               </p>
             </div>
             <div className="ftx-faq-item">
-              <h4>Is 22 channels enough — what about a channel you don&apos;t cover?</h4>
+              <h4>Is 28 channels enough — what about a channel you don&apos;t cover?</h4>
               <p>
                 If it&apos;s not on this list, we don&apos;t watch it, and we&apos;d rather tell you that than imply
                 broader coverage than the product actually has. The list here is the real, current inventory — not a
@@ -377,7 +452,33 @@ export default function DataSourcesFeature() {
               <p>
                 Not today — every channel is built around a public source by design, which is also what keeps the
                 product legally and ethically simple. If that changes, it&apos;ll be a distinct, clearly-labeled
-                capability, not folded quietly into the existing 22.
+                capability, not folded quietly into the existing 28.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Do Starter customers get fewer of the 28 channels than Growth?</h4>
+              <p>
+                The free and keyless channels — website, sitemap, ads, jobs, subdomains, tech stack and more — run
+                the same on every tier. The licensed-vendor channels (G2, Capterra, TrustRadius, Gartner Peer
+                Insights, traffic and review data) are part of Growth ($399/mo) and above; Starter&apos;s coverage
+                map shows those as available on upgrade rather than pretending they&apos;re already active.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Can a channel report a false positive — say something changed when it didn&apos;t?</h4>
+              <p>
+                It&apos;s rare but possible, usually from a page&apos;s own instability (an A/B test, a cached CDN
+                response) rather than the scout inventing something. Because every report links to what was actually
+                captured, a false positive is checkable and correctable rather than a black-box claim you just have
+                to trust.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>How does this compare to Klue&apos;s or Crayon&apos;s channel count?</h4>
+              <p>
+                Both claim broad tracking, but neither publishes an equivalent channel-by-channel inventory before a
+                demo call. Fortress HQ&apos;s list is on this page, named and grouped, whether or not you&apos;ve
+                paid for anything yet.
               </p>
             </div>
           </div>

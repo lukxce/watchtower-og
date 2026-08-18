@@ -122,7 +122,7 @@ export default function ExecutivesPage() {
               <span className="tmx-card-k">Signal feed</span>
               <h3>The evidence, if you want to go read it</h3>
               <p>
-                Every scout&apos;s report across 22 public channels, dated and sourced — there for the moment you
+                Every scout&apos;s report across 28 public channels, dated and sourced — there for the moment you
                 want to check a claim yourself instead of taking the summary on trust.
               </p>
             </div>
@@ -208,7 +208,7 @@ export default function ExecutivesPage() {
           <p>
             The output is also uneven in a way that&apos;s easy to miss: a manually compiled update reflects whatever
             the person had time to check, not what actually matters, and it rarely says what it didn&apos;t get to.
-            An update built from continuous coverage across 22 channels doesn&apos;t have that gap — and when it
+            An update built from continuous coverage across 28 channels doesn&apos;t have that gap — and when it
             does have one, a page it couldn&apos;t reach, it says so instead of quietly leaving it out.
           </p>
           <p>

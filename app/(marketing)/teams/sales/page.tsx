@@ -91,7 +91,7 @@ export default function SalesTeamPage() {
               <span className="tmx-card-k">Signal feed</span>
               <h3>What changed, dated and cited</h3>
               <p>
-                Pricing moves, new ads, review patterns and hiring activity across 22 public channels, in one place
+                Pricing moves, new ads, review patterns and hiring activity across 28 public channels, in one place
                 per competitor — so &quot;has anything changed&quot; has a real answer instead of a shrug.
               </p>
             </div>
@@ -285,7 +285,7 @@ export default function SalesTeamPage() {
             <details>
               <summary>How fast does a new competitor move show up?</summary>
               <p>
-                Scouts run on a daily cadence across the 22 channels, so most changes — a new ad, a pricing page
+                Scouts run on a daily cadence across the 28 channels, so most changes — a new ad, a pricing page
                 edit, a review — show up in the feed within a day of happening, cited to the source. It&apos;s not
                 real-time to the minute, and we won&apos;t claim it is.
               </p>

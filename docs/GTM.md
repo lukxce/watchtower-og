@@ -76,13 +76,13 @@ This is the whole entry strategy. It's not a feature, it's a business-model diff
 
 1. **Verifiability.** Every claim cites its source. This is the trust wedge, and it's enforced in code, not marketing. In a category full of "AI-powered insights," being the one that shows its work is a real position.
 2. **Price transparency.** $99 on the pricing page. A direct shot at a demo-gated category.
-3. **Depth of channel coverage.** 22 public channels including certificate transparency — which finds pre-launch buildouts nobody has announced. This is the "how did you even know that" moment that sells the product in a demo.
+3. **Depth of channel coverage.** 28 public channels including certificate transparency — which finds pre-launch buildouts nobody has announced. This is the "how did you even know that" moment that sells the product in a demo.
 
 ### Objection handling
 
 | Objection | Answer |
 |---|---|
-| *"How is this different from Google Alerts?"* | Alerts forward mentions. We watch 22 channels, group ten ads into one event, and tell you what it means. Also: alerts don't read certificate logs. |
+| *"How is this different from Google Alerts?"* | Alerts forward mentions. We watch 28 channels, group ten ads into one event, and tell you what it means. Also: alerts don't read certificate logs. |
 | *"We already use Crayon."* | Then you already believe in the category. The question is whether you're getting $20k of value, and whether your team actually opens it. |
 | *"$99 seems too cheap to be good."* | The incumbents' price reflects an enterprise sales motion, not the cost of watching a website. We don't have that motion. Try the demo. |
 | *"Is this legal?"* | Everything is public data — the same pages, ad libraries and certificate logs anyone can open. We don't scrape anything behind a login and we don't touch personal data. |

@@ -90,7 +90,7 @@ export default function MarketingTeamPage() {
               <span className="tmx-card-k">Signal feed</span>
               <h3>The facts under every page you maintain</h3>
               <p>
-                Pricing, plan names, feature claims and launches across 22 public channels, dated and sourced — the
+                Pricing, plan names, feature claims and launches across 28 public channels, dated and sourced — the
                 actual inventory a comparison page or a positioning doc should be checked against.
               </p>
             </div>

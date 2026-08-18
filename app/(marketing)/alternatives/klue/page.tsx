@@ -82,7 +82,7 @@ export default function KlueAlternative() {
                 </tr>
                 <tr>
                   <th scope="row">Coverage breadth</th>
-                  <td className="us">22 public channels per competitor, automated</td>
+                  <td className="us">28 public channels per competitor, automated</td>
                   <td>Deep on sales enablement and CRM integration; breadth of public-channel tracking is narrower by design</td>
                 </tr>
                 <tr>
@@ -198,7 +198,7 @@ export default function KlueAlternative() {
               <summary>Does Fortress HQ do everything Klue does?</summary>
               <p>
                 No. We don&apos;t have CRM-embedded battlecards or a native win-loss interview program today. What
-                we do is watch 22 public channels continuously, cite every claim, and put the price on the page.
+                we do is watch 28 public channels continuously, cite every claim, and put the price on the page.
                 If deep CRM embedding is the deciding factor for your team, Klue is likely the better fit.
               </p>
             </details>

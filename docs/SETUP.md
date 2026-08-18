@@ -79,27 +79,28 @@ the Vercel value locally if you want `/api/health` to be queryable.
 
 ---
 
-## 4. Glassdoor + Gartner pages — 18 lookups
+## 4. Glassdoor + Gartner pages — DONE
 
-Only Klue has these. They cannot be derived: Glassdoor keys pages by an
-internal id (`…-E2919580.htm`), and a Gartner URL encodes market + vendor +
-product.
+All resolved 19 August 2026 and verified with live runs.
 
-Set them in the app: **Battlecards → Channel sources**. Or:
-
-```bash
-node scripts/set-source.mjs <slug> glassdoor <url>
-```
-
-Expect several to genuinely not exist — the influencer tools (Modash, Cirqle,
-Upfluence) are unlikely to be on Gartner Peer Insights, and smaller companies
-often have no Glassdoor page. Leaving those blank is the correct answer, not a
-gap.
-
-| Competitor | Glassdoor | Gartner |
+| | Set | Genuinely absent |
 |---|---|---|
-| Klue | ✅ | ✅ |
-| Crayon, CreatorIQ, Grin, Kompyte, Modash, Signal Labs, Cirqle, Upfluence, Visualping | — | — |
+| Glassdoor | 8 — Klue, Crayon, CreatorIQ, Grin, Kompyte, Modash, Cirqle, Upfluence | Signal Labs, Visualping |
+| Gartner | 3 — Klue, Crayon, Kompyte | the six influencer tools |
+
+Two disambiguation calls worth keeping:
+
+- **Crayon has three Glassdoor entries.** `E1401357` is ours (Boston, 84
+  reviews, competitive intelligence). `E1057870` is Crayon Group, the Norwegian
+  IT reseller, and `E809100` is Crayon Data. Same trap as the funding channel.
+- **Signal Labs is not on Glassdoor.** "Signal AI" (`E1487921`) is a different
+  UK media-intelligence company and was deliberately not used.
+
+No influencer-marketing vendor is on Gartner Peer Insights — Gartner covers
+that category with a Market Guide instead. Those blanks are correct.
+
+Set any future competitor in the app: **Battlecards → Channel sources**, or
+`node scripts/set-source.mjs <slug> <channel> <url>`.
 
 ---
 

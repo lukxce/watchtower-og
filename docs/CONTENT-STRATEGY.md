@@ -133,7 +133,7 @@ Every post → newsletter issue → social thread → /watch page evidence
 
 This is the highest-leverage unbuilt thing on the list.
 
-Each tool takes a domain, returns a real answer in seconds, and is a **working slice of the product**. No email gate on the result — gate the *depth* instead ("this is one channel; Fortress HQ watches 22 — see all of them for this domain").
+Each tool takes a domain, returns a real answer in seconds, and is a **working slice of the product**. No email gate on the result — gate the *depth* instead ("this is one channel; Fortress HQ watches 28 — see all of them for this domain").
 
 ### What's actually cheap and fast
 
@@ -191,7 +191,7 @@ Every tool page follows the same shape, which is also an SEO asset:
 H1: What is [company] hiring for right now?
 [ domain input ] → live result in <1s
 The read — plain language, what it means
-"This is 1 of 22 channels Fortress HQ watches. See all of them for [domain] →"
+"This is 1 of 28 channels Fortress HQ watches. See all of them for [domain] →"
 Method: exactly where this data comes from, and its limits
 FAQ (schema markup)
 ```
