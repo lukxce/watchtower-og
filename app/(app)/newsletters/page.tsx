@@ -47,23 +47,48 @@ export default async function Newsletters() {
   const nameOf = (id: number) => competitors.find((c) => c.id === id)?.name ?? `#${id}`;
 
   const confirmedCount = competitors.filter((c) => c.status === 'confirmed').length;
-  const inboundUrl = `/api/inbound?org=${orgId}`;
+  // The customer needs an EMAIL ADDRESS to forward to — not a webhook URL.
+  // NEWSLETTER_INBOX holds the persona address (e.g. watch@yourdomain.com) and
+  // the workspace rides in a plus-tag, so one inbox serves every tenant.
+  const inbox = process.env.NEWSLETTER_INBOX ?? '';
+  const forwardTo = inbox
+    ? inbox.replace(/^([^@]+)@/, `$1+${orgId}@`)
+    : null;
 
   return (
     <main className="main solo">
       <section className="feed">
         <h1>Newsletters &amp; secret shopper</h1>
         <p className="sub">
-          {confirmedCount}/{competitors.length} competitors confirmed and receiving mail. Sign up a persona inbox for
-          each competitor&apos;s newsletter, forward what it receives to <code className="mono">{inboundUrl}</code>,
-          and it lands in the feed below tagged as a newsletter signal.
+          {confirmedCount}/{competitors.length} competitors confirmed and receiving mail. Subscribe a persona inbox
+          to each competitor&apos;s newsletter, forward what arrives to the address below, and it lands in the feed
+          tagged as a newsletter signal.
         </p>
+
+        {forwardTo ? (
+          <div className="callout-box">
+            <b>Forward their emails to</b>{' '}
+            <code className="mono">{forwardTo}</code>
+            <br />
+            The <code className="mono">+{orgId}</code> tag is what routes mail to this workspace, so keep it. Most mail
+            clients let you auto-forward by sender, which makes this a one-time setup per competitor.
+          </div>
+        ) : (
+          <div className="empty">
+            <b>Not configured yet.</b> This channel needs an inbox that can receive mail and post it onwards — Resend
+            Inbound, SendGrid Parse or Mailgun Routes all do it. Point one at{' '}
+            <code className="mono">/api/inbound?token=…</code>, then set <code className="mono">NEWSLETTER_INBOX</code>{' '}
+            to the address and <code className="mono">INBOUND_TOKEN</code> to the shared secret. The address then
+            appears here, per workspace.
+          </div>
+        )}
 
         <div className="callout-box">
           Signup itself is a manual, one-time action per competitor: visit their site, subscribe with your persona
           email, confirm from the inbox. Nothing here fakes that step. Once you&apos;re subscribed, forward
           (or auto-forward) their emails to the address above and Watchtower does the rest: matches the sender
-          domain, dedupes, and ingests it as a signal.
+          domain, dedupes, and ingests it as a signal. Mail from companies you don&apos;t track is ignored rather
+          than stored — the persona inbox will receive plenty of unrelated post.
         </div>
 
         <h3 className="admin-h">Subscription status</h3>

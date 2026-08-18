@@ -73,7 +73,7 @@ export const CHANNELS: ChannelDef[] = [
   { key: 'reddit', label: 'Reddit', group: 'Voice & PR', status: st(has(env.REDDIT_CLIENT_ID), 'needs_account'), note: 'OAuth search · set REDDIT_CLIENT_ID/SECRET (free app)', run: collectReddit },
   { key: 'producthunt', label: 'Product Hunt', group: 'Voice & PR', status: st(has(env.PRODUCTHUNT_TOKEN), 'needs_key'), note: 'GraphQL API · set PRODUCTHUNT_TOKEN (free)', run: collectProductHunt },
   { key: 'linkedin_posts', label: 'LinkedIn company posts', group: 'Voice & PR', status: st(APIFY, 'needs_account'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_LINKEDIN_ACTOR', run: collectLinkedinPosts },
-  { key: 'newsletters', label: 'Newsletters & sequences', group: 'Voice & PR', status: st(has(env.NEWSLETTER_INBOX), 'needs_account'), note: 'Persona inbox → /api/inbound (secret shopper)', run: collectNewsletters },
+  { key: 'newsletters', label: 'Newsletters & sequences', group: 'Voice & PR', status: st(has(env.NEWSLETTER_INBOX) && has(env.INBOUND_TOKEN), 'needs_account'), note: 'Persona inbox → /api/inbound (secret shopper) · needs NEWSLETTER_INBOX + INBOUND_TOKEN', run: collectNewsletters },
   // Reputation
   { key: 'trustpilot', label: 'Trustpilot reviews', group: 'Reputation', status: 'active', note: has(env.TRUSTPILOT_API_KEY) ? 'Business API' : 'Public page · set TRUSTPILOT_API_KEY to upgrade', run: collectTrustpilot },
   { key: 'g2', label: 'G2 reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_G2_ACTOR', run: collectG2 },
