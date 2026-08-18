@@ -8,7 +8,44 @@
 // Guessing here would reproduce the Crayon Group / Kluster failure on a channel
 // where a wrong match means publishing another company's announcements.
 import { hasVendor, runApifyActor, buildActorInput } from '@/lib/vendor';
-import { ingestItems, recordRun, getSource, type Competitor } from '@/db/queries';
+import { smartFetch } from '@/lib/fetchLadder';
+import { ingestItems, recordRun, getSource, setSource, type Competitor } from '@/db/queries';
+
+/**
+ * Find a competitor's LinkedIn company page from their own site.
+ *
+ * Companies link their LinkedIn from the footer on essentially every page, so
+ * the homepage is enough. This matters more than it looks: the slug is not a
+ * function of the domain, and measuring the real ones proves it —
+ *
+ *   crayon.co         -> /company/crayon-co        (not "crayon")
+ *   grin.co           -> /company/grin-inc-        (trailing hyphen)
+ *   usesignallabs.com -> /company/signal-labs-cix
+ *   visualping.io     -> /company/9480446          (a bare numeric id)
+ *
+ * Four of seven would have been wrong by derivation, and a wrong match here
+ * publishes another company's announcements as your competitor's.
+ *
+ * Cached as 'none' when the footer has no link, so a site that simply does not
+ * link LinkedIn is not refetched on every run. Setting the URL by hand
+ * overwrites that.
+ */
+export async function discoverLinkedinUrl(comp: Competitor): Promise<string | null> {
+  const cached = await getSource(comp.id, 'linkedin', 'url');
+  if (cached) return cached === 'none' ? null : cached;
+
+  const res = await smartFetch(`https://${comp.domain}`);
+  if (res.status !== 200) return null;
+  const found = res.html.match(/https?:\/\/(?:[a-z]{0,3}\.)?linkedin\.com\/company\/([A-Za-z0-9_-]+)/i);
+  if (!found) {
+    await setSource(comp.id, 'linkedin', 'url', 'none');
+    return null;
+  }
+  // Normalise: locale subdomains (ca./uk./lb.) are the same page.
+  const url = `https://www.linkedin.com/company/${found[1]}`;
+  await setSource(comp.id, 'linkedin', 'url', url);
+  return url;
+}
 
 interface LiPost {
   // Field names verified against a live run of harvestapi/linkedin-company-posts.
@@ -40,9 +77,9 @@ export async function collectLinkedinPosts(comp: Competitor): Promise<string> {
   }
   const actor = process.env.APIFY_LINKEDIN_ACTOR ?? '';
 
-  const target = await getSource(comp.id, 'linkedin', 'url');
+  const target = await discoverLinkedinUrl(comp);
   if (!target) {
-    await recordRun(comp.id, 'linkedin_posts', true, 0, 'needs the LinkedIn company URL — the slug cannot be derived from a domain safely');
+    await recordRun(comp.id, 'linkedin_posts', true, 0, 'no LinkedIn link found on their site — set one with scripts/set-source.mjs');
     return 'needs LinkedIn URL';
   }
 
