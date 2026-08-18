@@ -19,7 +19,16 @@ import { getDb } from '@/db/client';
 export const COLLECT_HOUR = 4;
 export const DELIVER_HOUR = 7;
 
-/** Fallback when a workspace has never told us where it is. */
+/**
+ * Fallback when a workspace has never told us where it is.
+ *
+ * This is load-bearing in a way that is easy to miss: the hourly cron only
+ * acts on workspaces whose LOCAL hour is 4 or 7. A workspace defaulting to UTC
+ * under a cron that fires at 05:00 UTC matches neither, and would silently do
+ * nothing — a broken schedule that looks configured. Any change to the cron
+ * hour in vercel.json has to be checked against this default, or against every
+ * workspace's real timezone.
+ */
 export const DEFAULT_TZ = 'UTC';
 
 /**
