@@ -9,6 +9,7 @@ import { runCollection } from '@/lib/orchestrator';
 import { computeThreat, snapshotThreat } from '@/lib/threat';
 import { authorized } from '@/lib/auth';
 import { workspacesAtLocalHour, COLLECT_HOUR, DELIVER_HOUR } from '@/lib/schedule';
+import { getDb } from '@/db/client';
 
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,28 @@ export async function GET(req: NextRequest) {
 
   const toCollect = await workspacesAtLocalHour(COLLECT_HOUR, now);
   const toDeliver = await workspacesAtLocalHour(DELIVER_HOUR, now);
+
+  // Works on one cron a day as well as on twenty-four.
+  //
+  // On Vercel Pro this runs hourly: a workspace is collected at its local
+  // 04:00 and delivered at 07:00, three hours apart, which is what you want
+  // when collection is slow. On Hobby, where crons only fire once a day, the
+  // single run lands on ONE of those hours and the other would never happen.
+  //
+  // So: if a workspace is due for delivery and has not been collected today,
+  // collect it first. Self-correcting, needs no flag, and on the hourly
+  // schedule it simply never triggers because 04:00 already did the work.
+  const collectedToday = new Set(
+    (await (await getDb()).query<{ org_id: string }>(
+      `SELECT DISTINCT org_id FROM usage_daily
+       WHERE meter = 'page_fetch' AND period = CURRENT_DATE AND units > 0`,
+    )).map((r) => r.org_id),
+  );
+  for (const ws of toDeliver) {
+    if (!collectedToday.has(ws.orgId) && !toCollect.some((c) => c.orgId === ws.orgId)) {
+      toCollect.push(ws);
+    }
+  }
 
   // Tier-2 page capture is a Monday job — but Monday in the workspace's own
   // timezone, not UTC, or a Sydney workspace gets it on Sunday afternoon.
