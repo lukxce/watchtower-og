@@ -28,7 +28,9 @@ export interface Plan {
   competitors: number;
   /** Pages kept under ongoing monitoring, per competitor. */
   monitoredPagesPerCompetitor: number;
-  /** Workspace-wide daily crawl budget. The rolling queue spends this. */
+  /** Workspace-wide daily crawl budget. The rolling queue spends this.
+   *  Sized so the archive sweep is spread evenly across the month rather
+   *  than run as one burst — a 2,500-page sweep is ~83 fetches a day. */
   pageFetchesPerDay: number;
   /** Apify actor runs per month, workspace-wide. 0 = channels off. */
   vendorRunsPerMonth: number;
@@ -44,10 +46,12 @@ export const PLANS: Record<PlanId, Plan> = {
     label: 'Starter',
     priceMonthly: 149,
     competitors: 3,
-    monitoredPagesPerCompetitor: 200,
-    // 200 pages tiered ≈ 31 fetches/day/competitor; ×3 ≈ 93, +headroom.
-    pageFetchesPerDay: 150,
-    vendorRunsPerMonth: 0,
+    // Pages are ~5% of cost — a bigger site is nearly free to watch, so the
+    // allowance is generous on purpose. 25 tier-1 daily + ~500 tier-2 weekly
+    // + a 2,500-page archive swept 83/day + new pages = ~182 fetches/day.
+    monitoredPagesPerCompetitor: 3000,
+    pageFetchesPerDay: 600, // 3 competitors x ~200/day, with headroom
+    vendorRunsPerMonth: 0,  // reviews + LinkedIn are Growth and up
     asksPerMonth: 50,
     vendorChannels: false,
   },
@@ -56,20 +60,21 @@ export const PLANS: Record<PlanId, Plan> = {
     label: 'Growth',
     priceMonthly: 399,
     competitors: 10,
-    monitoredPagesPerCompetitor: 1000,
-    // 1000 pages tiered ≈ 155/day/competitor; ×10 ≈ 1550, +headroom.
-    pageFetchesPerDay: 1800,
-    vendorRunsPerMonth: 320, // 32/competitor × 10
+    monitoredPagesPerCompetitor: 3000,
+    pageFetchesPerDay: 2000, // 10 competitors x ~200/day
+    // The vendor channels are 61% of Growth's marginal cost. They are the
+    // reason this tier exists, not the competitor count.
+    vendorRunsPerMonth: 320,
     asksPerMonth: 300,
     vendorChannels: true,
   },
   enterprise: {
     id: 'enterprise',
     label: 'Enterprise',
-    priceMonthly: null, // quoted; crawl volume is stated explicitly on the order
+    priceMonthly: null, // quoted; crawl volume stated explicitly on the order
     competitors: 30,
-    monitoredPagesPerCompetitor: 5000,
-    pageFetchesPerDay: 25000,
+    monitoredPagesPerCompetitor: 6000,
+    pageFetchesPerDay: 7000,
     vendorRunsPerMonth: 960,
     asksPerMonth: 2000,
     vendorChannels: true,

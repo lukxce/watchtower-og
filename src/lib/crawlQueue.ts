@@ -20,12 +20,14 @@
 import { getDb } from '@/db/client';
 import { spend } from '@/lib/budget';
 import { planOf } from '@/lib/plans';
+import { CADENCE_HOURS } from '@/lib/pageTiers';
 
-/** How often each tier is re-checked for edits. */
-const CADENCE_HOURS: Record<number, number> = {
-  1: 24,      // pricing, product, homepage — daily
-  2: 24 * 7,  // customers, integrations, compare — weekly
-  3: 24 * 30, // the long tail we still monitor — monthly
+// Tier 3 is fetch-once (null cadence), so it never appears in the due query.
+// The archive sweep is instead spread across the month by the daily budget:
+// pages come back round in most-overdue-first order, which self-levels.
+const DUE_HOURS: Record<string, number> = {
+  '1': CADENCE_HOURS[1]!,
+  '2': CADENCE_HOURS[2]!,
 };
 
 export interface DuePage {
@@ -77,10 +79,13 @@ export async function planCrawl(orgId: string, planId?: string | null): Promise<
      SELECT id, competitor_id, url, tier, last_fetched_at::text
      FROM ranked
      WHERE rn <= $2
+       -- tier 3 has no cadence: it is fetched once (last_fetched_at IS NULL)
+       -- and then never becomes due again.
        AND (last_fetched_at IS NULL
-            OR last_fetched_at < now() - (COALESCE($3::jsonb ->> tier::text, '720')::int * INTERVAL '1 hour'))
+            OR (($3::jsonb ->> tier::text) IS NOT NULL
+                AND last_fetched_at < now() - (($3::jsonb ->> tier::text)::int * INTERVAL '1 hour')))
      ORDER BY last_fetched_at NULLS FIRST, tier`,
-    [orgId, cap, JSON.stringify(CADENCE_HOURS)],
+    [orgId, cap, JSON.stringify(DUE_HOURS)],
   );
 
   if (due.length === 0) {
