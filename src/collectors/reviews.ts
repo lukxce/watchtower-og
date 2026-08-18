@@ -53,6 +53,13 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   // Prose arrives three different ways depending on the actor: one field,
   // G2's three-part split (azzouzana), or a question->answer object keyed by
   // the literal G2 prompts (memo23).
+  // zen-studio splits the body into `pros`/`cons` and frequently leaves `text`
+  // null — 20 of the 48 rows in the first live run had no `text` at all. Taking
+  // `text` alone would have ingested those as ratings with no content.
+  const prosCons = [str(raw.pros) && `Pros: ${str(raw.pros)}`, str(raw.cons) && `Cons: ${str(raw.cons)}`]
+    .filter(Boolean)
+    .join(' · ');
+
   const qa = raw.review_question_answers;
   const qaParts =
     qa && typeof qa === 'object' && !Array.isArray(qa)
@@ -66,7 +73,8 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   const text =
     pick('review_content', 'text', 'body', 'content', 'review', 'comment') ??
     (splitParts.length ? splitParts.join(' — ') : undefined) ??
-    (qaParts.length ? qaParts.join(' — ') : undefined);
+    (qaParts.length ? qaParts.join(' — ') : undefined) ??
+    (prosCons || undefined);
 
   const ratingRaw = raw.review_rating ?? raw.rating ?? raw.ratingOutOfFive ?? raw.score ?? raw.stars;
   const rating = typeof ratingRaw === 'number' ? ratingRaw : Number(ratingRaw) || undefined;
@@ -85,9 +93,27 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   // actors — carries the vendor's OWN domain on every row. That is a real join
   // key: it verifies the row belongs to this competitor instead of trusting a
   // name match, which is the failure that has bitten every other channel.
+  // Reviewer context arrives nested (memo23) OR flattened with literal dotted
+  // keys (zen-studio emits "reviewer.name", not reviewer: { name }).
   const reviewer = raw.reviewer as Record<string, unknown> | undefined;
-  if (reviewer?.business_size) extra.segment = str(reviewer.business_size) ?? extra.segment;
-  if (reviewer?.reviewer_job_title) extra.jobTitle = str(reviewer.reviewer_job_title);
+  const flat = (k: string) => str(raw[`reviewer.${k}`]);
+  const segment = str(reviewer?.business_size) ?? flat('companySize');
+  const jobTitle = str(reviewer?.reviewer_job_title) ?? flat('jobTitle');
+  if (segment) extra.segment = segment;
+  if (jobTitle) extra.jobTitle = jobTitle;
+  if (flat('industry')) extra.industry = flat('industry');
+  if (raw.platform) extra.platform = str(raw.platform);
+
+  // The most valuable field a review directory exposes for competitive
+  // intelligence: which products the buyer weighed against this one, and what
+  // else they run. TrustRadius names them outright.
+  const pd = raw.platformData as Record<string, unknown> | undefined;
+  const alts = Array.isArray(pd?.alternativesConsidered) ? pd!.alternativesConsidered : undefined;
+  if (alts?.length) extra.alternativesConsidered = alts;
+  const alongside = Array.isArray(pd?.otherSoftwareUsed) ? pd!.otherSoftwareUsed : undefined;
+  if (alongside?.length) {
+    extra.usedAlongside = (alongside as { product?: string }[]).map((x) => x.product).filter(Boolean);
+  }
   const domain = pick('company_domain', 'companyDomain');
   if (domain) extra.companyDomain = domain;
 
@@ -219,7 +245,20 @@ async function collectReviewSource(
         );
         return 'needs Glassdoor employer URL';
       }
-      fallback = { startUrls: [{ url: stored }], command: 'reviews', maxItems: MAX_REVIEWS };
+      fallback = {
+        startUrls: [{ url: stored }],
+        command: 'reviews',
+        maxItems: MAX_REVIEWS,
+        // This actor has what zen-studio lacks: incremental collection. Both
+        // flags together mean a repeat run bills only genuinely new reviews
+        // rather than re-pulling the same tail every time — which is why
+        // Glassdoor can run weekly where the multi-platform actor cannot.
+        monitoringModeForReviews: true,
+        saveOnlyUniqueItems: true,
+        // Aggregate stats come back without paying for every underlying
+        // review: the rating trend is the signal, not the individual posts.
+        includeCompanyReviewStats: true,
+      };
     } else {
       fallback = { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS };
     }
