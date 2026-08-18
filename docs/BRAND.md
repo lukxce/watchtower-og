@@ -14,14 +14,21 @@ That is the product, almost literally. Watchtower stands the watch over your com
 
 Never a raw pile of alerts. Never a false fire.
 
-### The two-beat lore
+### The lore
 
-> **Scouts gather. The Tower sees.**
+> **Scouts gather. The Tower sees. You command.**
 
 This is not decoration; it is the architecture, and that is why it holds up.
 
 - **Scouts** are the individual collectors — one per public channel. Pricing pages, ad libraries, job boards, certificate-transparency logs, press, review sites, sitemaps, events pages. Each one goes out, brings back what it found, and reports honestly when it found nothing.
 - **The Tower** is the product. It sees everything the scouts bring back, reads it *together* per competitor, and writes the briefing.
+- **The command is yours.** The tower never acts on your behalf and never decides for you. It hands you a briefing and stands back. This is brand law 1 stated as lore: *the tower reads, you decide.*
+
+**Use two beats or three depending on the audience.** The two-beat version —
+*Scouts gather. The Tower sees.* — is the marketing line: it describes the
+machine, and it is what runs on the homepage. The three-beat version is the
+in-product and onboarding line, because inside the app the person is not an
+audience, they are the Watch Commander. Never mix them in one viewport.
 
 The distinction earns its keep in the UI: a scout's report is a fact with a source. The Tower's read is a conclusion. We never blur them, and the customer can always see which is which.
 
@@ -150,7 +157,37 @@ A consistent internal vocabulary that surfaces in the product and the marketing.
 | **Launch Radar** | Forecast of who is about to ship | Fires only on corroborating signal types. |
 | **Threat Index** | The per-competitor score | Always shown with its inputs, never as a bare number. |
 
-**Retired, do not reuse:** "the Keeper" (the AI's old name), "the frontier" (as a section label), "signal indigo" / "first light" as *palette* names.
+### The command layer — the human half
+
+The vocabulary above is all machine. These name the person and their decisions,
+and they were the missing half of the system: the loop ran *gather → see* and
+then stopped at the exact point where the customer does the work.
+
+| Term | Means | Notes |
+|---|---|---|
+| **Watch Commander** | The customer. Their role, not their job title. | Already live in the app (`overview/page.tsx:53`). It is deliberately a *rank on the wall*, not a persona — a PMM, a founder and a sales lead all hold it. |
+| **The command** | The decision that follows a briefing | Never "the recommendation". The Tower does not recommend; it reports and you command. |
+| **Standing orders** | Persistent rules the commander sets once — what to watch, what is worth waking them for | This is the real name for alert rules and watch settings. "Set a standing order on Klue's pricing" beats "configure an alert trigger". |
+| **The order of the day** | The morning briefing itself | Pairs with *first light*, which is when it arrives. |
+| **Relief** | The handover — the weekly digest | A watch is relieved, not "summarised". The digest is the relief coming on duty and telling you what happened while you were off the wall. |
+| **Muster** | Bringing a competitor onto the watch | "Muster a competitor" for onboarding, rather than "add a tracker". |
+
+**The guardrail this layer needs.** "Command" reads as military, and §1 forbids
+military-tactical language — so be precise about which register this is.
+
+**Garrison vocabulary is right**: commander, watch, relief, standing orders,
+muster, post, wall. These are the words of people who *hold* a position and
+keep watch over it.
+
+**Battlefield vocabulary stays banned**: target, strike, kill, war room,
+weaponise, take out, crosshair. These are the words of people who go out and
+attack, which is neither what the product does nor what it reads public data
+for.
+
+The test: a watchtower garrison protects and reports. It does not raid. If a
+word belongs to the raid, it is out.
+
+**Retired, do not reuse:** "the Keeper" (the AI's old name), "the frontier" (as a section label), "signal indigo" / "first light" as *palette* names, "alerts"/"triggers" (use *standing orders*), "recommendation" (the Tower reports, the commander decides).
 
 ---
 
@@ -166,7 +203,9 @@ Short, active, and the literal product promise. The homepage runs a rotating tai
 
 | Line | Use |
 |---|---|
-| **Scouts gather. The Tower sees.** | The lore line. Section headers, about page, careers, the product's own voice. |
+| **Scouts gather. The Tower sees.** | The lore line, marketing. Section headers, about page, careers. |
+| **Scouts gather. The Tower sees. You command.** | The lore line, in-product. Onboarding, empty states, the app's own voice — anywhere the reader is the Watch Commander rather than a visitor. |
+| **The tower reads. You decide.** | Brand law 1 as a line. Use where the product could be mistaken for deciding on someone's behalf. |
 | **Stop being the last to know.** | Closing CTA. Loss-framed, so use it at the end, never the top. |
 | **Every fact cited.** | The trust line. Pairs with any claim about coverage. |
 | **Most of your market happens in the dark.** | The problem statement. Opens the fog-of-war section. |
