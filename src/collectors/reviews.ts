@@ -145,7 +145,13 @@ async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorRevi
     {
       query: bare, // the domain — identity, not a name
       platforms: Object.keys(PLATFORM_CHANNEL),
-      maxResults: MAX_REVIEWS,
+      // The actor enforces maxResults >= 100, so 25 is rejected outright and
+      // there is no cheap run. It also has no incremental mode — every run
+      // re-pulls and re-bills reviews we already hold. Both push this channel
+      // to a MONTHLY cadence: 100 rows once a month is $0.50 per competitor
+      // for five platforms, where weekly would be $2.00 for the same reviews.
+      // Reviews move slowly enough that monthly loses nothing.
+      maxResults: Math.max(100, MAX_REVIEWS),
       sort: 'most_recent',
     },
   );
