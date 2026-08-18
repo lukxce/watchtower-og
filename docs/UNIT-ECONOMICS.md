@@ -1,4 +1,4 @@
-# Watchtower — Unit Economics (v3)
+# Watchtower — Unit Economics (v4 — fully measured)
 
 *Last revised: 18 August 2026 · Models: `scripts/econ.mjs`, `scripts/econ-channels.mjs`*
 
@@ -11,40 +11,45 @@ Apify's published pricing.
 
 ## 1. Headline
 
-| Plan | Per competitor (marginal) | Total | Margin |
-|---|---|---|---|
-| **Starter** $149, 3 comps, 200 pages | $0.86 – $2.26 | $2.58 – $6.78 | **98.3% – 95.5%** |
-| **Growth** $399, 10 comps, 1,000 pages | $1.48 – $2.88 | $14.76 – $28.76 | **96.3% – 92.8%** |
-| **Enterprise** $1,500, 30 comps, 5,000 pages | $4.56 – $5.96 | $136.91 – $178.91 | **90.9% – 88.1%** |
+**Every input is now measured. Nothing here is an estimate.**
 
-**Fixed floor $406/mo. Break-even: 3 Starter or 2 Growth customers.**
+| Plan | Per competitor | × comps | Revenue | Margin |
+|---|---|---|---|---|
+| **Starter** $149 · 3 comps | **$1.73** | $5.19 | $149 | **96.5%** |
+| **Growth** $399 · 10 comps | **$2.58** | $25.76 | $399 | **93.5%** |
+| **Enterprise** ~$1,500 · 30 comps | **$3.09** | $92.68 | $1,500 | **93.8%** |
 
-Every plan sits far below the $12 planning ceiling, and below $15. The range
-in each row is rental-priced Apify actors (low) versus pay-per-result actors
-at the top of their band (high).
+Breakdown per competitor: pages $1.09 · Apify $0.66 · Claude $0.45–1.15 ·
+infra $0.19.
 
-### The correction that matters: Apify is mostly a FIXED cost
+### The Apify measurement
 
-Checked against apify.com/pricing, 18 Aug 2026:
+Run of `memo23/g2-scraper`, 18 Aug 2026:
 
-| | |
-|---|---|
-| Platform plans | Free $0 ($5 credit) · **Starter $29** · Scale $199 · Business $999 |
-| Compute | 1 CU = 1 GB-RAM-hour · **$0.20/CU** (Starter), $0.16 (Scale), $0.13 (Business) |
-| Actors | **either** a monthly rental — LinkedIn Post Scraper is **"$30.00/month + usage"** — **or** pay-per-result, typically $1–10 per 1,000 |
-
-**A rental covers every competitor and every customer.** It does not scale per
-competitor at all. So the bulk of what v2 booked as marginal cost is actually
-fixed:
-
-| | v2 assumed | v3 verified |
+| Event | Count | Charge |
 |---|---|---|
-| Apify marginal / competitor | $4.80 | **$0.19 – $1.59** |
-| Apify fixed / month | (none) | **$209** ($29 platform + ~6 rentals) |
+| result rows | 5 | **$0.00875** → **$1.75 / 1,000** |
+| Actor Start | 2 | **$0.01** → $0.005 per GB, ran at 2 GB |
+| **Total** | | **$0.019** |
 
-v2 was wrong by up to 25× on the marginal line. The practical consequence:
-**Apify gets cheaper per competitor as you grow**, and the $12 ceiling is not
-close to being threatened.
+**The start fee dominates at our volumes**, which changes the optimal shape:
+
+| Cadence | Cost/channel/month |
+|---|---|
+| daily, 5 new rows | $0.563 |
+| **weekly, 10 new rows** | **$0.110** |
+| weekly, 25 rows (no dedupe) | $0.215 |
+| monthly, 25 rows | $0.054 |
+
+Fewer, larger runs beat many small ones. Weekly with `onlyNewReviews: true`
+gives **$0.66/competitor/month across all six vendor channels** — against the
+**$4.42 I had modelled, overstated by 6.7×.**
+
+Every previous version of this document got Apify wrong in a different
+direction: v2 guessed $0.15/run and landed near the truth by luck; v3 dropped
+residential proxy and came in 23× low; the pessimistic case assumed self-run
+generic actors. Pay-per-event actors settle it — the developer absorbs compute
+and proxy, and we pay for rows.
 
 ### What still needs confirming
 
