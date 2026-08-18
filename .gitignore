@@ -2,6 +2,9 @@ node_modules/
 .next/
 data/
 .env*
+# ...but the example file is documentation and belongs in the repo. Without
+# this exception every edit to it was silently dropped.
+!.env.example
 *.log
 .DS_Store
 
