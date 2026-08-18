@@ -16,7 +16,7 @@ import { resolveG2Products } from '@/lib/g2';
  * needs to set.
  */
 const MAX_REVIEWS = Number(process.env.APIFY_MAX_REVIEWS ?? 25);
-import { ingestItems, recordRun, type Competitor } from '@/db/queries';
+import { ingestItems, recordRun, getSource, type Competitor } from '@/db/queries';
 
 interface VendorReview {
   id?: string;
@@ -201,17 +201,29 @@ async function collectReviewSource(
     // generic {query,maxItems} body would have been rejected outright. Checked
     // against its published schema rather than assumed, after making exactly
     // that mistake with G2.
-    const fallback: Record<string, unknown> =
-      channel === 'glassdoor'
-        ? {
-            // Glassdoor employer pages are keyed by an internal employer id we
-            // cannot derive, so we hand it a search URL and let it resolve.
-            // UNVERIFIED: confirm against a real run before trusting it.
-            startUrls: [{ url: `https://www.glassdoor.com/Search/results.htm?keyword=${encodeURIComponent(comp.name)}` }],
-            command: 'reviews',
-            maxItems: MAX_REVIEWS,
-          }
-        : { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS };
+    // Glassdoor employer pages are keyed by an internal id — the actor's own
+    // example is .../Avis/Azaé-Avis-E1360610.htm — which cannot be derived
+    // from a domain or a name. So the URL is stored per competitor in
+    // `sources`, the same way jobs.ts remembers an ATS board, and set once
+    // from the employer's real Reviews page.
+    let fallback: Record<string, unknown>;
+    if (channel === 'glassdoor') {
+      const stored = await getSource(comp.id, 'glassdoor', 'url');
+      if (!stored) {
+        await recordRun(
+          comp.id,
+          'glassdoor',
+          true,
+          0,
+          'needs the employer Reviews URL — Glassdoor keys pages by an internal id we cannot derive',
+        );
+        return 'needs Glassdoor employer URL';
+      }
+      fallback = { startUrls: [{ url: stored }], command: 'reviews', maxItems: MAX_REVIEWS };
+    } else {
+      fallback = { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS };
+    }
+
     const input = buildActorInput(
       actorEnv.replace('_ACTOR', '_INPUT'),
       { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
