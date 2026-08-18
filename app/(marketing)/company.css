@@ -18,7 +18,10 @@
 .cox-prose .cox-lede{font-size:17px;color:var(--a-mut);line-height:1.65;margin:0 0 8px;max-width:60ch}
 .cox-prose h2{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin:44px 0 14px;color:var(--a-ink)}
 .cox-prose h2:first-of-type{margin-top:40px}
+.cox-prose h3{font-size:17.5px;font-weight:800;letter-spacing:-.015em;line-height:1.3;margin:28px 0 10px;color:var(--a-ink)}
+.cox-prose h2 + h3{margin-top:6px}
 .cox-prose p{font-size:16px;color:var(--a-mut);line-height:1.75;margin:0 0 18px}
+.cox-prose code{font-family:var(--mono,monospace);font-size:.9em;background:rgba(20,37,34,.06);padding:2px 6px;border-radius:5px;color:var(--a-ink)}
 .cox-prose ul{margin:0 0 20px;padding:0;list-style:none}
 .cox-prose li{font-size:15.5px;color:var(--a-mut);line-height:1.65;padding:0 0 12px 20px;position:relative}
 .cox-prose li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--a-teal)}
@@ -37,6 +40,29 @@
 .cox-tile p{font-size:14.5px;color:var(--a-mut);line-height:1.65;margin:0 0 10px}
 .cox-tile p:last-child{margin-bottom:0}
 .cox-tile .cox-example{font-size:13.5px;color:var(--a-ink);background:rgba(255,255,255,.5);border-radius:10px;padding:10px 14px;line-height:1.55}
+
+/* standalone eyebrow — Methodology's expanded mechanism sections use the
+   same .cox-tile-k label directly in the prose column, ahead of its own h2,
+   instead of inside a card. Scoped to a direct child of .cox-prose so it
+   never touches the label's rules inside an actual .cox-tile. */
+.cox-prose>.cox-tile-k{display:block;margin:44px 0 8px}
+.cox-prose>.cox-tile-k+h2{margin-top:0}
+
+/* standalone callout — Methodology's expanded mechanism sections use this
+   where a tile's .cox-example used to live, now inline in running prose
+   instead of a card. Same visual idea (quiet glass chip), lighter footprint. */
+.cox-callout{background:rgba(255,255,255,.5);border-left:3px solid var(--a-teal);border-radius:4px 10px 10px 4px;
+  padding:13px 18px;margin:6px 0 22px;font-size:14.5px;color:var(--a-ink);line-height:1.6}
+.cox-callout b{font-weight:800}
+
+/* FAQ — plain divider rows, no card material, matches the restrained
+   register the rest of this page group uses. */
+.cox-faq{margin:16px 0 30px}
+.cox-faq-item{padding:20px 0;border-bottom:1px solid var(--a-line)}
+.cox-faq-item:first-child{padding-top:0}
+.cox-faq-item:last-child{border-bottom:none;padding-bottom:0}
+.cox-faq-item h3{margin:0 0 8px;font-size:16.5px}
+.cox-faq-item p{margin:0;font-size:15px}
 
 /* ---------- pure plain prose (Privacy, Terms, Email preferences) ---------- */
 .cox-legal{max-width:640px;margin:0 auto}

@@ -87,10 +87,47 @@ table.cpx-table{width:100%;border-collapse:collapse;font-size:14px;min-width:560
 .cpx-radar-cta p{margin:0 auto 20px;max-width:48ch;font-size:15.5px;color:var(--a-on-dark-mut);line-height:1.6}
 .cpx-radar-cta .wt-cta{justify-content:center;margin:0}
 
+/* ---------- "competitive landscape" context block ----------
+   A bordered aside used to make one honest, evidence-grounded point about
+   how fast the market moves — never a fabricated live counter. Each item
+   cites something already established elsewhere (a blog post, a doc), so
+   the list stays a set of dated facts rather than an ambient "N companies
+   right now" ticker. */
+.cpx-context{margin:26px 0 4px;border:1px solid var(--a-line);border-radius:12px;padding:26px 28px;background:rgba(255,255,255,.4)}
+.cpx-context h3{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--a-faint);margin:0 0 14px}
+.cpx-context ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.cpx-context li{display:flex;gap:14px;align-items:baseline;font-size:14.5px;line-height:1.55;color:var(--a-mut)}
+.cpx-context li b{color:var(--a-ink);font-weight:700;flex:none;min-width:112px}
+.cpx-context .cite{display:block;margin-top:14px;font-size:12px;color:var(--a-faint)}
+
+/* ---------- methodology note ---------- */
+.cpx-method{margin:26px 0 4px;padding:18px 20px;border-left:2px solid var(--a-teal);background:var(--a-teal-wash);border-radius:0 10px 10px 0;font-size:14px;color:var(--a-ink);line-height:1.6;max-width:70ch}
+.cpx-method b{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--a-teal);margin-bottom:8px}
+
+/* ---------- flat "failure mode" / mechanism grid (chatgpt compare) ---------- */
+.cpx-modes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+.cpx-mode{border:1px solid var(--a-line);border-radius:12px;padding:26px 26px 24px;background:rgba(255,255,255,.4)}
+.cpx-mode-k{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--a-teal);background:var(--a-teal-wash);border-radius:8px;padding:4px 10px;margin-bottom:14px}
+.cpx-mode h3{font-size:16.5px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.cpx-mode p{font-size:13.5px;color:var(--a-mut);line-height:1.6;margin:0}
+@media(max-width:820px){.cpx-modes{grid-template-columns:1fr}}
+
+/* ---------- FAQ ---------- */
+.cpx-faq{max-width:820px;margin:0}
+.cpx-faq-item{border:1px solid var(--a-line);border-radius:10px;background:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden}
+.cpx-faq-item summary{cursor:pointer;list-style:none;padding:18px 22px;font-size:15px;font-weight:700;color:var(--a-ink);display:flex;justify-content:space-between;align-items:center;gap:16px}
+.cpx-faq-item summary::-webkit-details-marker{display:none}
+.cpx-faq-item summary::after{content:'+';flex:none;font-size:20px;font-weight:400;color:var(--a-teal);line-height:1;transition:transform .14s ease}
+.cpx-faq-item[open] summary::after{transform:rotate(45deg)}
+.cpx-faq-item[open] summary{border-bottom:1px solid var(--a-line)}
+.cpx-faq-item p{margin:0;padding:4px 22px 20px;font-size:14.5px;color:var(--a-mut);line-height:1.65;max-width:66ch}
+
 @media(max-width:640px){
   .cpx-radar-form{flex-direction:column}
   .cpx-radar-form .btn{width:100%}
   .cpx-radar-input{width:100%}
   .cpx-radar-stat{flex-direction:column;gap:6px}
   .cpx-hero{padding:44px 0 4px}
+  .cpx-context li{flex-direction:column;gap:2px}
+  .cpx-context li b{min-width:0}
 }

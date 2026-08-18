@@ -71,30 +71,108 @@ export default function BattlecardsFeature() {
             A battlecard is not a feature-comparison table. It is a read, written for the three people who actually
             have to use it in a live conversation.
           </p>
-          <div className="wt-beats">
-            <div className="wt-beat">
-              <span className="wt-beat-k mono">sales angle</span>
-              <h3>What a rep says on a call</h3>
-              <p>
-                A question or a contrast a rep can use live — not a slogan, a specific thing to ask a prospect that
-                the competitor cannot answer comfortably.
-              </p>
+          <div className="ftx-steps">
+            <div className="ftx-step">
+              <div className="ftx-step-n" />
+              <div className="ftx-step-body">
+                <span className="mono">muster</span>
+                <h4>A competitor is mustered onto the watch</h4>
+                <p>
+                  You name a competitor, or let the Tower suggest one from your market. From that moment, all 22
+                  channels start reporting on them, and a blank battlecard is created with the frame the rest of this
+                  page fills in.
+                </p>
+              </div>
             </div>
-            <div className="wt-beat">
-              <span className="wt-beat-k mono">marketing angle</span>
-              <h3>Where the positioning actually differs</h3>
-              <p>
-                What the competitor is telling the market versus what their own pages, ads and pricing page actually
-                show — the gap is usually the whole story.
-              </p>
+            <div className="ftx-step">
+              <div className="ftx-step-n" />
+              <div className="ftx-step-body">
+                <span className="mono">signals accumulate</span>
+                <h4>Every scout report gets attached to the card</h4>
+                <p>
+                  A new ad, a pricing change, a hiring cluster, a review pattern — each one lands against that
+                  competitor&apos;s card individually, cited, the same day it&apos;s found. The card is a living
+                  file, not a document someone writes once.
+                </p>
+              </div>
             </div>
-            <div className="wt-beat">
-              <span className="wt-beat-k mono">product angle</span>
-              <h3>What they are building, before launch</h3>
-              <p>
-                Buildout signals — hostnames, hiring clusters, changelog language — read together, so product hears
-                about a competitor&apos;s roadmap before the launch post, not from a lost deal.
-              </p>
+            <div className="ftx-step">
+              <div className="ftx-step-n" />
+              <div className="ftx-step-body">
+                <span className="mono">read against your positioning</span>
+                <h4>The Tower checks it against your own site and pricing</h4>
+                <p>
+                  The same signal reads differently depending on what you actually compete on. The Tower weighs each
+                  new fact against your own pricing, your own claims and your own gaps before deciding what it means
+                  for you specifically — not a generic template answer.
+                </p>
+              </div>
+            </div>
+            <div className="ftx-step">
+              <div className="ftx-step-n" />
+              <div className="ftx-step-body">
+                <span className="mono">three angles compiled</span>
+                <h4>Sales, marketing and product each get a written angle</h4>
+                <p>
+                  A question a rep can ask live. A gap between what they claim and what their pages show. A buildout
+                  signal product should know about before a launch post. Three different readers, three different
+                  angles, one card.
+                </p>
+              </div>
+            </div>
+            <div className="ftx-step">
+              <div className="ftx-step-n" />
+              <div className="ftx-step-body">
+                <span className="mono">the card updates itself</span>
+                <h4>Nobody has to remember to refresh it</h4>
+                <p>
+                  When a new signal clears the evidence bar, the card&apos;s angles get rewritten to reflect it —
+                  automatically, the same day. A battlecard that goes stale the week after it&apos;s written is
+                  exactly the problem this replaces.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- what's included ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s on every card</span>
+          <h2 className="wt-h2">One shape, every competitor, no exceptions.</h2>
+          <div className="ftx-included">
+            <div className="ftx-inc">
+              <b>Sales angle</b>
+              <p>A live-call question or contrast the competitor can&apos;t answer comfortably — written for a rep mid-conversation.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>Marketing angle</b>
+              <p>The gap between what they tell the market and what their own pages, ads and pricing actually show.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>Product angle</b>
+              <p>Buildout signals — hostnames, hiring clusters, changelog language — read together as an early roadmap tell.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>How-we-know citations</b>
+              <p>Every line on a card traces to the scout report that produced it — never a claim without its source attached.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>Auto-refresh on new signal</b>
+              <p>A card rewrites its own angles the day a new signal clears the evidence bar — no manual maintenance required.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>Written against your positioning</b>
+              <p>The same competitor fact is framed differently depending on your own pricing and claims — never a generic template.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>All 22 channels feed it</b>
+              <p>Product, GTM &amp; ads, talent, voice &amp; PR, reputation and market signals all land on the same card, not separate silos.</p>
+            </div>
+            <div className="ftx-inc">
+              <b>One card per competitor</b>
+              <p>No merged, generic &quot;the competition&quot; view — every competitor on your watch gets their own card, built from their own signals.</p>
             </div>
           </div>
         </div>

@@ -49,10 +49,77 @@ h1.tmx-pull{
 .tmx-proof b{color:var(--a-ink);font-weight:700}
 
 /* the close band (.wt-close) is reused as-is from marketing.css — same
-   pattern as the homepage, no redefinition here. Just give it a touch less
-   top padding on this narrower page type so the rhythm from the proof
-   paragraph above doesn't feel doubled. */
-.tmx-hero + .tmx-proof-sec + .wt-close{padding-top:0}
+   pattern as the homepage, no redefinition here. */
+
+/* ---------- shared scaffolding for every section added below ----------
+   Each of the sections that follows the proof paragraph (Monday-morning
+   walkthrough, what-you-get grid, workflow steps, the honest by-hand
+   argument, FAQ) reuses this one section/eyebrow/heading trio so the page
+   keeps reading as one letter instead of a stack of different components. */
+.tmx-section{padding:46px 0;border-top:1px solid var(--a-line)}
+.tmx-section:first-of-type{border-top:none}
+.tmx-eyebrow{
+  display:block;font-family:var(--mono, monospace);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--a-teal);font-weight:800;margin-bottom:12px;
+}
+h2.tmx-h2{
+  font-size:clamp(22px,3vw,29px);font-weight:800;letter-spacing:-.032em;line-height:1.16;
+  margin:0 0 16px;color:var(--a-ink);max-width:26ch;text-wrap:balance;
+}
+.tmx-section p.tmx-lede{font-size:15.5px;color:var(--a-mut);line-height:1.7;margin:0 0 22px;max-width:60ch}
+
+/* ---------- Monday morning: the concrete before/after narrative ---------- */
+.tmx-monday-time{
+  display:inline-block;font-family:var(--mono, monospace);font-size:11.5px;color:var(--a-faint,var(--a-mut));
+  letter-spacing:.02em;margin:-2px 0 16px;
+}
+.tmx-monday p{font-size:16px;color:var(--a-mut);line-height:1.78;margin:0 0 18px;max-width:60ch}
+.tmx-monday p:last-child{margin-bottom:0}
+.tmx-monday p b{color:var(--a-ink);font-weight:700}
+
+/* ---------- what you get: expanded to a proper grid of real features ---------- */
+.tmx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin:0}
+.tmx-card{
+  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  border-radius:16px;padding:19px 20px 21px;box-shadow:var(--a-shadow);
+}
+.tmx-card-k{
+  display:block;font-family:var(--mono, monospace);font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--a-teal);font-weight:800;margin-bottom:9px;
+}
+.tmx-card h3{margin:0 0 7px;font-size:15px;font-weight:800;color:var(--a-ink);letter-spacing:-.015em;line-height:1.3}
+.tmx-card p{margin:0;font-size:13.3px;color:var(--a-mut);line-height:1.58}
+
+/* ---------- how they actually use it: numbered workflow ---------- */
+.tmx-steps{display:flex;flex-direction:column;margin:0}
+.tmx-step{display:grid;grid-template-columns:34px 1fr;gap:16px;padding:20px 0;border-top:1px solid var(--a-line)}
+.tmx-step:first-child{border-top:none;padding-top:0}
+.tmx-step:last-child{padding-bottom:0}
+.tmx-step-n{
+  font-family:var(--mono, monospace);font-weight:800;font-size:13px;color:var(--a-teal);
+  line-height:1.6;
+}
+.tmx-step h3{margin:0 0 6px;font-size:15.5px;font-weight:800;color:var(--a-ink);letter-spacing:-.015em}
+.tmx-step p{margin:0;font-size:14px;color:var(--a-mut);line-height:1.62;max-width:56ch}
+
+/* ---------- why not by hand: the honest, specific argument ---------- */
+.tmx-honest p{font-size:15.5px;color:var(--a-mut);line-height:1.75;margin:0 0 16px;max-width:60ch}
+.tmx-honest p:last-child{margin-bottom:0}
+.tmx-honest p b{color:var(--a-ink);font-weight:700}
+
+/* ---------- FAQ: a plain, honest accordion ---------- */
+.tmx-faq{display:flex;flex-direction:column;margin:0}
+.tmx-faq details{border-top:1px solid var(--a-line);padding:17px 0}
+.tmx-faq details:last-child{border-bottom:1px solid var(--a-line)}
+.tmx-faq summary{
+  cursor:pointer;font-size:15px;font-weight:700;color:var(--a-ink);list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;letter-spacing:-.01em;
+}
+.tmx-faq summary::-webkit-details-marker{display:none}
+.tmx-faq summary::after{content:'+';font-weight:400;color:var(--a-teal);flex-shrink:0;font-size:18px}
+.tmx-faq details[open] summary::after{content:'\2212'}
+.tmx-faq details[open] summary{margin-bottom:11px}
+.tmx-faq p{margin:0;font-size:14px;color:var(--a-mut);line-height:1.65;max-width:60ch}
 
 @media(max-width:640px){
   .tmx-hero{padding:56px 0 4px}
@@ -60,6 +127,9 @@ h1.tmx-pull{
   .tmx-dek{font-size:16px;margin-bottom:32px}
   .tmx-proof-sec{padding:32px 0 52px}
   .tmx-proof-sec .tmx-wrap{padding-left:18px}
+  .tmx-section{padding:36px 0}
+  .tmx-grid{grid-template-columns:1fr}
+  .tmx-step{grid-template-columns:24px 1fr;gap:12px}
 }
 
 @media (prefers-reduced-motion: reduce){
