@@ -7,6 +7,7 @@ import { allCompetitors, recordRun } from '@/db/queries';
 import { RUNNABLE_CHANNELS } from '@/lib/channels';
 import { scoreUnscored } from '@/lib/score';
 import { clearCaptureCache } from '@/lib/fetchLadder';
+import { clearReviewCache } from '@/collectors/reviews';
 
 export interface RunLine {
   competitor: string;
@@ -20,6 +21,7 @@ export async function runCollection(orgId: string, opts: { channels?: string[]; 
   const out: RunLine[] = [];
   for (const comp of comps) {
     clearCaptureCache(); // fresh per competitor; site-derived channels share one capture
+    clearReviewCache(); // one vendor call answers G2/Capterra/Trustpilot/etc.
     for (const ch of channels) {
       try {
         const result = await ch.run(comp, opts.tier2);

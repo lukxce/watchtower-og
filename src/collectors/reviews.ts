@@ -102,6 +102,70 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   };
 }
 
+
+// ---------------------------------------------------------------------------
+// One call, many platforms
+// ---------------------------------------------------------------------------
+//
+// zen-studio/software-review-scraper covers G2, Capterra, Trustpilot,
+// TrustRadius and Gartner in a single run, and — crucially — is queried by
+// DOMAIN rather than by product name. That is the identity key itself: no slug
+// resolution, no fuzzy matching, none of the Crayon-Group / Gong-cha / Kluster
+// failures that every name-matched channel produced.
+//
+// Because one run answers three of our channels, the result is memoized per
+// competitor per collection run. Whichever channel executes first pays for the
+// call; the others read the cache. Cleared alongside the page capture cache.
+const reviewRunCache = new Map<number, Map<string, VendorReview[]>>();
+
+export function clearReviewCache(): void {
+  reviewRunCache.clear();
+}
+
+/** Our channel key ← the actor's `platform` value. */
+const PLATFORM_CHANNEL: Record<string, string> = {
+  g2: 'g2',
+  capterra: 'capterra',
+  trustpilot: 'trustpilot',
+  trustradius: 'trustradius',
+  gartner: 'gartner',
+};
+
+async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorReview[]> | null> {
+  const cached = reviewRunCache.get(comp.id);
+  if (cached) return cached;
+
+  const actor = process.env.APIFY_REVIEWS_ACTOR ?? '';
+  if (!actor) return null;
+
+  const bare = comp.domain.replace(/^www\./, '');
+  const input = buildActorInput(
+    'APIFY_REVIEWS_INPUT',
+    { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
+    {
+      query: bare, // the domain — identity, not a name
+      platforms: Object.keys(PLATFORM_CHANNEL),
+      maxResults: MAX_REVIEWS,
+      sort: 'most_recent',
+    },
+  );
+
+  const raw = await runApifyActor<Record<string, unknown>>(actor, input);
+  if (raw === null) return null;
+
+  const byChannel = new Map<string, VendorReview[]>();
+  for (const row of raw) {
+    const platform = String(row.platform ?? '').toLowerCase();
+    const channel = PLATFORM_CHANNEL[platform];
+    if (!channel) continue;
+    const list = byChannel.get(channel) ?? [];
+    list.push(normalizeReview(row));
+    byChannel.set(channel, list);
+  }
+  reviewRunCache.set(comp.id, byChannel);
+  return byChannel;
+}
+
 async function collectReviewSource(
   comp: Competitor,
   channel: string,
@@ -112,53 +176,33 @@ async function collectReviewSource(
     await recordRun(comp.id, channel, true, 0, `deferred: set APIFY_TOKEN + ${actorEnv} (licensed vendor)`);
     return `deferred (needs vendor)`;
   }
-  const actor = process.env[actorEnv] ?? '';
-  const bare = comp.domain.replace(/^www\./, '');
 
-  // G2 needs resolving before it can be read. A search for "Klue" returns
-  // Klue, Klue Win-Loss, Kluster, Wolters Kluwer and KlientBoost — three of
-  // which are other companies. resolveG2Products keeps only the listings whose
-  // companyDomain IS ours, caches them, and hands back real G2 slugs. Reviews
-  // are then fetched per slug, which is what the actor actually needs;
-  // searchQueries returns product cards, not reviews.
-  let slugs: string[] = [comp.slug];
-  if (channel === 'g2') {
-    const products = await resolveG2Products(comp);
-    if (products === null) {
-      await recordRun(comp.id, channel, false, 0, 'vendor run failed resolving G2 products');
+  // Preferred path: the one multi-platform actor, queried by domain.
+  const all = await fetchAllReviews(comp);
+  let rows: VendorReview[] | null = all ? (all.get(channel) ?? []) : null;
+
+  // Fallback: a per-channel actor, for anything the combined one does not
+  // cover (Glassdoor) or if it is simply not configured.
+  if (rows === null) {
+    const actor = process.env[actorEnv] ?? '';
+    if (!actor) {
+      await recordRun(comp.id, channel, true, 0, `deferred: set APIFY_REVIEWS_ACTOR or ${actorEnv}`);
+      return 'deferred (no actor)';
+    }
+    const bare = comp.domain.replace(/^www\./, '');
+    const input = buildActorInput(
+      actorEnv.replace('_ACTOR', '_INPUT'),
+      { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
+      { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS },
+    );
+    const raw = await runApifyActor<Record<string, unknown>>(actor, input);
+    if (raw === null) {
+      await recordRun(comp.id, channel, false, 0, `vendor run failed / ${actorEnv} unset`);
       return 'FAILED (vendor)';
     }
-    if (products.length === 0) {
-      await recordRun(comp.id, channel, true, 0, `no G2 listing found for ${bare}`);
-      return 'no G2 listing';
-    }
-    slugs = products.map((p) => p.slug);
+    rows = raw.map(normalizeReview);
   }
 
-  const input = buildActorInput(
-    actorEnv.replace('_ACTOR', '_INPUT'),
-    { company: comp.name, domain: bare, slug: slugs[0], url: `https://${bare}` },
-    {
-      productSlugs: slugs,
-      sortOrder: 'most_recent',
-      // Rows are the billed unit and the start fee dominates at low volume
-      // (measured: $0.01 start + $1.75/1,000 rows). APIFY_MAX_REVIEWS keeps
-      // test runs cheap without editing code — set it to 5 while validating.
-      maxReviews: MAX_REVIEWS,
-      maxItems: MAX_REVIEWS * slugs.length,
-      onlyNewReviews: true,
-      useCachedData: false,
-      proxy: { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] },
-      slowMode: true,
-    },
-  );
-  const raw = await runApifyActor<Record<string, unknown>>(actor, input);
-  // Search/summary rows share the dataset with review rows; keep only reviews.
-  const rows = raw?.filter((r) => r.type === 'review' || r.reviewId || r.review_id).map(normalizeReview) ?? null;
-  if (rows === null) {
-    await recordRun(comp.id, channel, false, 0, `vendor run failed / ${actorEnv} unset`);
-    return 'FAILED (vendor)';
-  }
   const { added, fresh } = await ingestItems(
     comp.id,
     channel,
@@ -171,9 +215,11 @@ async function collectReviewSource(
     })),
   );
   await recordRun(comp.id, channel, true, added, `${rows.length} reviews via vendor`);
-  return `+${added} (${fresh} pending) — ${rows.length} reviews`;
+  return rows.length === 0 ? `no ${label} reviews found` : `+${added} (${fresh} pending) — ${rows.length} reviews`;
 }
 
 export const collectG2 = (c: Competitor) => collectReviewSource(c, 'g2', 'APIFY_G2_ACTOR', 'G2');
 export const collectCapterra = (c: Competitor) => collectReviewSource(c, 'capterra', 'APIFY_CAPTERRA_ACTOR', 'Capterra');
 export const collectGlassdoor = (c: Competitor) => collectReviewSource(c, 'glassdoor', 'APIFY_GLASSDOOR_ACTOR', 'Glassdoor');
+export const collectTrustRadius = (c: Competitor) => collectReviewSource(c, 'trustradius', 'APIFY_TRUSTRADIUS_ACTOR', 'TrustRadius');
+export const collectGartner = (c: Competitor) => collectReviewSource(c, 'gartner', 'APIFY_GARTNER_ACTOR', 'Gartner');

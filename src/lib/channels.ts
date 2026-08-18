@@ -23,7 +23,7 @@ import { collectEvents } from '@/collectors/events';
 import { collectReddit } from '@/collectors/reddit';
 import { collectProductHunt } from '@/collectors/producthunt';
 import { collectTrustpilot } from '@/collectors/trustpilot';
-import { collectG2, collectCapterra, collectGlassdoor } from '@/collectors/reviews';
+import { collectG2, collectCapterra, collectGlassdoor, collectTrustRadius, collectGartner } from '@/collectors/reviews';
 import { collectLinkedinPosts } from '@/collectors/linkedinPosts';
 import { collectFunding } from '@/collectors/funding';
 import { collectTraffic, collectTrends } from '@/collectors/market';
@@ -77,7 +77,9 @@ export const CHANNELS: ChannelDef[] = [
   // Reputation
   { key: 'trustpilot', label: 'Trustpilot reviews', group: 'Reputation', status: 'active', note: has(env.TRUSTPILOT_API_KEY) ? 'Business API' : 'Public page · set TRUSTPILOT_API_KEY to upgrade', run: collectTrustpilot },
   { key: 'g2', label: 'G2 reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_G2_ACTOR', run: collectG2 },
-  { key: 'capterra', label: 'Capterra reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_CAPTERRA_ACTOR', run: collectCapterra },
+  { key: 'capterra', label: 'Capterra reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · one multi-platform actor (APIFY_REVIEWS_ACTOR)', run: collectCapterra },
+  { key: 'trustradius', label: 'TrustRadius reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Same multi-platform actor — no extra integration', run: collectTrustRadius },
+  { key: 'gartner', label: 'Gartner Peer Insights', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Same multi-platform actor — enterprise buyer voice', run: collectGartner },
   // Market
   { key: 'traffic', label: 'Traffic & SEO', group: 'Market', status: st(has(env.DATAFORSEO_LOGIN), 'paid'), note: 'DataForSEO · set DATAFORSEO_LOGIN/PASSWORD', run: collectTraffic },
   { key: 'trends', label: 'Search interest', group: 'Market', status: st(has(env.DATAFORSEO_LOGIN), 'paid'), note: 'Google Trends via DataForSEO', run: collectTrends },
