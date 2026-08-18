@@ -9,10 +9,14 @@ const c=(i,o,r)=>(i*r[0]+o*r[1])/1e6;
 const OPUS=[5,25], SONNET=[2,10], HAIKU=[1,5];
 
 // page work per competitor: t1 daily, t2 weekly, archive swept 150/day, new pages
-const T1=25, T2=500, SWEEP_PER_DAY=83, NEW=3;
-const fetchesPerDay = T1 + Math.round(T2/7) + SWEEP_PER_DAY + NEW;
+// No archive sweep: tier 3 is fetched ONCE on publication and never again
+// (src/lib/pageTiers.ts). If a page is worth re-checking it belongs in tier 2.
+// An earlier version of this model charged for an 83/day sweep that the code
+// does not perform.
+const T1=25, T2=500, NEW=3;
+const fetchesPerDay = T1 + Math.round(T2/7) + NEW;
 const fetchesPerMonth = fetchesPerDay*D;
-const pages = T1+T2+2500;
+const pages = T1+T2;   // under ACTIVE re-check; the archive is fetch-once on top
 
 const pageCost   = fetchesPerMonth*perFetch;
 const apify      = 4.42;                      // 32 runs x (0.3 CU + 10MB residential)
@@ -23,8 +27,8 @@ const scoring    = c(1000,400,HAIKU)*D;       // Haiku 4.5
 const perAsk     = c(3000,800,SONNET);        // Sonnet 5
 
 console.log(`PAGE WORK PER COMPETITOR
-  tier 1 ${T1} daily · tier 2 ${T2} weekly · archive swept ${SWEEP_PER_DAY}/day · ~${NEW} new/day
-  = ${fetchesPerDay} fetches/day, ${fetchesPerMonth}/month, ~${pages} pages under watch
+  tier 1 ${T1} daily · tier 2 ${T2} weekly · ~${NEW} new/day (fetched once)
+  = ${fetchesPerDay} fetches/day, ${fetchesPerMonth}/month, ${pages} pages re-checked + archive fetched once
   cost ${$(pageCost)}\n`);
 
 console.log('FIXED COST PER MONTH (independent of customers)\n');

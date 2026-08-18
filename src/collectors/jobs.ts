@@ -104,8 +104,33 @@ async function fetchJobs(ats: Ats): Promise<JobItem[] | null> {
   return r.jobs.map((j) => ({ id: j.shortcode, title: j.title, url: j.url, meta: [j.department, j.location?.city].filter(Boolean).join(', ') }));
 }
 
+// Careers pages are not reliably at /careers — but they are almost always
+// linked from the homepage, usually in the footer. Harvest those links and try
+// them alongside the guessed paths.
+const CAREERISH = /(careers?|jobs|join-?us|work-with-us|we-?are-?hiring|hiring|life-at|opportunities)/i;
+
+async function careersPaths(comp: Competitor): Promise<string[]> {
+  const guesses = ['/careers', '/jobs', '/company/careers', '/about/careers', '/join-us', '/company/jobs'];
+  const home = await smartFetch(`https://${comp.domain}/`);
+  if (home.status !== 200) return guesses;
+  const bare = comp.domain.replace(/^www\./, '');
+  const found: string[] = [];
+  for (const m of home.html.matchAll(/href="([^"]+)"/g)) {
+    const href = m[1];
+    if (!CAREERISH.test(href)) continue;
+    try {
+      const u = new URL(href, `https://${comp.domain}`);
+      if (!u.hostname.endsWith(bare)) continue; // off-site links are handled by ATS_LINK
+      if (u.pathname.length > 1 && !found.includes(u.pathname)) found.push(u.pathname);
+    } catch {
+      /* malformed href */
+    }
+  }
+  return [...new Set([...found.slice(0, 4), ...guesses])];
+}
+
 async function probeAts(comp: Competitor): Promise<Ats | null> {
-  for (const path of ['/careers', '/jobs', '/company/careers', '/about/careers']) {
+  for (const path of await careersPaths(comp)) {
     const res = await smartFetch(`https://${comp.domain}${path}`);
     if (res.status !== 200) continue;
     for (const m of res.html.matchAll(ATS_LINK)) {
@@ -131,7 +156,14 @@ async function probeAts(comp: Competitor): Promise<Ats | null> {
   // was then cached forever — the competitor showed "0 open" while their
   // careers page listed three. An empty board that merely shares a name
   // should never beat a populated one.
-  const candidates = [...new Set([comp.slug, comp.name.toLowerCase().replace(/[^a-z0-9]/g, ''), comp.domain.replace(/^www\./, '').split('.')[0]])];
+  // SmartRecruiters slugs are CASE-SENSITIVE ("Visa" works, "visa" returns 0),
+  // so the competitor's own capitalisation is a candidate in its own right.
+  const candidates = [...new Set([
+    comp.slug,
+    comp.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
+    comp.name.replace(/[^A-Za-z0-9]/g, ''),
+    comp.domain.replace(/^www\./, '').split('.')[0],
+  ])];
   let best: { ats: Ats; count: number } | null = null;
   for (const slug of candidates) {
     const gh = (await jsonFetch(`https://boards-api.greenhouse.io/v1/boards/${slug}`)) as { name?: string } | null;
@@ -144,7 +176,38 @@ async function probeAts(comp: Competitor): Promise<Ats | null> {
       const jobs = await fetchJobs({ kind: 'workable', slug });
       if (jobs && (!best || jobs.length > best.count)) best = { ats: { kind: 'workable', slug }, count: jobs.length };
     }
+    // SmartRecruiters and Breezy both echo the company name in their payload,
+    // so they can be name-verified the same way. Without these two the probe
+    // missed real boards: gong.io has 9 open roles on SmartRecruiters and was
+    // being reported as having no board at all.
+    const sr = (await jsonFetch(`https://api.smartrecruiters.com/v1/companies/${slug}/postings`)) as
+      | { totalFound?: number; content?: { company?: { name?: string } }[] }
+      | null;
+    const srName = sr?.content?.[0]?.company?.name;
+    if (srName && similar(srName, comp.name)) {
+      const jobs = await fetchJobs({ kind: 'smartrecruiters', slug });
+      if (jobs && (!best || jobs.length > best.count)) best = { ats: { kind: 'smartrecruiters', slug }, count: jobs.length };
+    }
+    const bz = (await jsonFetch(`https://${slug}.breezy.hr/json`)) as { company?: { name?: string } }[] | null;
+    const bzName = Array.isArray(bz) ? bz[0]?.company?.name : undefined;
+    if (bzName && similar(bzName, comp.name)) {
+      const jobs = await fetchJobs({ kind: 'breezy', slug });
+      if (jobs && (!best || jobs.length > best.count)) best = { ats: { kind: 'breezy', slug }, count: jobs.length };
+    }
   }
+  // Lever and Ashby return no company name, so they cannot be fuzzy-matched —
+  // which is why the original probe skipped them entirely. But an EXACT match
+  // on the domain label is strong evidence on its own (klue.com -> "klue"),
+  // and requiring a non-empty board removes the remaining risk. Without this,
+  // Klue's 10 open roles on Ashby were invisible and the competitor showed 0.
+  const exact = comp.domain.replace(/^www\./, '').split('.')[0];
+  for (const kind of ['ashby', 'lever'] as const) {
+    const jobs = await fetchJobs({ kind, slug: exact });
+    if (jobs && jobs.length > 0 && (!best || jobs.length > best.count)) {
+      best = { ats: { kind, slug: exact }, count: jobs.length };
+    }
+  }
+
   if (best) return best.ats;
   return null;
 }
