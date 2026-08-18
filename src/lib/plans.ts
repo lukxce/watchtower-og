@@ -40,11 +40,23 @@ export interface Plan {
   vendorChannels: boolean;
 }
 
+// Prices set 19 Aug 2026 against the mid-market tier, not the enterprise one.
+// The comparison set is IndustryLens (EUR59), RivalSense ($29) and Signal Labs
+// (freemium) — NOT Klue and Crayon at $20-50k/yr. $79/$199 sits above the
+// cheap end so price is not the story, and below the point where selling
+// would need a demo-call motion.
+//
+// Margin was never the constraint: measured variable cost is $5.44 on Starter
+// and $20.34 on Growth (Opus reads + Sonnet chat), so every price from $29 up
+// clears 84%. What price actually decides is HOW MANY customers are needed —
+// ~$400k ARR covers a 10-person team at any of these prices, which is 482
+// customers at $49/$129, 290 at $79/$199, 142 at $149/$399. This is a
+// go-to-market choice wearing a pricing decision's clothes.
 export const PLANS: Record<PlanId, Plan> = {
   starter: {
     id: 'starter',
     label: 'Starter',
-    priceMonthly: 149,
+    priceMonthly: 79,
     competitors: 3,
     // Pages are ~5% of cost — a bigger site is nearly free to watch, so the
     // allowance is generous on purpose. 25 tier-1 daily + ~500 tier-2 weekly
@@ -58,7 +70,7 @@ export const PLANS: Record<PlanId, Plan> = {
   growth: {
     id: 'growth',
     label: 'Growth',
-    priceMonthly: 399,
+    priceMonthly: 199,
     competitors: 10,
     monitoredPagesPerCompetitor: 3000,
     pageFetchesPerDay: 2000, // 10 competitors x ~200/day

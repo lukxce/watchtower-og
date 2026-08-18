@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Competitive Intelligence — Fortress HQ',
   description:
-    'Verifiable competitive intelligence: 28 public channels watched daily, read together, cited, and published from $149/mo — no demo call required.',
+    'Verifiable competitive intelligence: 28 public channels watched daily, read together, cited, and published from $79/mo — no demo call required.',
 };
 
 const FRAME = [
@@ -51,8 +51,8 @@ const PERSONAS = [
 const CHANNEL_SAMPLE = ['Website & pricing', 'Sitemap diff', 'Subdomain watch', 'Tech stack', 'Meta ads', 'LinkedIn ads', 'Customer logos', 'Job postings', 'News & press', 'G2 reviews', 'Trustpilot reviews', 'Traffic & SEO', 'Search interest', 'Funding & M&A'];
 
 const TIERS = [
-  { name: 'Starter', price: '$149/mo', note: '3 competitors · watched daily', items: ['Signal feed & Threat Index', 'Comparison-page discovery, Compare view, Launch Radar', 'Daily order of the day, weekly relief digest — read in the app'] },
-  { name: 'Growth', price: '$399/mo', note: '10 competitors · full coverage', items: ['Everything in Starter', 'Campaign & landing-page tracking', '3× the page-fetch capacity per competitor', 'Paid-source channels: traffic, reviews, G2/Capterra'] },
+  { name: 'Starter', price: '$79/mo', note: '3 competitors · watched daily', items: ['Signal feed & Threat Index', 'Comparison-page discovery, Compare view, Launch Radar', 'Daily order of the day, weekly relief digest — read in the app'] },
+  { name: 'Growth', price: '$199/mo', note: '10 competitors · full coverage', items: ['Everything in Starter', 'Campaign & landing-page tracking', '3× the page-fetch capacity per competitor', 'Paid-source channels: traffic, reviews, G2/Capterra'] },
   { name: 'Enterprise', price: 'Talk to us', note: 'Unlimited competitors · SSO · win-loss', items: ['Everything in Growth', 'SSO & audit log, CRM-embedded battlecards', 'Native win-loss program', 'Dedicated onboarding'] },
 ];
 
@@ -83,7 +83,7 @@ const CI_FAQ = [
   },
   {
     q: 'Can I try this on real competitors before I pay for anything?',
-    a: 'Starter is $149/mo for 3 competitors watched daily, and there’s a live demo workspace with real, current signal from our own market before you enter a card number anywhere.',
+    a: 'Starter is $79/mo for 3 competitors watched daily, and there’s a live demo workspace with real, current signal from our own market before you enter a card number anywhere.',
   },
   {
     q: 'I only care about one or two competitors — is this overkill?',
@@ -105,7 +105,7 @@ export default function CompetitiveIntelligenceHub() {
             &ldquo;Klue pricing,&rdquo; &ldquo;Crayon alternative.&rdquo; What we claim inside it is a stance: every signal
             comes from a named public source, every conclusion cites the evidence behind it, and the price is on this
             site instead of behind a form. Fortress HQ watches 28 public channels a day, reads them together, and
-            writes the briefing &mdash; from $149/mo.
+            writes the briefing &mdash; from $79/mo.
           </p>
         </div>
       </section>
@@ -115,8 +115,8 @@ export default function CompetitiveIntelligenceHub() {
           <div className="hbx-stat-grid">
             <div className="hbx-stat"><span className="n">28</span><span className="l">Public channels watched, from pricing pages to certificate-transparency logs</span></div>
             <div className="hbx-stat"><span className="n">7</span><span className="l">Channel groups &mdash; Product, GTM &amp; ads, Talent, Voice &amp; PR, Reputation, Market, Corporate</span></div>
-            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter tier, published &mdash; no demo call to see a price</span></div>
-            <div className="hbx-stat"><span className="n">3 &rarr; 10</span><span className="l">Competitors watched daily on Starter, 10 on Growth ($399/mo)</span></div>
+            <div className="hbx-stat"><span className="n">$79/mo</span><span className="l">Starter tier, published &mdash; no demo call to see a price</span></div>
+            <div className="hbx-stat"><span className="n">3 &rarr; 10</span><span className="l">Competitors watched daily on Starter, 10 on Growth ($199/mo)</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Weighted dimensions behind the Threat Index, always shown with its inputs</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Named vendors we compare against directly &mdash; Klue, Crayon, Kompyte, Visualping, Signal Labs</span></div>
             <div className="hbx-stat"><span className="n">100%</span><span className="l">Of mentions classified as client, same-name, or noise before they reach your feed</span></div>

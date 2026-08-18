@@ -25,7 +25,7 @@ export default function BattlecardsFeature() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $149/mo · no card required</p>
+            <p className="wt-note">From $79/mo · no card required</p>
           </div>
 
           <div className="ftx-art">
@@ -425,7 +425,7 @@ export default function BattlecardsFeature() {
               <h4>Does a lower-tier plan get shorter or less-cited battlecards?</h4>
               <p>
                 No — every card on every tier carries all three angles and the same how-we-know citations. Starter
-                ($149/mo) limits how many competitors get cards at all, not how complete any single card is once
+                ($79/mo) limits how many competitors get cards at all, not how complete any single card is once
                 it&apos;s built.
               </p>
             </div>

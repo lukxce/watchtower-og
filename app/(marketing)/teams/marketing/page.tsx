@@ -229,7 +229,7 @@ export default function MarketingTeamPage() {
               <summary>We already run comparisons against Crayon or Klue internally. What&apos;s different here?</summary>
               <p>
                 Klue and Crayon are real platforms built for enterprise CI teams, priced and sold that way — a
-                quote after a demo call. Fortress HQ publishes its price, starts at $149/mo, and is live the day
+                quote after a demo call. Fortress HQ publishes its price, starts at $79/mo, and is live the day
                 you sign up. If you want deep CRM-embedded battlecards for a large sales org, they&apos;re worth
                 what they cost. If you want current, cited facts to keep your own marketing honest without a
                 procurement cycle, that&apos;s what this is for.
@@ -255,8 +255,8 @@ export default function MarketingTeamPage() {
             <details>
               <summary>What does it cost for a marketing team specifically?</summary>
               <p>
-                Starter is $149/mo for 3 competitors. Most marketing teams comparing themselves against more than a
-                few named rivals land on Growth at $399/mo, which adds full campaign and landing-page tracking — the
+                Starter is $79/mo for 3 competitors. Most marketing teams comparing themselves against more than a
+                few named rivals land on Growth at $199/mo, which adds full campaign and landing-page tracking — the
                 ad-library and events coverage that a comparison-heavy content strategy actually leans on.
               </p>
             </details>

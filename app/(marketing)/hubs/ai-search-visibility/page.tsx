@@ -14,8 +14,8 @@ const PERSONAS = [
 const CHANNEL_SAMPLE = ['News & press', 'YouTube', 'Podcasts', 'Reddit', 'Product Hunt', 'LinkedIn company posts', 'Newsletters & sequences', 'Funding & M&A'];
 
 const TIERS = [
-  { name: 'Starter', price: '$149/mo', note: '3 competitors · watched daily', items: ['News & press, YouTube, podcasts, Reddit, Product Hunt, newsletters — all live from day one', 'Funding & M&A, keyless', 'Every mention classified before it reaches your feed'] },
-  { name: 'Growth', price: '$399/mo', note: '10 competitors · full coverage', items: ['Adds LinkedIn company posts — the one Voice & PR channel that needs a licensed vendor, the same way G2 and Capterra do'] },
+  { name: 'Starter', price: '$79/mo', note: '3 competitors · watched daily', items: ['News & press, YouTube, podcasts, Reddit, Product Hunt, newsletters — all live from day one', 'Funding & M&A, keyless', 'Every mention classified before it reaches your feed'] },
+  { name: 'Growth', price: '$199/mo', note: '10 competitors · full coverage', items: ['Adds LinkedIn company posts — the one Voice & PR channel that needs a licensed vendor, the same way G2 and Capterra do'] },
   { name: 'Enterprise', price: 'Talk to us', note: 'Unlimited competitors', items: ['Same channel set as Growth, at scale', 'No AI-citation feature exists at any tier yet — there is nothing extra to gate here, and we won\'t pretend otherwise'] },
 ];
 
@@ -105,7 +105,7 @@ export default function AiSearchVisibilityHub() {
             <div className="hbx-stat"><span className="n">28</span><span className="l">Public channels watched daily, today &mdash; none of them an AI answer engine, yet</span></div>
             <div className="hbx-stat"><span className="n">7</span><span className="l">Voice &amp; PR channels already tracking how competitors are talked about in public</span></div>
             <div className="hbx-stat"><span className="n">100%</span><span className="l">Of mentions classified as client, same-name, or noise before they reach your feed</span></div>
-            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published &mdash; the same price whether a feature is shipped or roadmap</span></div>
+            <div className="hbx-stat"><span className="n">$79/mo</span><span className="l">Starter, published &mdash; the same price whether a feature is shipped or roadmap</span></div>
             <div className="hbx-stat"><span className="n">1</span><span className="l">Corporate channel &mdash; funding &amp; M&amp;A, keyless &mdash; the kind of fact an AI answer would need to surface too</span></div>
             <div className="hbx-stat"><span className="n">0 / 3</span><span className="l">Of the major AI answer engines (ChatGPT, Perplexity, Gemini) currently tracked by this product</span></div>
             <div className="hbx-stat"><span className="n">3</span><span className="l">In-build product layers ahead of an API &mdash; Ask-the-Tower, standing orders, exportable reports</span></div>

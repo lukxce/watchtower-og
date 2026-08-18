@@ -243,7 +243,7 @@ export default function SalesTeamPage() {
             <details>
               <summary>What does it cost, and do I need my own seat?</summary>
               <p>
-                Starter is $149/mo for 3 competitors watched daily, which covers most single-team deployments.
+                Starter is $79/mo for 3 competitors watched daily, which covers most single-team deployments.
                 Access is set up at the account level by whoever owns the workspace — talk to whoever runs sales
                 enablement or ops about getting added, rather than signing up individually per rep.
               </p>

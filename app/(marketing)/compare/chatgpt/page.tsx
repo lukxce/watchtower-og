@@ -157,7 +157,7 @@ export default function CompareChatGPT() {
                 </tr>
                 <tr>
                   <th scope="row">Pricing</th>
-                  <td className="us">Published, from $149/mo — built specifically for this job</td>
+                  <td className="us">Published, from $79/mo — built specifically for this job</td>
                   <td>Free or subscription, but not built to do this job</td>
                 </tr>
               </tbody>

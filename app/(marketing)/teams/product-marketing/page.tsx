@@ -251,9 +251,9 @@ export default function ProductMarketingPage() {
             <details>
               <summary>What does it cost for a team our size?</summary>
               <p>
-                Starter is $149/mo for 3 competitors watched daily — the right starting point for most solo-PMM
+                Starter is $79/mo for 3 competitors watched daily — the right starting point for most solo-PMM
                 setups. If you&apos;re tracking more than a handful of named competitors, or need campaign and
-                landing-page tracking on top of the core cards, Growth at $399/mo covers up to 10.
+                landing-page tracking on top of the core cards, Growth at $199/mo covers up to 10.
               </p>
             </details>
             <details>

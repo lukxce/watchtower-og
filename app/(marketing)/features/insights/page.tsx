@@ -25,7 +25,7 @@ export default function InsightsFeature() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $149/mo · no card required</p>
+            <p className="wt-note">From $79/mo · no card required</p>
           </div>
 
           <div className="ftx-art">

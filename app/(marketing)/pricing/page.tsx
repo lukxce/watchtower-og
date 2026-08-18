@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Pricing — Fortress HQ',
-  description: "Self-serve from $149/mo. No demo required to see a price, unlike the rest of this category.",
+  description: "Self-serve from $79/mo. No demo required to see a price, unlike the rest of this category.",
 };
 
 export default function Pricing() {
@@ -26,7 +26,7 @@ export default function Pricing() {
             <div className="tier">
               <span className="tier-tag">Starter</span>
               <h3>Self-serve</h3>
-              <div className="price">$149<span>/mo</span></div>
+              <div className="price">$79<span>/mo</span></div>
               <p className="tier-note">3 competitors · watched daily</p>
               <ul>
                 <li>Signal feed &amp; Threat Index</li>
@@ -39,7 +39,7 @@ export default function Pricing() {
             <div className="tier on">
               <span className="tier-tag">Growth</span>
               <h3>Full coverage</h3>
-              <div className="price">$399<span>/mo</span></div>
+              <div className="price">$199<span>/mo</span></div>
               <p className="tier-note">10 competitors · full coverage</p>
               <ul>
                 <li>Everything in Starter</li>

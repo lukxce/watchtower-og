@@ -261,9 +261,9 @@ export default function ProductTeamPage() {
             <details>
               <summary>What does it cost for a product team to get this coverage?</summary>
               <p>
-                Starter is $149/mo for 3 competitors, which covers the product-signal channels — sitemap diffs,
+                Starter is $79/mo for 3 competitors, which covers the product-signal channels — sitemap diffs,
                 certificate watch, tech-stack detection, hiring — for a focused competitive set. Broader coverage
-                and campaign tracking sit in Growth at $399/mo.
+                and campaign tracking sit in Growth at $199/mo.
               </p>
             </details>
           </div>

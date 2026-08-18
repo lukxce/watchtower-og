@@ -23,8 +23,8 @@ const PERSONAS = [
 const CHANNEL_SAMPLE = ['G2 reviews', 'Trustpilot reviews', 'Capterra reviews', 'TrustRadius reviews', 'Gartner Peer Insights', 'Funding & M&A', 'Job postings', 'Meta ads'];
 
 const TIERS = [
-  { name: 'Starter', price: '$149/mo', note: '3 competitors · watched daily', items: ['Battlecards from what\'s free to collect: pricing, hiring, ads, funding', 'Review-platform channels (G2, Trustpilot, Capterra, TrustRadius, Gartner) are paid-source and unlock on Growth'] },
-  { name: 'Growth', price: '$399/mo', note: '10 competitors · full coverage', items: ['All five review-platform channels turn on here', 'Reads & auto-generated battlecards', 'Slack / Teams digest for the daily read'] },
+  { name: 'Starter', price: '$79/mo', note: '3 competitors · watched daily', items: ['Battlecards from what\'s free to collect: pricing, hiring, ads, funding', 'Review-platform channels (G2, Trustpilot, Capterra, TrustRadius, Gartner) are paid-source and unlock on Growth'] },
+  { name: 'Growth', price: '$199/mo', note: '10 competitors · full coverage', items: ['All five review-platform channels turn on here', 'Reads & auto-generated battlecards', 'Slack / Teams digest for the daily read'] },
   { name: 'Enterprise', price: 'Talk to us', note: 'Unlimited competitors · SSO · win-loss', items: ['CRM-embedded battlecards', 'Native win-loss program', 'Dedicated onboarding'] },
 ];
 
@@ -114,8 +114,8 @@ export default function SalesIntelligenceHub() {
             <div className="hbx-stat"><span className="n">5</span><span className="l">Review platforms watched for win-loss signal &mdash; G2, Trustpilot, Capterra, TrustRadius, Gartner</span></div>
             <div className="hbx-stat"><span className="n">1</span><span className="l">Funding &amp; M&amp;A channel &mdash; SEC EDGAR Form D plus funding news, no key required</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Weighted dimensions behind the Threat Index, always shown with its inputs</span></div>
-            <div className="hbx-stat"><span className="n">$399/mo</span><span className="l">Growth tier &mdash; auto-generated battlecards, always current</span></div>
-            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter &mdash; 3 competitors watched daily, from day one</span></div>
+            <div className="hbx-stat"><span className="n">$199/mo</span><span className="l">Growth tier &mdash; auto-generated battlecards, always current</span></div>
+            <div className="hbx-stat"><span className="n">$79/mo</span><span className="l">Starter &mdash; 3 competitors watched daily, from day one</span></div>
             <div className="hbx-stat"><span className="n">4</span><span className="l">Real battlecards live in our own demo right now &mdash; Kompyte, Crayon, Signal Labs, Visualping</span></div>
             <div className="hbx-stat"><span className="n">10</span><span className="l">Competitors watched daily on Growth, each with its own auto-built card</span></div>
           </div>

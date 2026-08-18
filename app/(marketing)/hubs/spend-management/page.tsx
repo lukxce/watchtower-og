@@ -22,8 +22,8 @@ const PERSONAS = [
 const CHANNEL_SAMPLE = ['Meta ads', 'Google ads', 'LinkedIn ads', 'Events & webinars', 'Customer logos', 'Traffic & SEO', 'Search interest'];
 
 const TIERS = [
-  { name: 'Starter', price: '$149/mo', note: '3 competitors', items: ['Meta, Google and LinkedIn ad libraries — all live from day one, no paid vendor needed', 'Events & webinars, customer logos'] },
-  { name: 'Growth', price: '$399/mo', note: '10 competitors', items: ['Adds Traffic & SEO and Search interest — the paid-source DataForSEO estimates'] },
+  { name: 'Starter', price: '$79/mo', note: '3 competitors', items: ['Meta, Google and LinkedIn ad libraries — all live from day one, no paid vendor needed', 'Events & webinars, customer logos'] },
+  { name: 'Growth', price: '$199/mo', note: '10 competitors', items: ['Adds Traffic & SEO and Search interest — the paid-source DataForSEO estimates'] },
   { name: 'Enterprise', price: 'Talk to us', note: '30 competitors, standard config', items: ['Same full channel set at scale', 'Dedicated onboarding'] },
 ];
 
@@ -77,7 +77,7 @@ const SPEND_FAQ = [
   },
   {
     q: 'Which plan includes this?',
-    a: 'The three ad-library channels — Meta, Google, LinkedIn — run on Starter at $149/mo, since none of them need a paid data source. Traffic and search-interest estimates, which run through DataForSEO, sit in Growth ($399/mo) and above, because that cost scales with usage and we won\'t promise a flat price we can\'t actually hold.',
+    a: 'The three ad-library channels — Meta, Google, LinkedIn — run on Starter at $79/mo, since none of them need a paid data source. Traffic and search-interest estimates, which run through DataForSEO, sit in Growth ($199/mo) and above, because that cost scales with usage and we won\'t promise a flat price we can\'t actually hold.',
   },
   {
     q: 'Can I see this running on a real competitor before I pay for anything?',
@@ -113,10 +113,10 @@ export default function SpendManagementHub() {
             <div className="hbx-stat"><span className="n">3</span><span className="l">Ad-library channels watched &mdash; Meta, Google, LinkedIn</span></div>
             <div className="hbx-stat"><span className="n">2</span><span className="l">Market channels &mdash; Traffic &amp; SEO estimate, and Google Trends search interest</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">GTM &amp; ads channels total, incl. events &amp; webinars and customer logo wins/losses</span></div>
-            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published &mdash; all three ad-library channels included, keyless where possible</span></div>
+            <div className="hbx-stat"><span className="n">$79/mo</span><span className="l">Starter, published &mdash; all three ad-library channels included, keyless where possible</span></div>
             <div className="hbx-stat"><span className="n">0</span><span className="l">Dollar-denominated ad-spend estimates published, anywhere in the product</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Named vendors we compare against directly &mdash; Klue, Crayon, Kompyte, Visualping, Signal Labs</span></div>
-            <div className="hbx-stat"><span className="n">$399/mo</span><span className="l">Growth &mdash; adds the paid-source traffic &amp; search-interest estimate on top</span></div>
+            <div className="hbx-stat"><span className="n">$199/mo</span><span className="l">Growth &mdash; adds the paid-source traffic &amp; search-interest estimate on top</span></div>
           </div>
         </div>
       </section>

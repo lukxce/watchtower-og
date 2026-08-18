@@ -22,8 +22,8 @@ const PERSONAS = [
 const CHANNEL_SAMPLE = ['Website & pricing', 'Subdomain watch', 'Job postings', 'Meta ads', 'G2 reviews', 'Funding & M&A'];
 
 const TIERS = [
-  { name: 'Starter', price: '$149/mo', note: '3 competitors', items: ['600 page-fetches/day workspace budget', '3,000 monitored pages per competitor', '0 licensed-vendor runs/month'] },
-  { name: 'Growth', price: '$399/mo', note: '10 competitors', items: ['2,000 page-fetches/day', '320 licensed-vendor runs/month for paid-source channels'] },
+  { name: 'Starter', price: '$79/mo', note: '3 competitors', items: ['600 page-fetches/day workspace budget', '3,000 monitored pages per competitor', '0 licensed-vendor runs/month'] },
+  { name: 'Growth', price: '$199/mo', note: '10 competitors', items: ['2,000 page-fetches/day', '320 licensed-vendor runs/month for paid-source channels'] },
   { name: 'Enterprise', price: 'Talk to us', note: '30 competitors, standard config', items: ['7,000 page-fetches/day', '6,000 monitored pages per competitor', '960 licensed-vendor runs/month'] },
 ];
 
@@ -116,7 +116,7 @@ export default function GtmEngineeringHub() {
             <div className="hbx-stat"><span className="n">1</span><span className="l">Source URL required on every conclusion, or it isn&apos;t shown</span></div>
             <div className="hbx-stat"><span className="n">0</span><span className="l">Public API endpoints shipped today &mdash; said plainly, not implied</span></div>
             <div className="hbx-stat"><span className="n">3</span><span className="l">In-build product layers ahead of the API &mdash; a query interface, standing orders, exportable reports</span></div>
-            <div className="hbx-stat"><span className="n">$149&ndash;$399</span><span className="l">Starter and Growth tiers today read the same structured record, entirely inside the product</span></div>
+            <div className="hbx-stat"><span className="n">$79&ndash;$199</span><span className="l">Starter and Growth tiers today read the same structured record, entirely inside the product</span></div>
           </div>
         </div>
       </section>

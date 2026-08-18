@@ -25,7 +25,7 @@ export default function DataSourcesFeature() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $149/mo · no card required</p>
+            <p className="wt-note">From $79/mo · no card required</p>
           </div>
 
           <div className="ftx-art">
@@ -460,7 +460,7 @@ export default function DataSourcesFeature() {
               <p>
                 The free and keyless channels — website, sitemap, ads, jobs, subdomains, tech stack and more — run
                 the same on every tier. The licensed-vendor channels (G2, Capterra, TrustRadius, Gartner Peer
-                Insights, traffic and review data) are part of Growth ($399/mo) and above; Starter&apos;s coverage
+                Insights, traffic and review data) are part of Growth ($199/mo) and above; Starter&apos;s coverage
                 map shows those as available on upgrade rather than pretending they&apos;re already active.
               </p>
             </div>

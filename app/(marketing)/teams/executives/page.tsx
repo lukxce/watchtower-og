@@ -235,8 +235,8 @@ export default function ExecutivesPage() {
             <details>
               <summary>What does it cost at our stage?</summary>
               <p>
-                Starter is $149/mo for 3 competitors watched daily — reasonable for an early-stage team watching a
-                handful of named rivals. Growth, at $399/mo, covers up to 10 competitors with full campaign and
+                Starter is $79/mo for 3 competitors watched daily — reasonable for an early-stage team watching a
+                handful of named rivals. Growth, at $199/mo, covers up to 10 competitors with full campaign and
                 landing-page tracking, which is where most Series A–B teams land. Enterprise is a quote, and covers
                 SSO, audit logs and a dedicated onboarding for larger orgs.
               </p>

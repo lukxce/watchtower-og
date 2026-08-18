@@ -25,7 +25,7 @@ export default function OverviewFeature() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $149/mo · no card required</p>
+            <p className="wt-note">From $79/mo · no card required</p>
           </div>
 
           <div className="ftx-art">
@@ -350,7 +350,7 @@ export default function OverviewFeature() {
                 <tr>
                   <th>Crayon</th>
                   <td>Broad dashboard, similar enterprise setup motion, priced accordingly.</td>
-                  <td className="us">Same fixed shape, from $149/mo, no onboarding call required to see it work.</td>
+                  <td className="us">Same fixed shape, from $79/mo, no onboarding call required to see it work.</td>
                 </tr>
                 <tr>
                   <th>Kompyte</th>
@@ -427,8 +427,8 @@ export default function OverviewFeature() {
               <h4>Does Overview look different depending on which plan I&apos;m on — Starter versus Growth?</h4>
               <p>
                 The page shape is identical on every tier — biggest threat first, ratings, Launch Radar. What
-                changes is how many competitors it&apos;s built from: 3 on Starter ($149/mo), 10 on Growth
-                ($399/mo). Nobody gets a stripped-down version of the reasoning; they get a smaller market to reason
+                changes is how many competitors it&apos;s built from: 3 on Starter ($79/mo), 10 on Growth
+                ($199/mo). Nobody gets a stripped-down version of the reasoning; they get a smaller market to reason
                 over.
               </p>
             </div>

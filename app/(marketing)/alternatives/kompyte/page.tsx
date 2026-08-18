@@ -55,7 +55,7 @@ export default function KompyteAlternative() {
               <tbody>
                 <tr>
                   <th scope="row">Pricing model</th>
-                  <td className="us">Published: $149–$1,500/mo, self-serve</td>
+                  <td className="us">Published: $79–$1,500/mo, self-serve</td>
                   <td>Quoted, typically bundled with or sold alongside Semrush plans</td>
                 </tr>
                 <tr>

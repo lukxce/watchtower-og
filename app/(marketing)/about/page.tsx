@@ -158,7 +158,7 @@ export default function About() {
           round to announce, because there isn&rsquo;t one — we&rsquo;d rather tell you that plainly than pad an
           about page with corporate biography that doesn&rsquo;t exist yet. What we do have is specific: a
           product that watches 28 public channels across pricing, hiring, ads, launches, reviews and press,
-          self-serve pricing that&rsquo;s published starting at $149/mo rather than gated behind a demo call, a
+          self-serve pricing that&rsquo;s published starting at $79/mo rather than gated behind a demo call, a
           live workspace you can try without talking to anyone first, and a methodology we&rsquo;re glad to
           explain in detail rather than wave at.
         </p>

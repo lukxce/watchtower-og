@@ -25,7 +25,7 @@ export default function CampaignIntelligenceFeature() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $149/mo · no card required</p>
+            <p className="wt-note">From $79/mo · no card required</p>
           </div>
 
           <div className="ftx-art">
@@ -307,7 +307,7 @@ export default function CampaignIntelligenceFeature() {
                 <tr>
                   <th>Klue</th>
                   <td>Ad-tracking bundled into the enterprise tier, configured after a demo call.</td>
-                  <td className="us">Meta, Google and LinkedIn libraries, events and logos live from $149/mo.</td>
+                  <td className="us">Meta, Google and LinkedIn libraries, events and logos live from $79/mo.</td>
                 </tr>
                 <tr>
                   <th>Crayon</th>
@@ -382,8 +382,8 @@ export default function CampaignIntelligenceFeature() {
             <div className="ftx-faq-item">
               <h4>Does Growth or Enterprise get more ad-library coverage than Starter?</h4>
               <p>
-                Starter ($149/mo) already gets all three ad libraries, events and logo walls for its competitors.
-                Growth ($399/mo) adds more competitors and 3× the page-fetch capacity, not a bigger ad-tracking
+                Starter ($79/mo) already gets all three ad libraries, events and logo walls for its competitors.
+                Growth ($199/mo) adds more competitors and 3× the page-fetch capacity, not a bigger ad-tracking
                 feature set — nobody is missing a channel because of their plan.
               </p>
             </div>
