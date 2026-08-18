@@ -1,6 +1,16 @@
 // Thin Claude API wrapper shared by scoring, auto-discovery, and (later)
 // battlecards/Ask. Returns null when ANTHROPIC_API_KEY is absent so every
 // caller degrades cleanly to a deterministic fallback.
+export interface TokenUse { input: number; output: number }
+export let lastUsage: TokenUse | null = null;
+export const totalUsage = { input: 0, output: 0, calls: 0 };
+
+/** Haiku 4.5 list price, $/million tokens. */
+export const HAIKU_RATE = { input: 1.0, output: 5.0 };
+export function usageCostUsd(u = totalUsage): number {
+  return (u.input / 1e6) * HAIKU_RATE.input + (u.output / 1e6) * HAIKU_RATE.output;
+}
+
 export async function claudeJSON<T>(system: string, user: string, maxTokens = 1024): Promise<T | null> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return null;
@@ -16,7 +26,19 @@ export async function claudeJSON<T>(system: string, user: string, maxTokens = 10
       }),
     });
     if (!res.ok) return null;
-    const data = (await res.json()) as { content?: { text?: string }[] };
+    const data = (await res.json()) as {
+      content?: { text?: string }[];
+      usage?: { input_tokens?: number; output_tokens?: number };
+    };
+    // Token accounting. The cost model carried Claude as an ESTIMATE long
+    // after every other input was measured, which made it the largest
+    // unverified line in the business. Cheap to just count it.
+    if (data.usage) {
+      lastUsage = { input: data.usage.input_tokens ?? 0, output: data.usage.output_tokens ?? 0 };
+      totalUsage.input += lastUsage.input;
+      totalUsage.output += lastUsage.output;
+      totalUsage.calls += 1;
+    }
     const txt = data.content?.[0]?.text ?? '';
     const start = txt.indexOf('[') >= 0 && (txt.indexOf('[') < txt.indexOf('{') || txt.indexOf('{') < 0) ? txt.indexOf('[') : txt.indexOf('{');
     const end = txt.lastIndexOf(']') > txt.lastIndexOf('}') ? txt.lastIndexOf(']') : txt.lastIndexOf('}');

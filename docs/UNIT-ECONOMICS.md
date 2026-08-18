@@ -93,16 +93,36 @@ rather than $49, and DataForSEO's $50 not yet being committed.
 
 ---
 
-## 5. The one number still unmeasured
+## 5. Claude — now measured too
 
-**Claude, at $0.45 – $1.15 per competitor per month.**
+Instrumented and run for real, not estimated:
 
-It is now the **largest single variable line** — bigger than all of Apify
-combined — and the only one still estimated. Every previous version of this
-document treated Apify as the big unknown; that has inverted.
+| | Measured |
+|---|---|
+| competitor read | **503 in / 236 out tokens**, ~$0.0017 on Haiku |
+| scoring | **300 signals in one batched call**, 10,621 in / 1,500 out, $0.018 |
 
-The whole $3.67–$5.77 spread on Starter is this line. Worth measuring before
-quoting margins to anyone outside the company.
+Per competitor per month on Haiku: daily reads $0.051 + scoring $0.009 + a
+share of capped Asks ≈ **$0.14**. v4 carried $0.45–$1.15, so it was overstated
+by 3–8x, and the whole remaining range in this document was that one guess.
+
+**Everything in the model is now measured. Per competitor: ~$0.92/month.**
+
+### If the model tier changes
+
+Everything runs through one wrapper (`src/lib/claude.ts`), so the tier is a
+one-line change. Measured token counts priced at list:
+
+| Strategy | Starter $49 | Growth $129 |
+|---|---|---|
+| all Haiku (today) | $2.77 · **94.3%** | $9.97 · **92.3%** |
+| Opus reads + Sonnet chat | $5.44 · **88.9%** | $20.34 · **84.2%** |
+| **Opus weekly + Haiku daily + Sonnet chat** | **$3.60 · 92.6%** | **$14.21 · 89.0%** |
+
+Full Opus makes reads 42% of variable cost — a 15x jump on that line, and the
+only place model choice moves the total materially. The weekly hybrid keeps
+most of the reasoning quality for a third of the cost, and matches how the
+intelligence actually arrives: competitor positions do not move day to day.
 
 ---
 
