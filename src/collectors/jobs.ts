@@ -4,13 +4,14 @@
 import { smartFetch } from '@/lib/fetchLadder';
 import { ingestItems, recordRun, getSource, setSource, jsonFetch, type Competitor } from '@/db/queries';
 
-type AtsKind = 'greenhouse' | 'lever' | 'ashby' | 'workable';
+type AtsKind = 'greenhouse' | 'lever' | 'ashby' | 'workable' | 'smartrecruiters' | 'breezy';
 interface Ats {
   kind: AtsKind;
   slug: string;
 }
 
-const ATS_LINK = /(?:boards\.greenhouse\.io|job-boards\.greenhouse\.io|jobs\.lever\.co|jobs\.ashbyhq\.com|apply\.workable\.com)\/(?:embed\/job_board\?for=)?([A-Za-z0-9_-]+)/g;
+const ATS_LINK =
+  /(?:boards\.greenhouse\.io|job-boards\.greenhouse\.io|jobs\.lever\.co|jobs\.ashbyhq\.com|apply\.workable\.com|jobs\.smartrecruiters\.com|careers\.smartrecruiters\.com)\/(?:embed\/job_board\?for=)?([A-Za-z0-9_-]+)|([A-Za-z0-9_-]+)\.breezy\.hr/g;
 const ATS_STOPWORDS = new Set(['embed', 'job_board', 'jobs', 'js', 'v1', 'boards', 'api', 'widget']);
 
 function kindOf(url: string): AtsKind | null {
@@ -18,6 +19,8 @@ function kindOf(url: string): AtsKind | null {
   if (url.includes('lever.co')) return 'lever';
   if (url.includes('ashbyhq.com')) return 'ashby';
   if (url.includes('workable.com')) return 'workable';
+  if (url.includes('smartrecruiters.com')) return 'smartrecruiters';
+  if (url.includes('breezy.hr')) return 'breezy';
   return null;
 }
 
@@ -56,6 +59,44 @@ async function fetchJobs(ats: Ats): Promise<JobItem[] | null> {
     if (!r?.jobs) return null;
     return r.jobs.map((j) => ({ id: j.id, title: j.title, url: j.jobUrl, meta: [j.department, j.location].filter(Boolean).join(', ') }));
   }
+  if (ats.kind === 'smartrecruiters') {
+    // Public postings API, no key. Verified live: 241ms. Note the slug is
+    // CASE-SENSITIVE — "Visa" returns postings, "visa" returns zero — so a
+    // zero count here is not proof the company isn't on SmartRecruiters.
+    const r = (await jsonFetch(`https://api.smartrecruiters.com/v1/companies/${ats.slug}/postings`)) as {
+      totalFound?: number;
+      content?: {
+        id: string;
+        name: string;
+        department?: { label?: string };
+        function?: { label?: string };
+        location?: { fullLocation?: string; city?: string; remote?: boolean };
+      }[];
+    } | null;
+    if (!r?.content) return null;
+    return r.content.map((j) => ({
+      id: j.id,
+      title: j.name,
+      // `ref` on the payload is the API URL, not a page a human can open.
+      url: `https://jobs.smartrecruiters.com/${ats.slug}/${j.id}`,
+      meta: [j.function?.label ?? j.department?.label, j.location?.remote ? 'Remote' : j.location?.fullLocation ?? j.location?.city]
+        .filter(Boolean)
+        .join(', '),
+    }));
+  }
+  if (ats.kind === 'breezy') {
+    // Verified live: 327ms, returns a bare array and a public url per posting.
+    const r = (await jsonFetch(`https://${ats.slug}.breezy.hr/json`)) as
+      | { id: string; name: string; url?: string; department?: string; location?: { name?: string; city?: string; is_remote?: boolean } }[]
+      | null;
+    if (!Array.isArray(r)) return null;
+    return r.map((j) => ({
+      id: j.id,
+      title: j.name,
+      url: j.url,
+      meta: [j.department, j.location?.is_remote ? 'Remote' : j.location?.name ?? j.location?.city].filter(Boolean).join(', '),
+    }));
+  }
   const r = (await jsonFetch(`https://apply.workable.com/api/v1/widget/accounts/${ats.slug}?details=false`)) as {
     jobs?: { shortcode: string; title: string; url?: string; department?: string; location?: { city?: string } }[];
   } | null;
@@ -69,9 +110,12 @@ async function probeAts(comp: Competitor): Promise<Ats | null> {
     if (res.status !== 200) continue;
     for (const m of res.html.matchAll(ATS_LINK)) {
       const kind = kindOf(m[0]);
-      if (kind && m[1] && !ATS_STOPWORDS.has(m[1].toLowerCase())) {
-        const jobs = await fetchJobs({ kind, slug: m[1] });
-        if (jobs !== null) return { kind, slug: m[1] };
+      // Group 1 is the path-style slug (…greenhouse.io/SLUG); group 2 is the
+      // subdomain style (SLUG.breezy.hr). Exactly one of them is set.
+      const slug = m[1] ?? m[2];
+      if (kind && slug && !ATS_STOPWORDS.has(slug.toLowerCase())) {
+        const jobs = await fetchJobs({ kind, slug });
+        if (jobs !== null && jobs.length > 0) return { kind, slug };
       }
     }
     const forMatch = res.html.match(/greenhouse\.io\/embed\/job_board\?for=([A-Za-z0-9_-]+)/i);
