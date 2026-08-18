@@ -38,15 +38,25 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
     return undefined;
   };
 
-  // Prose can arrive as one field or as G2's three-part split.
-  const parts = [
+  // Prose arrives three different ways depending on the actor: one field,
+  // G2's three-part split (azzouzana), or a question->answer object keyed by
+  // the literal G2 prompts (memo23).
+  const qa = raw.review_question_answers;
+  const qaParts =
+    qa && typeof qa === 'object' && !Array.isArray(qa)
+      ? Object.values(qa as Record<string, unknown>).map(str).filter(Boolean)
+      : [];
+  const splitParts = [
     str(raw.whatDoYouLike),
     str(raw.whatDoYouDislike),
     str(raw.whatProblemsOrBenefits),
   ].filter(Boolean);
-  const text = pick('text', 'body', 'content', 'review', 'comment') ?? (parts.length ? parts.join(' — ') : undefined);
+  const text =
+    pick('review_content', 'text', 'body', 'content', 'review', 'comment') ??
+    (splitParts.length ? splitParts.join(' — ') : undefined) ??
+    (qaParts.length ? qaParts.join(' — ') : undefined);
 
-  const ratingRaw = raw.rating ?? raw.score ?? raw.stars;
+  const ratingRaw = raw.review_rating ?? raw.rating ?? raw.ratingOutOfFive ?? raw.score ?? raw.stars;
   const rating = typeof ratingRaw === 'number' ? ratingRaw : Number(ratingRaw) || undefined;
 
   // Switching data is the most valuable thing a review directory exposes for
@@ -59,13 +69,23 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   if (raw.nps !== undefined && raw.nps !== null) extra.nps = raw.nps;
   if (raw.company_segment_label) extra.segment = raw.company_segment_label;
 
+  // memo23 puts reviewer context in a nested object, and — uniquely among the
+  // actors — carries the vendor's OWN domain on every row. That is a real join
+  // key: it verifies the row belongs to this competitor instead of trusting a
+  // name match, which is the failure that has bitten every other channel.
+  const reviewer = raw.reviewer as Record<string, unknown> | undefined;
+  if (reviewer?.business_size) extra.segment = str(reviewer.business_size) ?? extra.segment;
+  if (reviewer?.reviewer_job_title) extra.jobTitle = str(reviewer.reviewer_job_title);
+  const domain = pick('company_domain', 'companyDomain');
+  if (domain) extra.companyDomain = domain;
+
   return {
-    id: pick('reviewId', 'id', 'review_id', 'uuid'),
-    title: pick('title', 'headline', 'summary'),
+    id: pick('reviewId', 'review_id', 'id', 'uuid'),
+    title: pick('review_title', 'title', 'headline', 'summary'),
     text,
     rating,
-    date: pick('published_at', 'date', 'publishedAt', 'createdAt', 'submitted_at', 'reviewDate'),
-    url: pick('reviewUrl', 'url', 'link', 'reviewLink'),
+    date: pick('publish_date', 'published_at', 'date', 'publishedAt', 'createdAt', 'submitted_at', 'reviewDate'),
+    url: pick('review_link', 'reviewUrl', 'url', 'link', 'reviewLink'),
     extra,
   };
 }
