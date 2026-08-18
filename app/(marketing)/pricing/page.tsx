@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Pricing — Fortress HQ',
-  description: "Self-serve from $99/mo. No demo required to see a price, unlike the rest of this category.",
+  description: "Self-serve from $149/mo. No demo required to see a price, unlike the rest of this category.",
 };
 
 export default function Pricing() {
@@ -26,13 +26,13 @@ export default function Pricing() {
             <div className="tier">
               <span className="tier-tag">Starter</span>
               <h3>Self-serve</h3>
-              <div className="price">$99<span>/mo</span></div>
+              <div className="price">$149<span>/mo</span></div>
               <p className="tier-note">3 competitors · watched daily</p>
               <ul>
                 <li>Signal feed &amp; Threat Index</li>
                 <li>Comparison-page discovery</li>
                 <li>Compare view, Launch Radar</li>
-                <li>Weekly email digest</li>
+                <li>Daily order of the day, weekly relief digest — read in the app</li>
               </ul>
               <Link href="/sign-up" className="btn btn-ghost">Start free</Link>
             </div>
@@ -43,9 +43,8 @@ export default function Pricing() {
               <p className="tier-note">10 competitors · full coverage</p>
               <ul>
                 <li>Everything in Starter</li>
-                <li>Auto-generated battlecards, always current</li>
                 <li>Campaign &amp; landing-page tracking</li>
-                <li>Slack / Teams digest</li>
+                <li>3&times; the page-fetch capacity per competitor</li>
                 <li>Paid-source channels (traffic, reviews, G2/Capterra)</li>
               </ul>
               <Link href="/sign-up" className="btn btn-primary">Start free</Link>

@@ -1,0 +1,66 @@
+/* Company / legal pages — About, Methodology, Privacy, Terms, Email
+   preferences. Deliberately the most restrained visual language on the
+   site: About and Methodology get a narrow prose column and (on
+   Methodology only) a few small glass tiles; Privacy, Terms and Email
+   preferences get NO decorative treatment at all — a reading column and
+   type, nothing else. That restraint is itself the design for this group.
+   Scoped under .cox, reusing the --a-* tokens that cascade from .mkt in
+   marketing.css. Do not redefine tokens here. */
+
+/* ---------- shared page shell ---------- */
+.cox-page{padding:64px 0 100px}
+.cox-page .wrap{max-width:1180px}
+
+/* ---------- prose column (About, Methodology) ---------- */
+.cox-prose{max-width:680px;margin:0 auto}
+.cox-prose .cox-kicker{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--a-teal);background:var(--a-teal-wash);padding:7px 15px;border-radius:999px;margin-bottom:22px}
+.cox-prose h1{font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;margin:0 0 18px;color:var(--a-ink);text-wrap:balance}
+.cox-prose .cox-lede{font-size:17px;color:var(--a-mut);line-height:1.65;margin:0 0 8px;max-width:60ch}
+.cox-prose h2{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin:44px 0 14px;color:var(--a-ink)}
+.cox-prose h2:first-of-type{margin-top:40px}
+.cox-prose p{font-size:16px;color:var(--a-mut);line-height:1.75;margin:0 0 18px}
+.cox-prose ul{margin:0 0 20px;padding:0;list-style:none}
+.cox-prose li{font-size:15.5px;color:var(--a-mut);line-height:1.65;padding:0 0 12px 20px;position:relative}
+.cox-prose li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--a-teal)}
+.cox-prose strong{color:var(--a-ink);font-weight:700}
+.cox-prose .cox-cta-row{display:flex;gap:13px;flex-wrap:wrap;margin-top:14px}
+
+/* small glass tiles — Methodology's three verification mechanisms only.
+   Reuses the existing glass recipe (--a-glass/--a-blur/--a-shadow), so it
+   matches the rest of the site's material rather than inventing a new one. */
+.cox-tiles{display:grid;grid-template-columns:1fr;gap:16px;margin:14px 0 30px}
+.cox-tile{background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  border-radius:20px;padding:26px 28px;box-shadow:var(--a-shadow)}
+.cox-tile-k{display:inline-block;font-family:var(--mono, monospace);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:800;color:var(--a-teal);margin-bottom:10px}
+.cox-tile h3{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0 0 9px;color:var(--a-ink)}
+.cox-tile p{font-size:14.5px;color:var(--a-mut);line-height:1.65;margin:0 0 10px}
+.cox-tile p:last-child{margin-bottom:0}
+.cox-tile .cox-example{font-size:13.5px;color:var(--a-ink);background:rgba(255,255,255,.5);border-radius:10px;padding:10px 14px;line-height:1.55}
+
+/* ---------- pure plain prose (Privacy, Terms, Email preferences) ---------- */
+.cox-legal{max-width:640px;margin:0 auto}
+.cox-legal .cox-note{font-size:12.5px;color:var(--a-faint);line-height:1.6;margin:0 0 30px;font-style:italic}
+.cox-legal h1{font-size:clamp(27px,3.4vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin:0 0 10px;color:var(--a-ink)}
+.cox-legal .cox-updated{font-size:13px;color:var(--a-faint);margin:0 0 40px}
+.cox-legal h2{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.3;margin:38px 0 12px;color:var(--a-ink)}
+.cox-legal h2:first-of-type{margin-top:0}
+.cox-legal p{font-size:15.5px;color:var(--a-mut);line-height:1.8;margin:0 0 16px}
+.cox-legal ul{margin:0 0 16px;padding:0 0 0 20px}
+.cox-legal li{font-size:15.5px;color:var(--a-mut);line-height:1.75;margin-bottom:8px}
+.cox-legal a{color:var(--a-teal);text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- email preferences: minimal, honest form, no glass ---------- */
+.cox-pref-form{margin-top:8px}
+.cox-pref-form .field{margin-bottom:18px}
+.cox-pref-form label{display:block;font-size:13px;font-weight:700;color:var(--a-mut);margin-bottom:7px}
+.cox-pref-form input,.cox-pref-form textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;
+  border:1px solid var(--a-line);border-radius:10px;background:transparent;color:var(--a-ink);resize:vertical}
+.cox-pref-form input:focus,.cox-pref-form textarea:focus{outline:none;border-color:var(--a-teal)}
+.cox-pref-note{font-size:13px;color:var(--a-faint);line-height:1.6;margin-top:14px}
+
+@media(max-width:640px){
+  .cox-page{padding:44px 0 72px}
+  .cox-prose h2{margin-top:34px}
+  .cox-tile{padding:22px 20px}
+}

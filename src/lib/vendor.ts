@@ -58,7 +58,14 @@ export async function runApifyActor<T = Record<string, unknown>>(
       `https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/run-sync-get-dataset-items?token=${token}`,
       { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(input), signal: ctl.signal },
     );
-    if (!res.ok) return null;
+    if (!res.ok) {
+      // The body carries the actual reason — almost always a rejected input
+      // field. Swallowing it turned every schema mismatch into a silent
+      // "vendor unavailable", which is how two wrong input shapes shipped.
+      const why = await res.text().catch(() => '');
+      console.warn(`[vendor] ${actorId} → HTTP ${res.status} ${why.slice(0, 300)}`);
+      return null;
+    }
     return (await res.json()) as T[];
   } catch {
     return null;

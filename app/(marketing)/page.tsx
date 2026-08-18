@@ -6,7 +6,7 @@ import FogPanel from './FogPanel';
 export const metadata = {
   title: 'Fortress HQ · Know the moment your competitors move.',
   description:
-    'Fortress HQ turns everything your competitors do in public into one briefing that says what it means and what to do. Every fact cited. From $99/mo.',
+    'Fortress HQ turns everything your competitors do in public into one briefing that says what it means and what to do. Every fact cited. From $149/mo.',
 };
 
 // Real lines from our own workspace, worded the way the feed words them.
@@ -46,7 +46,7 @@ export default function Home() {
               <Link href="/sign-up" className="btn btn-primary btn-lg">Start free</Link>
               <Link href="/demo" className="btn btn-ghost btn-lg">Try the live demo →</Link>
             </div>
-            <p className="wt-note">From $99/mo · no card required<span className="wt-note-x"> · the demo needs no account</span></p>
+            <p className="wt-note">From $149/mo · no card required<span className="wt-note-x"> · the demo needs no account</span></p>
           </div>
 
           {/* The product itself, bleeding off the right edge so it reads as
@@ -150,12 +150,12 @@ export default function Home() {
         <div className="wrap">
           <span className="wt-eyebrow">Pricing</span>
           <h2 className="wt-h2">Published, because we are not afraid of it.</h2>
-          <p className="wt-lede">The incumbents quote five figures after a demo call. Start today for $99.</p>
+          <p className="wt-lede">The incumbents quote five figures after a demo call. Start today for $149.</p>
           <div className="mkt-tiers">
             <div className="tier">
               <span className="tier-tag">Starter</span>
               <h3>Self-serve</h3>
-              <div className="price">$99<span>/mo</span></div>
+              <div className="price">$149<span>/mo</span></div>
               <p className="tier-note">3 competitors · watched daily</p>
               <ul>
                 <li>Bundled signal feed &amp; Threat Index</li>

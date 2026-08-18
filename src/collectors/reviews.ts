@@ -76,7 +76,9 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
     (qaParts.length ? qaParts.join(' — ') : undefined) ??
     (prosCons || undefined);
 
-  const ratingRaw = raw.review_rating ?? raw.rating ?? raw.ratingOutOfFive ?? raw.score ?? raw.stars;
+  // `ratingOverall` is the Glassdoor actor's name for the star — without it
+  // every Glassdoor row stored as "?★", which is what shipping looked like.
+  const ratingRaw = raw.review_rating ?? raw.rating ?? raw.ratingOutOfFive ?? raw.score ?? raw.stars ?? raw.ratingOverall;
   const rating = typeof ratingRaw === 'number' ? ratingRaw : Number(ratingRaw) || undefined;
 
   // Switching data is the most valuable thing a review directory exposes for
@@ -117,12 +119,46 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
   const domain = pick('company_domain', 'companyDomain');
   if (domain) extra.companyDomain = domain;
 
+  // Glassdoor scores six sub-dimensions alongside the overall star. A 0 there
+  // means "not rated", NOT a score of zero — storing the zeros would drag
+  // every average down with opinions the reviewer never gave. Dropped.
+  const SUB_RATINGS: Record<string, string> = {
+    workLifeBalance: 'ratingWorkLifeBalance',
+    cultureAndValues: 'ratingCultureAndValues',
+    seniorLeadership: 'ratingSeniorLeadership',
+    compensation: 'ratingCompensationAndBenefits',
+    careerOpportunities: 'ratingCareerOpportunities',
+    diversityAndInclusion: 'ratingDiversityAndInclusion',
+  };
+  const subs: Record<string, number> = {};
+  for (const [key, field] of Object.entries(SUB_RATINGS)) {
+    const v = Number(raw[field]);
+    if (Number.isFinite(v) && v > 0) subs[key] = v;
+  }
+  if (Object.keys(subs).length) extra.subRatings = subs;
+
+  // Sentiment verdicts Glassdoor collects separately from the star rating.
+  if (str(raw.ratingBusinessOutlook)) extra.businessOutlook = str(raw.ratingBusinessOutlook);
+  if (str(raw.ratingCeo)) extra.ceoApproval = str(raw.ratingCeo);
+  if (str(raw.ratingRecommendToFriend)) extra.recommends = str(raw.ratingRecommendToFriend);
+
+  // Who is talking matters as much as what they said: a current employee of
+  // four years and a departing hire of six months are different signals.
+  if (raw.isCurrentJob === true) extra.currentEmployee = true;
+  const tenure = Number(raw.lengthOfEmployment);
+  if (Number.isFinite(tenure) && tenure > 0) extra.yearsAtCompany = tenure;
+  if (!extra.jobTitle && str(raw.jobTitle)) extra.jobTitle = str(raw.jobTitle);
+
+  // A company that answers its reviews is running an employer-brand effort —
+  // itself a move worth noticing when it starts or stops.
+  if (raw.hasEmployerResponse === true) extra.employerResponded = true;
+
   return {
     id: pick('reviewId', 'review_id', 'id', 'uuid'),
     title: pick('review_title', 'title', 'headline', 'summary'),
     text,
     rating,
-    date: pick('publish_date', 'published_at', 'date', 'publishedAt', 'createdAt', 'submitted_at', 'reviewDate'),
+    date: pick('publish_date', 'published_at', 'date', 'publishedAt', 'createdAt', 'submitted_at', 'reviewDate', 'reviewDateTime'),
     url: pick('review_link', 'reviewUrl', 'url', 'link', 'reviewLink'),
     extra,
   };
@@ -260,6 +296,7 @@ async function collectReviewSource(
     // `sources`, the same way jobs.ts remembers an ATS board, and set once
     // from the employer's real Reviews page.
     let fallback: Record<string, unknown>;
+    let pageUrl: string | undefined;
     if (channel === 'glassdoor') {
       const stored = await getSource(comp.id, 'glassdoor', 'url');
       if (!stored) {
@@ -272,6 +309,7 @@ async function collectReviewSource(
         );
         return 'needs Glassdoor employer URL';
       }
+      pageUrl = stored;
       fallback = {
         startUrls: [{ url: stored }],
         command: 'reviews',
@@ -286,6 +324,23 @@ async function collectReviewSource(
         // review: the rating trend is the signal, not the individual posts.
         includeCompanyReviewStats: true,
       };
+    } else if (channel === 'gartner') {
+      // Gartner is NOT a gap in the multi-platform actor — it was never in its
+      // scope. That actor bills itself "All-in-One Review Scraper: G2, Capterra
+      // & Trustpilot", so asking it for Gartner and reading the silence as
+      // "Klue isn't on Gartner" was our error, not its failure. Klue has 20
+      // Gartner reviews at 4.8.
+      //
+      // The dedicated actor takes a full Peer Insights product URL, which
+      // encodes market + vendor + product and so cannot be derived from a
+      // domain — stored per competitor, like the Glassdoor employer page.
+      const stored = await getSource(comp.id, 'gartner', 'url');
+      if (!stored) {
+        await recordRun(comp.id, 'gartner', true, 0, 'needs the Gartner Peer Insights product URL — it encodes market and vendor, and cannot be derived');
+        return 'needs Gartner product URL';
+      }
+      pageUrl = stored;
+      fallback = { productUrl: stored, maxResults: MAX_REVIEWS, sort: 'most-recent' };
     } else {
       fallback = { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS };
     }
@@ -301,6 +356,10 @@ async function collectReviewSource(
       return 'FAILED (vendor)';
     }
     rows = raw.map(normalizeReview);
+    // Glassdoor and Gartner rows carry no per-review link, and a signal you
+    // cannot click through to is a dead end. Point them at the page they came
+    // from.
+    if (pageUrl) rows = rows.map((r) => (r.url ? r : { ...r, url: pageUrl }));
   }
 
   const { added, fresh } = await ingestItems(

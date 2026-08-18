@@ -10,8 +10,12 @@ import { DEMO_COOKIE } from '@/lib/demo';
 
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
+// '/compare(.*)' was removed 18 Aug 2026: the in-app /compare redirect it
+// used to gate is gone (folded into /competitors, then deleted as a stale
+// unreferenced stub), and the path now belongs to the public comparison
+// pages under app/(marketing)/compare/ — those must stay unauthenticated.
 const isProtectedRoute = createRouteMatcher([
-  '/overview(.*)', '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/compare(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)', '/newsletters(.*)', '/industry(.*)', '/beta(.*)',
+  '/overview(.*)', '/feed(.*)', '/radar(.*)', '/competitors(.*)', '/battlecards(.*)', '/ask(.*)', '/reports(.*)', '/alerts(.*)', '/admin(.*)', '/newsletters(.*)', '/industry(.*)', '/beta(.*)',
 ]);
 
 export default clerkConfigured
