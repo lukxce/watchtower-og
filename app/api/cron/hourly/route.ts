@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runCollection } from '@/lib/orchestrator';
 import { computeThreat, snapshotThreat } from '@/lib/threat';
-import { authorize } from '@/lib/auth';
+import { authorize, tooSoon } from '@/lib/auth';
 import { workspacesAtLocalHour, COLLECT_HOUR, DELIVER_HOUR } from '@/lib/schedule';
 import { getDb } from '@/db/client';
 
@@ -21,6 +21,17 @@ export async function GET(req: NextRequest) {
   if (!auth.ok) {
     return NextResponse.json({ error: 'unauthorized', ...auth.diagnostics }, { status: 401 });
   }
+  // The vercel-cron header is forgeable (verified — curl set it and was let
+  // in), so anything reached that way is rate-limited. A real bearer token
+  // skips this.
+  const gap = await tooSoon(auth.via);
+  if (gap.blocked) {
+    return NextResponse.json(
+      { skipped: 'ran too recently', lastRunAt: gap.lastRunAt, authorizedVia: auth.via },
+      { status: 429 },
+    );
+  }
+
   const now = new Date();
 
   const toCollect = await workspacesAtLocalHour(COLLECT_HOUR, now);
