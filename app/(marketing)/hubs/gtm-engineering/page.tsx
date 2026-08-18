@@ -6,6 +6,72 @@ export const metadata = {
     'Every competitive signal in Fortress HQ is already a structured, source-linked record. Today it surfaces in the product. A public API is next, not yet shipped.',
 };
 
+const GTM_FRAME = [
+  { name: 'Klue', theirs: 'Deep CRM integration is a core, shipped part of their product.', us: 'No public API or CRM surface yet. The record shape underneath is API-ready; the pipe out isn\'t built.' },
+  { name: 'Crayon', theirs: 'Enterprise integrations, sold as part of the enterprise motion, priced after a demo call.', us: 'Everything we do have — the feed, the battlecard — is source-linked in-product, with a published price, before any integration conversation.' },
+  { name: 'Kompyte', theirs: 'Runs on Semrush\'s distribution now; any integration surface belongs to the suite, not an independent roadmap.', us: 'A dedicated CI product with one job. Whatever ships next is chosen for this product, not folded in around a larger suite\'s priorities.' },
+  { name: 'Visualping', theirs: 'A single-purpose page-change tool; not aiming to be a structured data platform.', us: 'The underlying record is already structured across 22 channels — the piece that\'s missing is exposing it externally, not building the structure itself.' },
+  { name: 'Signal Labs', theirs: 'Team-tier pricing quoted on a call; integration scope unclear without one.', us: 'Published pricing at every tier, and the same honest "not yet" on API access instead of a quote-gated answer.' },
+];
+
+const MECH = [
+  {
+    h: 'Every scout returns a record, not a paragraph',
+    p: 'A collector like ads_meta, subdomains, jobs or funding doesn\'t hand the Tower prose — it hands back a row: which competitor, which channel, what changed, when, and the source URL that proves it. That structure exists the instant a scout runs, whether or not anyone ever reads it in the product.',
+  },
+  {
+    h: 'Status is computed at runtime, never hardcoded',
+    p: 'Whether a channel shows as active, needs a key, needs an account, or is a paid vendor call is derived from which credentials are actually present when the code runs — not set by hand and left to drift. That\'s what keeps the coverage map honest without a person doing a manual audit pass every time a key gets added.',
+  },
+  {
+    h: 'Records accumulate per competitor, tagged and timestamped',
+    p: 'Every fact lands against the competitor it belongs to, carrying its channel, category and source URL. A pricing change and a hiring cluster live in the same structured space, which is what lets the next step read them together instead of requiring someone to stitch spreadsheets by hand.',
+  },
+  {
+    h: 'The Tower composes an auditable score on top',
+    p: 'The Threat Index is a weighted composite over five dimensions — GTM, talent, product, market, corporate, at 25/25/20/20/10 — stored per-dimension with a week-over-week delta tracked against the prior snapshot. Nothing about this composition is hidden; it\'s just not exposed outside the product yet.',
+  },
+  {
+    h: 'Today, the only egress is the product surface itself',
+    p: 'The daily feed and the battlecard are where the structured record currently turns into something a person reads — both source-linked, every line traceable back to the record behind it. That\'s the whole delivery layer as it stands: in-app, for a person, not yet for a system.',
+  },
+  {
+    h: 'The pipe out is next, in a specific order — not shipped yet',
+    p: 'A way to query the corpus directly, standing orders pushed to Slack, email or a webhook, and a one-click report export are the layers we\'re building first. A public API and webhooks for pulling records programmatically come after that, once there\'s a stable surface worth versioning. None of the four exist today, and we\'d rather say that in order than let the page blur what\'s built.',
+  },
+];
+
+const GTM_FAQ = [
+  {
+    q: 'If there\'s no API, isn\'t this whole page just marketing about something that doesn\'t exist?',
+    a: 'That\'s a fair read if the page implied the API exists — it doesn\'t, and we\'ve tried hard not to word it that way. What does exist, verifiably, is the structured record every signal is stored as before it\'s ever written into a sentence — the same shape an API response would need. This page is about that foundation, said honestly as a foundation, not a launch announcement wearing a foundation as a disguise.',
+  },
+  {
+    q: 'Is there a public API today?',
+    a: 'No. Not in beta, not on request, not for enterprise customers on a special path. The record structure that an API would expose is real and running; the API itself is not built.',
+  },
+  {
+    q: 'Can I at least get a webhook or a push notification when something changes?',
+    a: 'Not yet. Standing orders that push to Slack, email or a webhook the moment a rule fires are on the list ahead of the API, and they\'re not shipped either. The scoring that would decide what\'s worth pushing already runs inside the product — the delivery mechanism to get it outside the product doesn\'t exist yet.',
+  },
+  {
+    q: 'Then what\'s actually true today, structurally?',
+    a: 'Every one of the 22 channels writes back a structured record — competitor, channel, timestamp, category, source URL — the moment it runs. The Tower reads those records together and composes a Threat Index and a battlecard from them. All of that is real and running. What isn\'t real yet is a way to pull any of it out of the product programmatically.',
+  },
+  {
+    q: 'Why does any of this matter if I can\'t access it externally yet?',
+    a: 'Because it determines how hard the eventual API is to build well. A product that only decided to structure its data the day someone asked for an API usually ships a bad one, retrofitted around whatever the UI happened to need. Ours is structured this way from the first scout run, which is exactly why we\'re confident saying the pipe out is "next" rather than "eventually, maybe."',
+  },
+  {
+    q: 'When will the API ship?',
+    a: 'We\'re not attaching a date we can\'t hold to. The order is public, though: a query interface, standing orders, and exportable reports come first, because they\'re closer to done and more people need them sooner. The API is the step after that, once there\'s a stable surface worth committing to version.',
+  },
+  {
+    q: 'Is this the same kind of "not built yet" as the AI search visibility page, or different?',
+    a: 'Same honesty standard, different reason for the gap. AI-citation tracking doesn\'t exist because the underlying methodology hasn\'t been built to a bar we\'d trust. The API doesn\'t exist because we chose to build the in-product query and delivery layers first — the data has been structured correctly since day one, we just haven\'t built the door to hand it to you directly.',
+  },
+];
+
 export default function GtmEngineeringHub() {
   return (
     <div className="hbx">
@@ -31,6 +97,9 @@ export default function GtmEngineeringHub() {
             <div className="hbx-stat"><span className="n">7</span><span className="l">Channel groups every signal is tagged with &mdash; Product, GTM &amp; ads, Talent, Voice &amp; PR, Reputation, Market, Corporate</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">Weighted dimensions behind the Threat Index, stored per-dimension for audit, not a black box</span></div>
             <div className="hbx-stat"><span className="n">1</span><span className="l">Source URL required on every conclusion, or it isn&apos;t shown</span></div>
+            <div className="hbx-stat"><span className="n">0</span><span className="l">Public API endpoints shipped today &mdash; said plainly, not implied</span></div>
+            <div className="hbx-stat"><span className="n">3</span><span className="l">In-build product layers ahead of the API &mdash; a query interface, standing orders, exportable reports</span></div>
+            <div className="hbx-stat"><span className="n">$149&ndash;$399</span><span className="l">Starter and Growth tiers today read the same structured record, entirely inside the product</span></div>
           </div>
         </div>
       </section>
@@ -94,6 +163,92 @@ export default function GtmEngineeringHub() {
                 pulling the underlying records directly is the natural next step after that &mdash; not shipped.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-mech">
+        <div className="wrap">
+          <span className="wt-eyebrow">The full mechanism</span>
+          <h2 className="wt-h2">From a public page to a structured record, honestly to where it stops today.</h2>
+          <div className="hbx-mech-list">
+            {MECH.map((m, i) => (
+              <div className="hbx-mech-step" key={m.h}>
+                <span className="hbx-mech-num">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{m.h}</h3>
+                  <p>{m.p}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-example">
+        <div className="wrap">
+          <span className="wt-eyebrow">What the gap actually looks like</span>
+          <h2 className="wt-h2">A GTM engineer wants competitor signal in the warehouse. Here&apos;s what&apos;s true today.</h2>
+          <div className="hbx-scenario">
+            <span className="hbx-scenario-tag">Worked example &middot; an honest walkthrough of the current limit</span>
+            <p>
+              A growth engineer wants to join competitor signal against internal pipeline data &mdash; did threat scores
+              on Klue or Crayon move the week before a batch of deals were lost. The instinct is to reach for an API
+              key. There isn&apos;t one. There&apos;s also no webhook to catch events as they happen, and no export job to
+              schedule against a warehouse.
+            </p>
+            <p>
+              What does exist: the feed and each battlecard, readable in the product, every line already carrying its
+              source URL. If the engineer needed one fact today, they could open the battlecard and copy it by hand,
+              cited. That&apos;s a real, if manual, path &mdash; not the automated one they actually want.
+              <span className="accent"> The reason we can say the API is a "next step" and not a "someday" is that the
+              record shape already matches what an API response would need</span> &mdash; competitor, channel, timestamp,
+              category, source URL &mdash; because it was built that way from the first scout run, not bolted on after
+              the fact. When the pipe gets built, the data behind it won&apos;t need a redesign. It just needs a door.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-argument">
+        <div className="wrap">
+          <span className="wt-eyebrow">The competitive frame, for integration surface</span>
+          <h2 className="wt-h2">Where the others sit on this specifically.</h2>
+          <div className="hbx-table-wrap">
+            <table className="hbx-table">
+              <thead>
+                <tr><th>Vendor</th><th>Their position</th><th>Our counter</th></tr>
+              </thead>
+              <tbody>
+                {GTM_FRAME.map((f) => (
+                  <tr key={f.name}>
+                    <th>{f.name}</th>
+                    <td>{f.theirs}</td>
+                    <td className="us">{f.us}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-faq">
+        <div className="wrap">
+          <span className="wt-eyebrow">Questions worth asking</span>
+          <h2 className="wt-h2">Including the one that gets right to the point.</h2>
+          <div className="hbx-faq-list">
+            {GTM_FAQ.map((f) => (
+              <details className="hbx-faq-item" key={f.q}>
+                <summary>
+                  <span className="q-txt">
+                    {f.q.startsWith('If there') && <span className="hbx-faq-tag">Hard question</span>}
+                    {f.q}
+                  </span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

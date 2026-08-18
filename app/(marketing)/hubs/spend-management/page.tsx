@@ -6,6 +6,72 @@ export const metadata = {
     "We don't estimate a competitor's ad spend in dollars — that number is always a guess. We show you which platforms they're live on, how their creative mix shifts, and where organic effort is going.",
 };
 
+const SPEND_FRAME = [
+  { name: 'Klue', theirs: 'Enterprise CI, sales-enablement led. Ad-spend tracking isn\'t a headline capability, and pricing is a quote after a demo call.', us: 'Platform-level ad and traffic signal, published pricing, and the same refusal to publish a dollar figure nobody outside the ad platform actually knows.' },
+  { name: 'Crayon', theirs: 'Broad enterprise tracking, no published price.', us: 'Same class of signal — which platforms, how many creatives, how the mix shifts — at a fraction of the cost, with the price on the page.' },
+  { name: 'Kompyte', theirs: 'Now runs on Semrush\'s distribution rather than as an independent product.', us: 'A dedicated CI product whose ad and GTM tracking is the point, not a module folded into a much larger suite.' },
+  { name: 'Visualping', theirs: 'Page-change monitoring. Good at telling you a page changed; not built to read ad libraries.', us: 'Ad-library and traffic signal read together, per competitor, against everything else on file — not a standalone alert.' },
+  { name: 'Signal Labs', theirs: 'Team-tier pricing quoted on a call.', us: 'Published pricing at every tier, and the same honest line on why we don\'t model a dollar figure.' },
+];
+
+const MECH = [
+  {
+    h: 'Three ad-library channels, each read directly against the platform',
+    p: 'ads_meta pulls the Ad Library Graph API by page ID (free, needs a token to activate). ads_google reads the Transparency Center by domain, keyless and active by default. ads_linkedin reads the LinkedIn Ad Library, advertiser-exact. Each one is a direct read of what the platform itself discloses — not a modeled inference layered on top of scraped impressions.',
+  },
+  {
+    h: 'Creative counts and platform presence, tracked over time',
+    p: 'What gets recorded is how many ads are live on each platform and how that count moves — a competitor going from two Meta ads to eleven in a week is a real, verifiable posture change, sourced to the ad library itself, not a currency figure with no way to check it.',
+  },
+  {
+    h: 'Organic signal runs alongside paid, clearly labelled as an estimate',
+    p: 'traffic and trends read DataForSEO for estimated organic traffic and Google Trends search interest. We label these as estimates because that\'s what they honestly are — a third-party model, cited to its source — which is a different thing from inventing a precise-looking dollar figure and presenting it as fact.',
+  },
+  {
+    h: 'Events and customer logos add where field effort is going',
+    p: 'events reads field-marketing themes off events and webinar pages; logos tracks customer wins and losses off logo walls captured during the same site crawl. Both sit in the same GTM & ads group as the ad-library channels, because spend posture and field-marketing posture are the same underlying question — where is effort going right now.',
+  },
+  {
+    h: 'The Tower reads platform, creative and organic signal together',
+    p: 'None of these five channels means much alone. A creative-count spike on LinkedIn plus flat organic traffic plus a new events page reads differently than the same ad spike paired with rising search interest — the Tower composes the narrative across all of it, per competitor, instead of listing each channel\'s number separately.',
+  },
+  {
+    h: 'What comes out is a posture, not a currency figure',
+    p: 'The final read says whether a competitor is acquiring or defending, where their creative mix is shifting, and whether organic reach is growing or shrinking — in plain language, every claim traceable to the ad library, DataForSEO estimate, or page it came from. No modeled dollar number is manufactured to make the answer feel more precise than it is.',
+  },
+];
+
+const SPEND_FAQ = [
+  {
+    q: 'Why not just add a modeled dollar figure like every other ad-spend tracker?',
+    a: 'Because it would be a guess wearing a currency symbol, and this whole product is built around not doing that. Third-party ad-spend estimates are modeled from panel data and traffic proxies, and they\'re routinely off by multiples — you\'ve probably already caught one being wrong about your own company. Adding a more polished version of the same guess would look complete and be less honest than what we have now.',
+  },
+  {
+    q: 'Isn\'t "we don\'t estimate spend" just a workaround for not having the data?',
+    a: 'No — we could build a modeled estimate the same way every other vendor in this category does; we\'ve chosen not to, on principle, because it fails the evidence bar the rest of the product is held to. What we do instead is track what\'s actually verifiable directly against the platform: live creative counts, which networks a competitor runs on, and how that shifts. That\'s a real constraint we\'re choosing, not a capability we\'re missing.',
+  },
+  {
+    q: 'How do I know a number like "11 ads live" is even accurate?',
+    a: 'Because it\'s read directly from the ad platform\'s own public library — the Meta Ad Library, the Google Ads Transparency Center, the LinkedIn Ad Library — not inferred from a model. If a competitor has 11 ads live, that\'s what the platform itself reports, and the source is the platform, not a third-party estimate.',
+  },
+  {
+    q: 'Is the traffic and search-interest data not also a modeled guess, though?',
+    a: 'Yes, honestly — and we label it that way rather than hiding it. traffic and trends run on DataForSEO, which is itself an estimate, not a platform-verified number the way the three ad libraries are. The difference we care about isn\'t "estimate versus fact" everywhere; it\'s being explicit about which is which, instead of dressing an estimate up as a precise fact the way a fabricated dollar-spend figure would.',
+  },
+  {
+    q: 'What happens if Meta, Google or LinkedIn rate-limit the ad library or change the format?',
+    a: 'The channel reports that plainly rather than silently returning stale or wrong data — the same honest-gap discipline that runs across all 22 channels. A channel that can\'t reach its source says so; it doesn\'t quietly keep showing yesterday\'s number as if it were current.',
+  },
+  {
+    q: 'Which plan includes this?',
+    a: 'The three ad-library channels — Meta, Google, LinkedIn — run on Starter at $149/mo, since none of them need a paid data source. Traffic and search-interest estimates, which run through DataForSEO, sit in Growth ($399/mo) and above, because that cost scales with usage and we won\'t promise a flat price we can\'t actually hold.',
+  },
+  {
+    q: 'Can I see this running on a real competitor before I pay for anything?',
+    a: 'Yes — the live demo workspace shows real ad-library and traffic signal on our own market, including the exact kind of posture read (acquiring versus defending) described above, before you enter a card number anywhere.',
+  },
+];
+
 export default function SpendManagementHub() {
   return (
     <div className="hbx">
@@ -30,7 +96,10 @@ export default function SpendManagementHub() {
             <div className="hbx-stat"><span className="n">3</span><span className="l">Ad-library channels watched &mdash; Meta, Google, LinkedIn</span></div>
             <div className="hbx-stat"><span className="n">2</span><span className="l">Market channels &mdash; Traffic &amp; SEO estimate, and Google Trends search interest</span></div>
             <div className="hbx-stat"><span className="n">5</span><span className="l">GTM &amp; ads channels total, incl. events &amp; webinars and customer logo wins/losses</span></div>
-            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published</span></div>
+            <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published &mdash; all three ad-library channels included, keyless where possible</span></div>
+            <div className="hbx-stat"><span className="n">0</span><span className="l">Dollar-denominated ad-spend estimates published, anywhere in the product</span></div>
+            <div className="hbx-stat"><span className="n">5</span><span className="l">Named vendors we compare against directly &mdash; Klue, Crayon, Kompyte, Visualping, Signal Labs</span></div>
+            <div className="hbx-stat"><span className="n">$399/mo</span><span className="l">Growth &mdash; adds the paid-source traffic &amp; search-interest estimate on top</span></div>
           </div>
         </div>
       </section>
@@ -92,6 +161,92 @@ export default function SpendManagementHub() {
                 metric.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-mech">
+        <div className="wrap">
+          <span className="wt-eyebrow">The full mechanism</span>
+          <h2 className="wt-h2">From an ad library to &ldquo;acquiring or defending,&rdquo; in six steps.</h2>
+          <div className="hbx-mech-list">
+            {MECH.map((m, i) => (
+              <div className="hbx-mech-step" key={m.h}>
+                <span className="hbx-mech-num">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{m.h}</h3>
+                  <p>{m.p}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-example">
+        <div className="wrap">
+          <span className="wt-eyebrow">Reading posture, not a price tag</span>
+          <h2 className="wt-h2">Two competitors, two ad postures, read the honest way.</h2>
+          <div className="hbx-scenario">
+            <span className="hbx-scenario-tag">Worked example &middot; real signal from our own demo workspace</span>
+            <p>
+              Two real reads from our own market, the same morning. Visualping shows up with 11 ads live across
+              Google &mdash; a real, visible posture change, sourced straight to the Transparency Center. Around the same
+              window, Signal Labs shows 10 ads live and, paired with it, still zero press coverage anywhere in the
+              news channel. Neither of those is a dollar figure. Both are still genuinely useful.
+            </p>
+            <p>
+              <span className="accent">The Visualping number reads as acquisition</span> &mdash; a freemium utility
+              buying reach through paid placement rather than earned coverage, which is a specific, actionable posture
+              a GTM team can plan around. The Signal Labs pairing reads differently: ad spend with no third-party
+              validation anywhere in public voice suggests a company still building its own credibility from a
+              standing start, not yet earning the press mentions a more established vendor would. Neither conclusion
+              needed a modeled dollar figure to be useful &mdash; the platform-level fact and its pairing with another
+              channel did the actual work.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-argument">
+        <div className="wrap">
+          <span className="wt-eyebrow">The competitive frame, for GTM &amp; ad signal</span>
+          <h2 className="wt-h2">Where the others sit, and our counter.</h2>
+          <div className="hbx-table-wrap">
+            <table className="hbx-table">
+              <thead>
+                <tr><th>Vendor</th><th>Their position</th><th>Our counter</th></tr>
+              </thead>
+              <tbody>
+                {SPEND_FRAME.map((f) => (
+                  <tr key={f.name}>
+                    <th>{f.name}</th>
+                    <td>{f.theirs}</td>
+                    <td className="us">{f.us}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-faq">
+        <div className="wrap">
+          <span className="wt-eyebrow">Questions worth asking</span>
+          <h2 className="wt-h2">Including the one that pushes back on the whole premise.</h2>
+          <div className="hbx-faq-list">
+            {SPEND_FAQ.map((f) => (
+              <details className="hbx-faq-item" key={f.q}>
+                <summary>
+                  <span className="q-txt">
+                    {f.q.startsWith('Isn') && <span className="hbx-faq-tag">Hard question</span>}
+                    {f.q}
+                  </span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

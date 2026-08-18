@@ -1,11 +1,14 @@
 /* Teams pages — one page per audience segment (marketing, product marketing,
    sales, product, executives). Deliberately NOT the UI-mockup-heavy language
    the rest of the site uses: no dashboard screenshots, no glass feed panel.
-   This group reads as a short letter to one specific person — narrow column,
-   one big pull-quote line naming their exact pain, three facts, one proof
-   paragraph, then the same closing CTA band the homepage uses (.wt-close,
-   already defined in ../marketing.css and in scope because .mkt wraps every
-   route in this group).
+   This group reads as a long letter to one specific person — narrow editorial
+   column throughout, opening with one big pull-quote line naming their exact
+   pain and a short proof paragraph, then a run of real sections (a Monday-
+   morning walkthrough, an expanded what-you-get grid, a step-by-step of how
+   the persona actually uses the product, an honest by-hand argument, an FAQ),
+   then the same closing CTA band the homepage uses (.wt-close, already
+   defined in ../marketing.css and in scope because .mkt wraps every route in
+   this group).
    Everything here reuses the --a-* custom properties that cascade down from
    .mkt — no token is redefined. Scoped under .tmx so it can't collide with
    the homepage/pricing classes living in marketing.css. */
@@ -13,7 +16,7 @@
 .tmx-wrap{max-width:640px;margin:0 auto;padding:0 28px}
 
 /* ---------- hero: the letter opens ---------- */
-.tmx-hero{padding:88px 0 8px}
+.tmx-hero{padding:88px 0 22px}
 .tmx-hero .tmx-wrap{text-align:left}
 
 /* the pull-quote line — same display scale as the homepage h1, set a touch
@@ -30,17 +33,7 @@ h1.tmx-pull{
   display:inline;background:linear-gradient(120deg, rgba(234,253,53,.92), rgba(226,244,99,.62));
   border-radius:9px;padding:0 .22em;box-decoration-break:clone;-webkit-box-decoration-break:clone;
 }
-.tmx-dek{font-size:18px;color:var(--a-mut);line-height:1.65;margin:0 0 40px;max-width:56ch}
-
-/* ---------- "what you get": one compact row, three facts, not a mockup ---------- */
-.tmx-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 20px}
-.tmx-tile{
-  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
-  border-radius:16px;padding:18px 17px;box-shadow:var(--a-shadow);
-}
-.tmx-tile-k{display:block;font-family:var(--mono, monospace);font-size:9.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--a-teal);font-weight:800;margin-bottom:10px}
-.tmx-tile p{margin:0;font-size:13.5px;font-weight:700;color:var(--a-ink);line-height:1.4;letter-spacing:-.01em}
+.tmx-dek{font-size:18px;color:var(--a-mut);line-height:1.65;margin:0;max-width:56ch}
 
 /* ---------- the proof paragraph: one specific, real claim ---------- */
 .tmx-proof-sec{padding:44px 0 68px}
@@ -123,15 +116,10 @@ h2.tmx-h2{
 
 @media(max-width:640px){
   .tmx-hero{padding:56px 0 4px}
-  .tmx-tiles{grid-template-columns:1fr}
-  .tmx-dek{font-size:16px;margin-bottom:32px}
+  .tmx-dek{font-size:16px}
   .tmx-proof-sec{padding:32px 0 52px}
   .tmx-proof-sec .tmx-wrap{padding-left:18px}
   .tmx-section{padding:36px 0}
   .tmx-grid{grid-template-columns:1fr}
   .tmx-step{grid-template-columns:24px 1fr;gap:12px}
-}
-
-@media (prefers-reduced-motion: reduce){
-  .tmx-tile{transition:none}
 }

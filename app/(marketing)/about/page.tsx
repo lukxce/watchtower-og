@@ -109,23 +109,48 @@ export default function About() {
         <h2>Who this is for</h2>
         <p>
           Fortress HQ is built for people who are expected to already know what a competitor did, not for
-          people who enjoy reading feeds. That shows up differently depending on the seat:
+          people who enjoy reading feeds. Nobody on this list has time to compile a market update by hand, and
+          the product is shaped around each seat&rsquo;s actual failure mode rather than one generic dashboard:
         </p>
-        <ul>
-          <li><strong>Founders and executives</strong> — you find out in the board meeting, and one page that
-            says what the market did in ten seconds beats a feed you have to scroll. See{' '}
-            <Link href="/teams/executives">Fortress HQ for executives</Link>.</li>
-          <li><strong>Product marketing</strong> — battlecards go stale the week after they&rsquo;re written, and
-            you&rsquo;re often the whole competitive-intelligence function alone. See{' '}
-            <Link href="/teams/product-marketing">Fortress HQ for product marketing</Link>.</li>
-          <li><strong>Sales</strong> — a rep hits an objection nobody briefed them on and loses ground live, on a
-            call, that they can&rsquo;t get back. See <Link href="/teams/sales">Fortress HQ for sales</Link>.</li>
-          <li><strong>Product</strong> — you find out a competitor shipped the thing on your roadmap from their
-            launch post, when the work that gave it away was public for months. See{' '}
-            <Link href="/teams/product">Fortress HQ for product teams</Link>.</li>
-          <li><strong>Marketing</strong> — a comparison page sits there wrong until a prospect points it out on a
-            reply-all. See <Link href="/teams/marketing">Fortress HQ for marketing teams</Link>.</li>
-        </ul>
+
+        <h3>Founders and executives</h3>
+        <p>
+          The failure mode is finding out in the board meeting — a board member mentions a competitor&rsquo;s
+          move and the room turns to you. The product&rsquo;s answer isn&rsquo;t a feed to scroll before the
+          call, it&rsquo;s the state of the market in ten seconds, already compiled. See{' '}
+          <Link href="/teams/executives">Fortress HQ for executives</Link>.
+        </p>
+
+        <h3>Product marketing</h3>
+        <p>
+          Often the whole competitive-intelligence function is one person, and a battlecard written once,
+          carefully, with sources, is three months and one price change out of date by the time someone asks
+          &ldquo;what&rsquo;s new with them.&rdquo; The product keeps cards current and sourced enough to
+          forward straight to sales. See{' '}
+          <Link href="/teams/product-marketing">Fortress HQ for product marketing</Link>.
+        </p>
+
+        <h3>Sales</h3>
+        <p>
+          The failure mode is a rep hitting an objection nobody briefed them on, live, on a call, and losing
+          ground they can&rsquo;t get back — not because the answer didn&rsquo;t exist, but because nobody had
+          written it down yet. See <Link href="/teams/sales">Fortress HQ for sales</Link>.
+        </p>
+
+        <h3>Product</h3>
+        <p>
+          The failure mode is discovering a competitor shipped the exact thing on your own roadmap, from their
+          launch post — when the work that gave it away (a hiring cluster, a hostname on a certificate log) was
+          public for months beforehand and nobody was watching. See{' '}
+          <Link href="/teams/product">Fortress HQ for product teams</Link>.
+        </p>
+
+        <h3>Marketing</h3>
+        <p>
+          The failure mode is a comparison page that&rsquo;s quietly wrong — a competitor drops their price or
+          ships the feature your page says they don&rsquo;t have — and it sits there wrong until a prospect
+          points it out on a reply-all. See <Link href="/teams/marketing">Fortress HQ for marketing teams</Link>.
+        </p>
 
         <h2>Where we are today</h2>
         <p>

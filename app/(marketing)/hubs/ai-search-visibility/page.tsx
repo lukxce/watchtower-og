@@ -6,6 +6,64 @@ export const metadata = {
     "We don't track your ChatGPT or Perplexity citations yet. Here's what we track today that gets most of the way there, and why we think we're the right team to build the rest.",
 };
 
+const MECH = [
+  {
+    h: 'It would start as a scout, not a shortcut',
+    p: 'One more collector reporting into the same Tower, following the identical pattern the 22 live channels already follow — it does its job, or it says plainly why it didn\'t. No special-cased AI feature that plays by different rules than website & pricing or subdomains does.',
+  },
+  {
+    h: 'It would need repeatable, verifiable queries — not a screenshot',
+    p: 'A screenshot of a ChatGPT answer to one prompt on one day is a sample, not a channel. Any real citation-tracking scout would need a defined, repeatable query set and a way to log what came back, or it isn\'t a monitoring capability, it\'s a party trick.',
+  },
+  {
+    h: 'Every mention would go through the same classification pass',
+    p: 'A brand name surfacing inside an AI answer would need to be checked — is this actually the client, a same-named entity, or noise — the identical corollary work every other channel already does before anything reaches your feed. We wouldn\'t ship a channel that skips the discipline the other 22 don\'t get to skip.',
+  },
+  {
+    h: 'It would compose into the existing read, not live in its own silo',
+    p: 'An AI-citation signal would sit alongside pricing, hiring, ads and reviews in the same per-competitor synthesis the Tower already runs — not a separate "AI visibility" dashboard bolted on the side that nobody reads together with the rest.',
+  },
+  {
+    h: 'It would carry a source, or it wouldn\'t be shown at all',
+    p: 'No dashboard number implying a measured "AI visibility score" until there is something underneath it that can be cited the same way every other conclusion in the product already has to be. A number with no source fails the bar the rest of this product is held to, so it doesn\'t ship until it clears it.',
+  },
+  {
+    h: 'Internals before the interface — the same order as everything else',
+    p: 'Every one of the 22 live channels was built quiet infrastructure first, customer-facing claim second. This would be no different: we\'d rather take longer and say "not yet" than ship a page implying more than the collector actually does.',
+  },
+];
+
+const AISV_FAQ = [
+  {
+    q: 'So does citation tracking inside ChatGPT, Perplexity or Gemini exist in the product today?',
+    a: 'No. Not partially, not in beta, not behind a flag. It is a genuinely unbuilt capability, and this page exists to say that plainly rather than let a features list imply otherwise. If you came here hoping to buy it, you can\'t yet — and we\'d rather lose that sale honestly than take it dishonestly.',
+  },
+  {
+    q: 'Why publish a whole page about something you haven\'t built?',
+    a: 'Because buyers are already asking about it, and the two dishonest options — staying silent and hoping nobody notices, or quietly implying we do it — both fail our own standard. The honest option is to say exactly where we stand: what we already track that gets partway there, what\'s missing, and why we think we\'re positioned to build it well when we do.',
+  },
+  {
+    q: 'What exactly would need to be true before you\'d ship this?',
+    a: 'A query methodology we could stand behind as repeatable rather than a one-off prompt — the same discipline every other channel already has. Until we can build a scout that meets the same evidence bar as the 22 running today, we\'d rather not ship a weaker version just to have a checkbox.',
+  },
+  {
+    q: 'Are you tracking anything AI-related today, even partially?',
+    a: 'Not citations inside an AI answer engine, no. What is live is the discipline that any AI-citation channel would need to sit on top of: verified sources, classified mentions, disclosed gaps. That is not a consolation feature — it is the hard part of building this correctly, and it is already running underneath the 22 channels we do have.',
+  },
+  {
+    q: 'Is anyone else in this category actually doing this today, that you can verify?',
+    a: 'Not that we can confirm as a live, independently checkable feature — and if we can\'t verify a competitor\'s claim, we don\'t repeat it as fact, the same standard we hold our own numbers to. A marketing page claiming "AI visibility tracking" is easy to write; whether it holds up to the same evidence bar this page is asking of us is a different question, and not one we\'ll answer on someone else\'s behalf.',
+  },
+  {
+    q: 'Will this cost extra when it ships, or is it part of an existing tier?',
+    a: 'We haven\'t decided, and we won\'t pretend we have. Announcing pricing for a feature that doesn\'t exist yet is exactly the kind of claim this whole page is trying not to make.',
+  },
+  {
+    q: 'When will this ship?',
+    a: 'We\'re not going to give you a date we can\'t hold to. What we can tell you is the order: the discipline underneath it (verified sourcing, classification, disclosed gaps) is already built and running for 22 other channels, which is the hard, unglamorous part. Building the specific collector for AI answer engines on top of that foundation is the next real step — we just haven\'t said "shipped" until it\'s actually shipped.',
+  },
+];
+
 export default function AiSearchVisibilityHub() {
   return (
     <div className="hbx">
@@ -31,6 +89,9 @@ export default function AiSearchVisibilityHub() {
             <div className="hbx-stat"><span className="n">7</span><span className="l">Voice &amp; PR channels already tracking how competitors are talked about in public</span></div>
             <div className="hbx-stat"><span className="n">100%</span><span className="l">Of mentions classified as client, same-name, or noise before they reach your feed</span></div>
             <div className="hbx-stat"><span className="n">$149/mo</span><span className="l">Starter, published &mdash; the same price whether a feature is shipped or roadmap</span></div>
+            <div className="hbx-stat"><span className="n">1</span><span className="l">Corporate channel &mdash; funding &amp; M&amp;A, keyless &mdash; the kind of fact an AI answer would need to surface too</span></div>
+            <div className="hbx-stat"><span className="n">0 / 3</span><span className="l">Of the major AI answer engines (ChatGPT, Perplexity, Gemini) currently tracked by this product</span></div>
+            <div className="hbx-stat"><span className="n">3</span><span className="l">In-build product layers ahead of an API &mdash; Ask-the-Tower, standing orders, exportable reports</span></div>
           </div>
         </div>
       </section>
@@ -102,6 +163,97 @@ export default function AiSearchVisibilityHub() {
                 channel we haven&apos;t written yet.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-mech">
+        <div className="wrap">
+          <span className="wt-eyebrow">How this would actually be built</span>
+          <h2 className="wt-h2">Not a promise &mdash; the same six-step discipline the other 22 channels already follow.</h2>
+          <div className="hbx-mech-list">
+            {MECH.map((m, i) => (
+              <div className="hbx-mech-step" key={m.h}>
+                <span className="hbx-mech-num">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{m.h}</h3>
+                  <p>{m.p}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-example">
+        <div className="wrap">
+          <span className="wt-eyebrow">What the gap actually looks like, today</span>
+          <h2 className="wt-h2">Ask ChatGPT to compare us to Klue right now. Nobody will tell you what it said.</h2>
+          <div className="hbx-scenario">
+            <span className="hbx-scenario-tag">Worked example &middot; the honest version of this story</span>
+            <p>
+              If you wanted to know, this minute, whether ChatGPT recommends Fortress HQ over Klue, Crayon, Kompyte,
+              Visualping or Signal Labs when a buyer asks it to compare competitive-intelligence tools, there is
+              exactly one way to find out: open ChatGPT yourself and ask it. Whatever it says back is a snapshot of
+              one moment, for one prompt, on one model version &mdash; unsourced, unrepeatable, gone the moment you
+              close the tab. Ask again tomorrow and the model may answer differently, and neither of us would know
+              why.
+            </p>
+            <p>
+              That is precisely the failure mode the rest of this product exists to avoid. A pricing page, a subdomain,
+              a review pattern &mdash; every one of the 22 channels we already run returns something we can point to,
+              timestamp, and re-check. <span className="accent">A single hand-typed prompt into a chat window has none
+              of that</span>, which is exactly why we won&apos;t sell you a feature built on it. Faking this with a
+              screenshot and a confident label would be easy. It would also be the first thing on this site that
+              didn&apos;t hold up to its own citation &mdash; so we&apos;re not doing it, and this page is the record of
+              that decision.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-argument">
+        <div className="wrap">
+          <span className="wt-eyebrow">Where the named competitors stand on this, honestly</span>
+          <h2 className="wt-h2">We hold their claims to the same bar we hold ours.</h2>
+          <p className="wt-lede">
+            We are not going to tell you Klue, Crayon, Kompyte, Visualping or Signal Labs do or don&apos;t track AI-answer
+            citations &mdash; we have no verified, independently checkable evidence either way, and repeating an
+            unverified claim about a competitor breaks the exact rule this whole page is built around.
+          </p>
+          <div className="hbx-callout-grid">
+            <div className="hbx-callout-card">
+              <h4>Klue &amp; Crayon</h4>
+              <p>Enterprise CI, sales-enablement led, pricing behind a demo call. We have no verifiable evidence of a live, independently checkable AI-citation-tracking feature from either, and we won&apos;t assert one we can&apos;t confirm.</p>
+            </div>
+            <div className="hbx-callout-card">
+              <h4>Kompyte</h4>
+              <p>Now runs on Semrush&apos;s distribution rather than as an independent product. Same standard applies: no confirmed claim on this specific capability, so no claim made here.</p>
+            </div>
+            <div className="hbx-callout-card">
+              <h4>Visualping &amp; Signal Labs</h4>
+              <p>Page-change monitoring, and a newer CI entrant respectively. Neither is something we&apos;ve verified as tracking AI-answer citations live &mdash; and an unverified feature claim is exactly what we won&apos;t publish about ourselves or about them.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-faq">
+        <div className="wrap">
+          <span className="wt-eyebrow">Questions worth asking</span>
+          <h2 className="wt-h2">Including the one that gets right to the point.</h2>
+          <div className="hbx-faq-list">
+            {AISV_FAQ.map((f) => (
+              <details className="hbx-faq-item" key={f.q}>
+                <summary>
+                  <span className="q-txt">
+                    {f.q.startsWith('So does citation tracking') && <span className="hbx-faq-tag">Hard question</span>}
+                    {f.q}
+                  </span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

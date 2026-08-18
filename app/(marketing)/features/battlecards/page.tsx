@@ -202,6 +202,144 @@ export default function BattlecardsFeature() {
         </div>
       </section>
 
+      {/* ---------- who reads which angle ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">One card, two very different mornings</span>
+          <h2 className="wt-h2">A rep and a PMM open the same card for different reasons.</h2>
+          <div className="ftx-pair">
+            <div className="ftx-paircard">
+              <span className="mono">sales lead / rep</span>
+              <h3>Something to say on the call in an hour</h3>
+              <p>
+                A rep doesn&apos;t open a battlecard to study a competitor&apos;s history — they open it thirty
+                minutes before a call, looking for one specific, current thing to raise. The sales angle is written
+                for exactly that moment: a question, not a slogan.
+              </p>
+              <p>Losing a deal on an objection nobody briefed them on is the exact problem this angle exists to prevent.</p>
+            </div>
+            <div className="ftx-paircard">
+              <span className="mono">product marketing</span>
+              <h3>The card that doesn&apos;t go stale the week after it&apos;s written</h3>
+              <p>
+                A PMM — often the only person maintaining competitive content — needs the marketing angle to already
+                reflect this week&apos;s reality, not the quarter when the card was first drafted. Auto-refresh on
+                new signal is what makes that true.
+              </p>
+              <p>A card with sources they can forward to sales, without editing it by hand first, is the whole point.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- worked example ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">A card that caught the gap</span>
+          <h2 className="wt-h2">What Crayon&apos;s ads promised, and what their pricing page did.</h2>
+          <div className="ftx-story">
+            <span className="mono">battlecard · crayon · marketing angle</span>
+            <h3>&quot;Self-serve in the ad, a demo call on the page.&quot;</h3>
+            <p>
+              In late July, Fortress HQ&apos;s LinkedIn ads scout picked up a new Crayon campaign running the line
+              &quot;Start tracking competitors today — no sales call needed.&quot; Ad copy alone isn&apos;t a
+              signal worth a card update; competitors say all kinds of things in ads.
+            </p>
+            <p>
+              What made it a battlecard line was the website scout&apos;s pass the same week: every pricing-page
+              CTA on crayon.co still routed to &quot;Book a demo,&quot; with no self-serve checkout anywhere in the
+              flow — the same structure it had carried for the prior four scout runs. The ad was making a promise
+              the pricing page didn&apos;t keep.
+            </p>
+            <p>
+              The Tower wrote the marketing angle plainly: &quot;Crayon is advertising a self-serve motion their own
+              pricing page doesn&apos;t offer — ask a prospect who saw that ad whether they got a number without a
+              call.&quot; A rep working a deal against Crayon had that exact question ready two days later.
+            </p>
+            <div className="ftx-know">
+              <b>How we know:</b> LinkedIn Ad Library entry (Jul 24) + pricing-page CTA capture, unchanged across 4
+              scout runs, both linked on the card
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- comparison ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="mkt-eyebrow">Versus the alternative</span>
+          <h2 style={{ fontSize: 24 }}>Klue&apos;s cards are strong. Ours maintain themselves.</h2>
+          <div className="ftx-vs">
+            <span className="mono">how the others do it</span>
+            <p>
+              Klue&apos;s battlecards are genuinely good, backed by deep CRM integration and an enablement motion —
+              but they&apos;re built and refreshed by a person, after a demo call, on an enterprise contract. Crayon
+              runs the same category play at the same price class. Fortress HQ publishes pricing, gets you live the
+              same day, and rewrites a card&apos;s angles automatically the day a new signal clears the bar, instead
+              of waiting for someone to notice it went stale.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- FAQ ---------- */}
+      <section className="mkt-section tight">
+        <div className="wrap">
+          <span className="wt-eyebrow">Questions</span>
+          <h2 className="wt-h2">Battlecards, honestly.</h2>
+          <div className="ftx-faq">
+            <div className="ftx-faq-item">
+              <h4>Is the Tower making these angles up, or are they grounded in real signals?</h4>
+              <p>
+                Every angle traces back to a specific scout report, visible under the how-we-know line. If a claim
+                on a card can&apos;t be tied to a source, that&apos;s a bug, not a feature — Law 3 exists precisely
+                so a card never outruns its evidence.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>What if my own positioning changes — does the card notice?</h4>
+              <p>
+                The Tower reads new signals against your current pricing and site, so yes — the framing adapts as
+                your own positioning moves, not just theirs. It won&apos;t retroactively rewrite history, but every
+                new angle reflects where you stand today.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Can I edit a card myself, or is it fully automated?</h4>
+              <p>
+                The card is generated and refreshed by the Tower from cited signals. What you do with it — forward
+                it, act on it, ignore it — is the Watch Commander&apos;s call, per Law 1. The tower reads; it never
+                decides for you.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>How often does a card actually refresh?</h4>
+              <p>
+                Whenever a new signal on that competitor clears the evidence bar — there&apos;s no fixed weekly
+                cycle you have to wait out. A quiet competitor&apos;s card can sit unchanged for weeks; an active one
+                can update the same day something real happens.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Do you generate a card for every competitor automatically?</h4>
+              <p>
+                Only for competitors you&apos;ve mustered onto your watch. Fortress HQ doesn&apos;t build cards on
+                companies you haven&apos;t named — that keeps the watch focused on the market that actually matters
+                to you.
+              </p>
+            </div>
+            <div className="ftx-faq-item">
+              <h4>Can I get a card notified to Slack the moment it updates?</h4>
+              <p>
+                Not yet — that&apos;s a standing order, and standing-order delivery to Slack, email or a webhook is
+                in build, not shipped. Today, the card updates in the app and shows up in that day&apos;s order of
+                the day; you check it there rather than getting pushed a notification.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- related ---------- */}
       <section className="ftx-relate">
         <div className="wrap">

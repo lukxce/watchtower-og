@@ -139,6 +139,26 @@ table.hbx-table{width:100%;border-collapse:collapse;min-width:640px;
 .hbx-callout-card p{font-size:13px;color:var(--a-mut);line-height:1.62;margin:0}
 .hbx-callout-card p.us{color:var(--a-ink);font-weight:600;margin-top:8px}
 
+/* ---------- generic section spacing, reused by persona / channel-inventory / plan-tier blocks ---------- */
+.hbx-block{padding:52px 0 0}
+.hbx-block .wt-lede{margin-top:10px}
+
+/* ---------- persona cards: who this hub speaks to, grounded in BRAND.md §4 ---------- */
+.hbx-persona-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:28px}
+@media(max-width:700px){.hbx-persona-grid{grid-template-columns:1fr}}
+.hbx-persona-card{
+  background:var(--a-glass);backdrop-filter:var(--a-blur);-webkit-backdrop-filter:var(--a-blur);
+  border-radius:20px;padding:26px 26px;box-shadow:var(--a-shadow);
+}
+.hbx-persona-card .role{display:block;font-family:var(--mono, monospace);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-teal);font-weight:800;margin-bottom:11px}
+.hbx-persona-card h4{font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0 0 9px;color:var(--a-ink)}
+.hbx-persona-card p{font-size:13.5px;color:var(--a-mut);line-height:1.65;margin:0}
+
+/* ---------- channel inventory chips: which of the 22 actually feed this hub ---------- */
+.hbx-chansec{padding:52px 0 0}
+.hbx-chansec .hbx-chips{margin-top:24px}
+.hbx-chansec .hbx-chip{font-size:12.5px;padding:7px 14px}
+
 /* ---------- FAQ: native <details> accordion, no JS needed ---------- */
 .hbx-faq{padding:52px 0 0}
 .hbx-faq-list{margin-top:28px;display:flex;flex-direction:column;gap:12px}
@@ -163,6 +183,6 @@ table.hbx-table{width:100%;border-collapse:collapse;min-width:640px;
 @media(max-width:820px){
   .hbx-hero{padding:36px 0 4px}
   .hbx-stats{padding:26px 0 0}
-  .hbx-argument,.hbx-how,.hbx-split,.hbx-mech,.hbx-example,.hbx-faq{padding-top:38px}
+  .hbx-argument,.hbx-how,.hbx-split,.hbx-mech,.hbx-example,.hbx-faq,.hbx-block,.hbx-chansec{padding-top:38px}
   .hbx-cta{padding:36px 0 64px}
 }

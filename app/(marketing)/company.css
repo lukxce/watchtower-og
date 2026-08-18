@@ -88,5 +88,6 @@
 @media(max-width:640px){
   .cox-page{padding:44px 0 72px}
   .cox-prose h2{margin-top:34px}
+  .cox-prose>.cox-tile-k{margin-top:34px}
   .cox-tile{padding:22px 20px}
 }

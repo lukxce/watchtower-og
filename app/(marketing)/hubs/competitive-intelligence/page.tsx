@@ -41,6 +41,21 @@ const MECH = [
   },
 ];
 
+const PERSONAS = [
+  { role: 'Founder / CEO · 10–150 staff', h: 'Kept up by being the last to know', p: 'A competitor\'s move surfacing in a board meeting before it surfaced anywhere else. This hub gives the state of the market in the time it takes to read one page, without assigning anyone to compile it by hand.' },
+  { role: 'Product marketing · often a team of one', h: 'Kept up by battlecards going stale', p: 'Being asked "what\'s new with X" and not having a good answer, and watching a hand-built card go out of date the week after it\'s written. The signal underneath comes from the same 22 channels a full research team would otherwise have to check manually.' },
+  { role: 'Sales lead / enablement', h: 'Kept up by reps losing deals on unbriefed objections', p: '"How we win against X" gets written from what a competitor is actually doing right now, not a memory of last quarter\'s deal review — see the sales-intelligence hub for the battlecard-specific version of this.' },
+  { role: 'Product', h: 'Kept up by discovering a competitor shipped the roadmap item', p: 'Early buildout signals — a new hostname on the certificate log, a hiring cluster in a specific role — show up before the launch post does, not after, the way the Klue example above played out.' },
+];
+
+const CHANNEL_SAMPLE = ['Website & pricing', 'Sitemap diff', 'Subdomain watch', 'Tech stack', 'Meta ads', 'LinkedIn ads', 'Customer logos', 'Job postings', 'News & press', 'G2 reviews', 'Trustpilot reviews', 'Traffic & SEO', 'Search interest', 'Funding & M&A'];
+
+const TIERS = [
+  { name: 'Starter', price: '$149/mo', note: '3 competitors · watched daily', items: ['Signal feed & Threat Index', 'Comparison-page discovery, Compare view, Launch Radar', 'Daily order of the day, weekly relief digest — read in the app'] },
+  { name: 'Growth', price: '$399/mo', note: '10 competitors · full coverage', items: ['Everything in Starter', 'Campaign & landing-page tracking', '3× the page-fetch capacity per competitor', 'Paid-source channels: traffic, reviews, G2/Capterra'] },
+  { name: 'Enterprise', price: 'Talk to us', note: 'Unlimited competitors · SSO · win-loss', items: ['Everything in Growth', 'SSO & audit log, CRM-embedded battlecards', 'Native win-loss program', 'Dedicated onboarding'] },
+];
+
 const CI_FAQ = [
   {
     q: 'What actually counts as a "public channel" here?',
@@ -69,6 +84,10 @@ const CI_FAQ = [
   {
     q: 'Can I try this on real competitors before I pay for anything?',
     a: 'Starter is $149/mo for 3 competitors watched daily, and there’s a live demo workspace with real, current signal from our own market before you enter a card number anywhere.',
+  },
+  {
+    q: 'I only care about one or two competitors — is this overkill?',
+    a: 'No — Starter is priced for exactly that. It covers up to 3 competitors, not a minimum of 3. Watching one competitor across 22 channels, read together, is still a meaningfully different thing than a shared doc or a single page-change alert on that same one company.',
   },
 ];
 
@@ -187,6 +206,36 @@ export default function CompetitiveIntelligenceHub() {
         </div>
       </section>
 
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">Who this is actually for</span>
+          <h2 className="wt-h2">Four roles, four different reasons to open this every morning.</h2>
+          <div className="hbx-persona-grid">
+            {PERSONAS.map((per) => (
+              <div className="hbx-persona-card" key={per.role}>
+                <span className="role">{per.role}</span>
+                <h4>{per.h}</h4>
+                <p>{per.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-chansec">
+        <div className="wrap">
+          <span className="wt-eyebrow">A sample of the inventory</span>
+          <h2 className="wt-h2">Fourteen of the 22 channels, named, spanning every group.</h2>
+          <p className="wt-lede">
+            Not the full list &mdash; see the <Link href="/features/data-sources">complete data-sources inventory</Link> for
+            every channel across all seven groups. This is a sample, chosen to span each one.
+          </p>
+          <div className="hbx-chips">
+            {CHANNEL_SAMPLE.map((c) => <span className="hbx-chip" key={c}>{c}</span>)}
+          </div>
+        </div>
+      </section>
+
       <section className="hbx-example">
         <div className="wrap">
           <span className="wt-eyebrow">What &ldquo;verifiable&rdquo; means in practice</span>
@@ -212,6 +261,22 @@ export default function CompetitiveIntelligenceHub() {
               that too, and gotten more confident. It didn&apos;t, so it didn&apos;t. A conclusion is only as strong as
               the evidence stacked under it, and the briefing shows that stack instead of asserting a score.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="hbx-block">
+        <div className="wrap">
+          <span className="wt-eyebrow">What&apos;s included, by tier</span>
+          <h2 className="wt-h2">Published, the same way the price is.</h2>
+          <div className="hbx-callout-grid">
+            {TIERS.map((t) => (
+              <div className="hbx-callout-card" key={t.name}>
+                <h4>{t.name} &middot; {t.price}</h4>
+                <p>{t.note}</p>
+                <p className="us">{t.items.join(' · ')}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

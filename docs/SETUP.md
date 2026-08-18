@@ -38,9 +38,10 @@ It silently degrades **11 collectors**: `news`, `jobs`, `logos`, `techstack`,
 `events`, `googleplay`, `subdomains`, `youtube`, `adsLinkedin`, `trustpilot`,
 `linkedinPosts`.
 
-It is also the likeliest reason Kompyte and Upfluence had no discoverable
-LinkedIn footer — those pages probably need rendering, and there was no rung to
-fall to.
+It does **not** fix everything, and two guesses of mine were wrong when tested:
+Kompyte and Upfluence render fine and simply do not link LinkedIn from their
+homepages at all, and Trustpilot still blocks Firecrawl outright (713 bytes
+returned). Trustpilot goes through Apify for that reason.
 
 Get it: **https://firecrawl.dev** → Dashboard → API Keys.
 The cost model assumes Standard at $83/mo; the free tier is enough to prove it
