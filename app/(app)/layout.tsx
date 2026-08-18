@@ -6,12 +6,17 @@ import ChannelRail from '../ChannelRail';
 import { clerkConfigured } from '@/lib/tenant';
 import { getViewAsOrg } from '@/lib/adminAuth';
 import { isDemo } from '@/lib/demo';
+import DetectTimeZone from './DetectTimeZone';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const viewingAs = await getViewAsOrg();
   const demo = await isDemo();
   return (
     <div className="app">
+      {/* The crawl and the digest fire at the workspace's local 04:00/07:00,
+          so the workspace has to know where it is. Never overrides a value
+          already set — see app/api/timezone/route.ts. */}
+      {!demo && <DetectTimeZone />}
       {demo && (
         <div className="demo-banner">
           <span><b>Demo</b> · real signals from a live workspace tracking 5 real competitors. Read only.</span>

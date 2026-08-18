@@ -253,6 +253,10 @@ CREATE TABLE IF NOT EXISTS org_settings (
 );
 ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS description TEXT;
 ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS competencies TEXT;
+-- IANA timezone. The daily crawl and the digest fire at the WORKSPACE's local
+-- 04:00 and 07:00, not at a fixed UTC hour — 07:00 UTC is midnight in Los
+-- Angeles, which is not first light by any definition.
+ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS timezone TEXT NOT NULL DEFAULT 'UTC';
 
 -- Platform-admin corrections on the LLM reasoning layer (src/lib/reason.ts).
 -- Deliberately NOT org-scoped for reads — a correction made while viewing one
