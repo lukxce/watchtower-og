@@ -1,144 +1,186 @@
-# Watchtower — Unit Economics
+# Watchtower — Unit Economics (v2)
 
-*Last revised: 18 August 2026 · Model in `scripts/econ.mjs`*
+*Last revised: 18 August 2026 · Model: `node scripts/econ.mjs`*
 
-**Read this before touching pricing.** The GTM doc originally argued about tier
-pricing without this underneath it, which was backwards.
+**v1 was wrong and too optimistic.** It assumed 8 tracked pages per competitor
+and priced in no review or LinkedIn scraping at all. This version is built on
+measured page volumes and the channels we actually intend to run.
 
 ---
 
-## 1. The headline
+## 1. Headline
 
-| | |
+| Scenario | Per competitor | Starter (3) | Growth (10) |
+|---|---|---|---|
+| Optimistic | $1.02 | $3.07 · **96.9%** | $10.22 · **97.4%** |
+| **Expected** | **$1.98** | **$5.95 · 94.0%** | **$19.82 · 95.0%** |
+| Pessimistic | $5.68 | $17.03 · **82.8%** | $56.77 · **85.8%** |
+
+**The conclusion survives the correction: margins hold in every scenario.**
+Even the pessimistic case — expensive Apify actors and the wrong Firecrawl
+plan — leaves 83–86%. The answer to "can we afford to scrape Trustpilot,
+Glassdoor, G2, Capterra and LinkedIn?" is **yes, comfortably.**
+
+### What dominates (expected case)
+
+| | Cost | Share |
+|---|---|---|
+| **Apify** — 6 scraped channels | $1.60 | **81%** |
+| Claude — reads + scoring | $0.27 | 14% |
+| Firecrawl — page rendering | $0.09 | 5% |
+| Neon — snapshots | $0.02 | 1% |
+
+**Claude is 14% and not the problem.** Keep it for reading and writing. The
+cost question is entirely an Apify question.
+
+---
+
+## 2. Measured inputs
+
+Taken against the five live demo competitors, 17–18 August 2026.
+
+| Input | Value | Note |
+|---|---|---|
+| Sitemap URLs / competitor | **478 avg** | range 50 (Signal Labs) → 1,278 (Klue) |
+| Page fetches / competitor / month | **550** | tier-1 daily, tier-2 weekly, new pages |
+| Firecrawl credits / month | 110 | 20% of fetches need JS rendering |
+| Apify actor runs / month | **32** | across 6 channels |
+
+### The `<lastmod>` problem — this drives the whole page-fetch number
+
+| Site | Dated URLs | Changed 1d / 7d / 30d |
+|---|---|---|
+| klue.com | 1,001 | 3 / 7 / 23 |
+| www.crayon.co | 625 | **0 / 0 / 0** |
+| kompyte.com | 230 | **0 / 0 / 0** |
+
+**Only one of three sites publishes trustworthy `lastmod`.** Zero changes in
+30 days is not credible for an active marketing site — Crayon and Kompyte
+both publish content. So sitemap `lastmod` **cannot be the change-detection
+mechanism**; edits have to be caught by re-fetching and hashing content.
+
+That is why the model carries 550 page fetches rather than the ~90 a
+lastmod-only approach would suggest. It's also why tiering matters: fetching
+all 478 URLs daily would be 14,340 fetches/month and blow the model up. The
+tiering already exists in `sitemap.ts` (TIER1 / TIER2) and should stay.
+
+---
+
+## 3. Cost per channel group
+
+| Channel | Vendor | Runs/mo | Why not an API |
+|---|---|---|---|
+| Trustpilot | Apify | 4 | public page returns **403**; official API is gated |
+| Glassdoor | Apify | 4 | no public API |
+| G2 | Apify | 4 | partner API only, gated |
+| Capterra | Apify | 4 | no public API |
+| LinkedIn company posts | Apify | 8 | no public API |
+| **LinkedIn founder posts** | Apify | 8 | no public API · **channel does not exist yet** |
+| Sitemap + page diff | Firecrawl / plain | 550 | inherent — page diffing *is* the feature |
+| Reads + scoring | Claude | 30 | the differentiator; keep |
+
+**`LinkedIn founder posts` is not built.** It's in the model because it's
+wanted, but there is no collector for it today. Founder posts are arguably
+higher-signal than company posts — that's where launches get teased and
+strategy gets stated out loud — so it's worth building, but it's net-new work.
+
+---
+
+## 4. The Apify question
+
+81% of marginal cost sits in one vendor whose per-run price I **cannot
+verify without an account**. The model spans $0.02–$0.15 per run, a 7.5×
+range, and that range is the difference between 97% and 83% margin.
+
+**Before committing to the Apify-heavy design, do this:**
+1. Open a trial account and run each of the 6 actors **once** against a real
+   competitor.
+2. Record actual compute units consumed per run.
+3. Re-run `scripts/econ.mjs` with the real rate.
+
+Everything else in this model is measured. This is the one number that isn't,
+and it's the one that matters most.
+
+### Levers if Apify comes in expensive
+
+- **Frequency.** Reviews change slowly. Monthly instead of weekly cuts those
+  four channels by 75% and loses almost nothing.
+- **Tier gating.** Put review + LinkedIn channels on Growth only. They're
+  worth more to a bigger company anyway, and it protects Starter's margin.
+- **Self-host the cheap ones.** Trustpilot and Glassdoor are simple pages; the
+  403 is a fingerprinting problem, not a hard block. But this trades vendor
+  cost for maintenance burden and reliability risk — see §6.
+
+---
+
+## 5. Fixed platform floor
+
+| Service | Monthly |
 |---|---|
-| **Marginal cost per competitor** | **~$1.01 / month** |
-| **Starter** (3 competitors, $99) | $3.02 cost → **96.9% gross margin** |
-| **Growth** (10 competitors, $399) | $10.07 cost → **97.5% gross margin** |
-| **Fixed platform floor** | **~$179 / month**, before a single customer |
-| **Break-even** | **2 Starter** customers, or **1 Growth** |
+| Vercel Pro | $20 |
+| Neon Launch | $19 |
+| Clerk | $25 |
+| **Firecrawl Standard** | **$83** |
+| **Apify** | **$49+** |
+| DataForSEO | $50 |
+| Anthropic | usage (~$3 at 10 customers) |
+| **Total** | **~$246/mo** |
 
-**The conclusion that matters:** variable cost is almost irrelevant. This is a
-near-pure-margin business at the unit level, and the entire real cost is a
-fixed subscription floor that two customers cover.
+Up from $179 in v1, because Firecrawl Standard replaces Hobby — at 110
+credits × 10 competitors × 10 customers, Hobby's 3,000-credit cap is breached
+by the third customer. **Firecrawl's per-credit price is 6× better on
+Standard**, so upgrading early is a saving, not a cost.
 
----
+**Break-even: 3 Starter customers, or 1 Growth.**
 
-## 2. Marginal cost, per competitor per month
-
-Daily crawl = 30 runs/month.
-
-| Line | Cost | Basis |
-|---|---|---|
-| LLM — competitor read | $0.180 | 1 read/crawl · ~2.5k in + 700 out · Haiku 4.5 |
-| LLM — signal scoring | $0.090 | batched, ~20 new signals/day |
-| Firecrawl | $0.240 | **only walled pages** · ~8 tracked pages, ~20% walled |
-| Apify | $0.480 | 4 actors (G2, Capterra, Glassdoor, LinkedIn), weekly |
-| DataForSEO | $0.016 | traffic + trends, weekly |
-| Neon storage | $0.001 | measured: 11 MB / 11 competitors |
-| **Total** | **$1.01** | |
-
-### Confidence
-
-| Input | Confidence | Note |
-|---|---|---|
-| Neon storage | **Measured** | 11 MB across 11 competitors, live DB |
-| Channel latency | **Measured** | timed against live endpoints 17 Aug |
-| LLM token counts | Estimated | from actual `max_tokens` in `claude.ts` / `reason.ts` |
-| Anthropic rates | **Verify** | $1/$5 per MTok assumed — confirm current pricing |
-| **Apify per-run cost** | **Weakest number** | actor compute varies 5–10× by actor. Largest single unknown |
-| Firecrawl walled-rate | Estimated | 20% assumed; **untested — see §5** |
+Minimum viable floor is still **$64/mo** (Vercel + Neon + Clerk + Anthropic),
+which runs the 15 keyless channels. Firecrawl and Apify are additive.
 
 ---
 
-## 3. The fixed floor
+## 6. Strategy: buy scraping, don't build it
 
-This, not per-customer cost, is the real number at low volume.
+Confirmed direction — scraping goes through third parties wherever one exists.
+The reasoning holds up on the numbers:
 
-| Service | Monthly | Needed for |
-|---|---|---|
-| Vercel Pro | $20 | hosting, cron |
-| Neon Launch | $19 | Postgres |
-| Clerk | $25 | auth (free to 10k MAU, then this) |
-| Firecrawl Hobby | $16 | walled pages, Play Store, Google Ads |
-| Apify Starter | $49 | G2 / Capterra / Glassdoor / LinkedIn |
-| DataForSEO | $50 | minimum deposit — traffic & trends |
-| Anthropic | usage | ~$0 at this scale |
-| **Total** | **~$179/mo** | |
+- **Cost is not the constraint.** Even pessimistic Apify leaves 83% margin.
+- **Maintenance is.** Every self-hosted scraper is a thing that silently
+  breaks when a competitor redesigns. We already hit **crt.sh 429** and
+  **Trustpilot 403** in a single evening. A vendor absorbs that maintenance.
+- **"No false fires" is the brand.** A silently-broken scraper reporting
+  "no reviews found" is exactly the failure the product promises not to make.
+  Paying a vendor to keep selectors current is buying insurance on the brand
+  law.
 
-**You do not need all of this on day one.** Minimum viable floor is
-**Vercel + Neon + Clerk + Anthropic ≈ $64/mo**, which runs 15 of 26 channels.
-Firecrawl and Apify are additive, and each unlocks specific channels — buy them
-when a customer asks for what they unlock, not before.
+**Keep in-house:** anything with a real API (ATS boards, cert logs, iTunes,
+RSS, Graph API) and the page-diff engine, which is the product itself.
 
----
-
-## 4. What this means for pricing
-
-**Cost is not an argument for any price on this list.** At 97% margin, every
-tier works. Price purely on value and willingness to pay.
-
-Three consequences:
-
-1. **My earlier "raise Starter to $149" argument stands, but not for cost
-   reasons.** It's a *positioning* argument — a tier without reads and
-   battlecards is a monitoring tool, and monitoring-tool is the comparison we
-   lose to Visualping. Cost gives no reason to raise it.
-
-2. **Competitor count is a weak pricing axis.** A competitor costs ~$1/month,
-   so charging by competitor count is charging for something nearly free. It's
-   fine as a *value* proxy (more competitors = bigger company = more value),
-   but don't defend it on cost, and don't be precious about being generous with
-   limits — going from 3 to 5 competitors costs $2.
-
-3. **The dangerous axis is seats, not competitors** — and we don't charge for
-   them at all. Worth revisiting: a 40-person sales org getting battlecards for
-   $399 is under-monetised, and seats cost us nothing either.
-
-### What would actually change the model
-
-- **Reads regenerating per page view** instead of per crawl. Currently cached
-  per crawl — keep it that way. Per-view generation on a busy workspace could
-  10–50× the LLM line.
-- **Google Ad Transparency via Firecrawl.** It returns a 2.4 MB JS shell, so
-  it needs rendering. Daily × every competitor would make Firecrawl the largest
-  line by far. Run it **weekly, not daily**, or accept LinkedIn-only ads.
-- **Apify actors run daily instead of weekly** — 7× that line.
-- **A customer with 100 competitors.** Still only ~$100/month marginal, but it
-  would dominate the crawl window. Cap it or price it bespoke.
+**Buy:** review sites, LinkedIn, JS-rendered pages, anything requiring
+fingerprint evasion.
 
 ---
 
-## 5. Open issue found while building this model
+## 7. Open issues
 
-The demo workspace has **0 tracked pages and 0 snapshots**:
-
-```
-Crayon 0 · Klue 0 · Kompyte 0 · Signal Labs 0 · Visualping 0
-snapshots: 0
-```
-
-So the **website capture + content-diff channel has never actually run** for
-the demo competitors. Consequences:
-
-- Pricing-page change detection — a headline feature — is not producing anything.
-- The Firecrawl estimate above is **untested in practice**, because nothing has
-  needed a walled fetch yet.
-
-This should be fixed before trusting the Firecrawl line, and it's a product bug
-independent of cost.
+1. **Apify per-run cost unverified** — §4. Blocks confident pricing.
+2. **`website` channel has never run.** Demo workspace shows 0 pages, 0
+   snapshots. The 550-fetch figure is therefore modelled, not observed.
+   Pricing-page change detection — a headline feature — is producing nothing.
+3. **LinkedIn founder posts channel doesn't exist.** Net-new build.
+4. **Anthropic rates** should be confirmed before quoting margins externally.
 
 ---
 
-## 6. Sanity check against the incumbents
+## 8. What this means for pricing
 
-Klue and Crayon charge $15k–$40k/year. If their marginal cost resembles ours —
-and there's no reason it wouldn't — their pricing reflects an enterprise sales
-motion, not the cost of watching websites.
+Unchanged from v1, and now on firmer ground: **cost is not an argument for
+any price on the sheet.** At 94–95% expected margin, every tier works.
 
-That's the whole wedge, and now it's quantified: **we can profitably charge
-$99 because the work genuinely costs about a dollar.** We aren't undercutting
-them with venture subsidy; we're charging closer to cost-plus because we don't
-carry their sales overhead.
+Two refinements the v2 numbers support:
 
-That is a defensible position, and it's worth saying out loud on the pricing
-page.
+- **Put review + LinkedIn channels behind Growth.** Not because Starter
+  can't absorb them (it can) but because they're the channels a larger
+  company values most, and it gives Growth a concrete reason to exist beyond
+  a competitor count.
+- **Seats remain the unpriced axis.** A 40-person sales org on Growth costs
+  the same as a 3-person one. Still the clearest money left on the table.
