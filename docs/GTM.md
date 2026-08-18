@@ -1,4 +1,4 @@
-# Watchtower — Go-To-Market Strategy
+# Fortress HQ — Go-To-Market Strategy
 
 *Owner: Luka Jovanović · Last revised: 18 August 2026*
 
@@ -6,7 +6,7 @@
 
 ## 0. The short version
 
-Watchtower sells competitive intelligence to B2B companies who currently do it in a stale Notion doc. The category is well-established, the incumbents are expensive and enterprise-gated, and the wedge is **published pricing plus verifiable output**.
+Fortress HQ sells competitive intelligence to B2B companies who currently do it in a stale Notion doc. The category is well-established, the incumbents are expensive and enterprise-gated, and the wedge is **published pricing plus verifiable output**.
 
 The motion is **product-led with a founder-led sales overlay**: free tools and a no-account demo pull people in, self-serve converts the small deals, and the founder personally closes anything above $399/mo for the first year.
 
@@ -105,7 +105,7 @@ Current, published:
 
 **The structure is right; Starter may be underpriced.** $99 for three competitors is defensible as a wedge, but the value gap to $399 is very large — most of the actual product (the reads, the battlecards) sits above the line. Two risks: Starter feels thin and churns, or it's so cheap it attracts non-ICP tyre-kickers.
 
-**Recommendation, to test in Q4:** raise Starter to **$149** and move *reads and battlecards for 3 competitors* down into it. Rationale — the reasoning layer is the product; a tier without it isn't Watchtower, it's a monitoring tool, and that's the one comparison we lose. Better to defend $149 with the real product than $99 with a hollow one.
+**Recommendation, to test in Q4:** raise Starter to **$149** and move *reads and battlecards for 3 competitors* down into it. Rationale — the reasoning layer is the product; a tier without it isn't Fortress HQ, it's a monitoring tool, and that's the one comparison we lose. Better to defend $149 with the real product than $99 with a hollow one.
 
 **Keep Enterprise deliberately vague.** Not because we're coy, but because we don't yet know what it needs, and the honest answer today is that we're not ready for procurement.
 

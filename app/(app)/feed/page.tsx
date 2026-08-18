@@ -109,7 +109,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
         <h1>{activeComp ? `${activeComp} — feed` : 'Signal feed'}</h1>
         <p className="sub">
           Bundled events, ranked by impact — one card per thing that happened, not per raw detection. Times are the
-          event date where known, else when Watchtower first observed it. The at-a-glance view is the <a href="/overview" style={{ color: 'var(--brand)', fontWeight: 700 }}>Overview</a>.
+          event date where known, else when Fortress HQ first observed it. The at-a-glance view is the <a href="/overview" style={{ color: 'var(--brand)', fontWeight: 700 }}>Overview</a>.
         </p>
 
         {(activeComp || active) && (
@@ -170,7 +170,7 @@ export default async function Feed({ searchParams }: { searchParams: Promise<{ c
                         {dated ? (
                           <span className="when">{ago(bundle.when)}</span>
                         ) : (
-                          <span className="when seen" title="Watchtower first observed this here; the underlying item may be older">
+                          <span className="when seen" title="Fortress HQ first observed this here; the underlying item may be older">
                             first seen {ago(bundle.when)}
                           </span>
                         )}

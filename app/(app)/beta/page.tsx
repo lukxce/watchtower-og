@@ -3,7 +3,7 @@ import { getCoverage, type CellState } from '@/lib/coverage';
 import './beta.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Coverage — Watchtower' };
+export const metadata = { title: 'Coverage — Fortress HQ' };
 
 const LEGEND: { state: CellState; label: string; hint: string }[] = [
   { state: 'found', label: 'Watched', hint: 'Collected, with signals' },

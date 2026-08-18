@@ -1,4 +1,4 @@
-// Platform-admin cross-tenant view: every workspace on Watchtower, not just
+// Platform-admin cross-tenant view: every workspace on Fortress HQ, not just
 // the one you're signed into. "View as" sets the impersonation cookie
 // (adminAuth.ts) so you see exactly what that client sees — same pages, same
 // data, org-scoped exactly as their own login would show. Redirects any
@@ -58,7 +58,7 @@ export default async function AdminWorkspaces() {
       <section className="feed">
         <h1>All workspaces</h1>
         <p className="sub">
-          Every customer workspace on Watchtower, platform-admin only. &ldquo;View as&rdquo; shows you exactly what
+          Every customer workspace on Fortress HQ, platform-admin only. &ldquo;View as&rdquo; shows you exactly what
           that workspace sees — same pages, their data, nothing else. Corrections you leave on a workspace&apos;s
           signals teach the reasoning layer for everyone (<code className="mono">interpretation_feedback</code>).
         </p>

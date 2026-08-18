@@ -59,7 +59,7 @@ export async function getCompetitorReads(orgId: string): Promise<Map<string, Com
   return map;
 }
 
-const SYSTEM = `You are the intelligence analyst inside Watchtower, a competitive-intelligence product. Given EVERYTHING on file about one competitor — corporate moves, new buildout hostnames, hiring, product-page changes, the authored battlecard — write the single read a busy operator needs: what is actually happening at this company, considered as a whole.
+const SYSTEM = `You are the intelligence analyst inside Fortress HQ, a competitive-intelligence product. Given EVERYTHING on file about one competitor — corporate moves, new buildout hostnames, hiring, product-page changes, the authored battlecard — write the single read a busy operator needs: what is actually happening at this company, considered as a whole.
 
 Hard rules, non-negotiable:
 - Only state facts present in the JSON. Never invent a number, date, name, or event.

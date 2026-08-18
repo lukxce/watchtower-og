@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS workspaces (
 
 declare global {
   // eslint-disable-next-line no-var
-  var __watchtowerDb: Promise<Db> | undefined;
+  var __fortressDb: Promise<Db> | undefined;
 }
 
 async function connect(): Promise<Db> {
@@ -342,6 +342,6 @@ async function connect(): Promise<Db> {
 }
 
 export function getDb(): Promise<Db> {
-  if (!globalThis.__watchtowerDb) globalThis.__watchtowerDb = connect();
-  return globalThis.__watchtowerDb;
+  if (!globalThis.__fortressDb) globalThis.__fortressDb = connect();
+  return globalThis.__fortressDb;
 }

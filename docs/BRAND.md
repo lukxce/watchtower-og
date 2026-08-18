@@ -1,18 +1,20 @@
-# Watchtower — Brand Platform
+# Fortress HQ — Brand Platform
 
-*Owner: Luka Jovanović · Last revised: 18 August 2026 · Supersedes the "first light" brand doc*
+*Owner: Luka Jovanović · Last revised: 18 August 2026 · Supersedes the "first light" brand doc · Renamed from Watchtower to Fortress HQ, 18 Aug 2026 — the naming-collision audit found every `watchtower.*` domain taken and the name itself competing with a song, a band, a film, a farmhouse and half a dozen cybersecurity products. The metaphor system below didn't change; it's why the rename cost almost nothing.*
 
 ---
 
 ## 1. The story
 
-A watchtower exists for one reason: **someone stands the watch so everyone else can sleep.**
+A fortress exists for one reason: **someone stands the watch so everyone else can sleep.**
 
-It doesn't shout. It doesn't light the beacon for a fox on the road. It watches everything, understands what it sees, and lights the fire only when something real is moving. And when that fire is lit you trust it — because the tower has never lied to you.
+It doesn't shout. It doesn't light the beacon for a fox on the road. From the tower at its center, it watches everything, understands what it sees, and lights the fire only when something real is moving. And when that fire is lit you trust it — because the tower has never lied to you.
 
-That is the product, almost literally. Watchtower stands the watch over your competitors — their pricing, their launches, their hiring, their ads, the hostnames they haven't announced — reads what it sees, and brings you conclusions in the morning. What they did. Why it matters. What to do about it.
+That is the product, almost literally. Fortress HQ stands the watch over your competitors — their pricing, their launches, their hiring, their ads, the hostnames they haven't announced — reads what it sees, and brings you conclusions in the morning. What they did. Why it matters. What to do about it.
 
 Never a raw pile of alerts. Never a false fire.
+
+**Fortress HQ is the walls. The Tower is who keeps them.** A single tower standing alone in open country is a folly, not a position — it's the ground it holds that makes the watch worth keeping. The company took its name from the whole structure; the reasoning layer inside it kept its own. We are the fortress in the fog of war.
 
 ### The lore
 
@@ -21,7 +23,7 @@ Never a raw pile of alerts. Never a false fire.
 This is not decoration; it is the architecture, and that is why it holds up.
 
 - **Scouts** are the individual collectors — one per public channel. Pricing pages, ad libraries, job boards, certificate-transparency logs, press, review sites, sitemaps, events pages. Each one goes out, brings back what it found, and reports honestly when it found nothing.
-- **The Tower** is the product. It sees everything the scouts bring back, reads it *together* per competitor, and writes the briefing.
+- **The Tower** is the reasoning layer — the part of Fortress HQ that sees everything the scouts bring back, reads it *together* per competitor, and writes the briefing.
 - **The command is yours.** The tower never acts on your behalf and never decides for you. It hands you a briefing and stands back. This is brand law 1 stated as lore: *the tower reads, you decide.*
 
 **Use two beats or three depending on the audience.** The two-beat version —
@@ -34,7 +36,7 @@ The distinction earns its keep in the UI: a scout's report is a fact with a sour
 
 ### Why the metaphor works (and where it stops)
 
-It works because a watchtower is **defensive, patient and honest**. It is not a spy, not a hacker, not a growth-hack. Everything Watchtower reads is public — it is simply read continuously, and read *together*, which almost nobody does.
+It works because a fortress is **defensive, patient and honest**. It is not a spy, not a hacker, not a growth-hack. Everything Fortress HQ reads is public — it is simply read continuously, and read *together*, which almost nobody does.
 
 It stops at anything that implies **secrecy, intrusion or aggression**. We are not "surveillance." We are not "spying on your competitors." We do not do cloak-and-dagger, dark-mode-hacker aesthetics, crosshairs, or targets. Two reasons: it is legally and ethically the wrong signal for a product that only reads public data, and it is the exact register every mediocre competitor already uses.
 
@@ -46,11 +48,11 @@ It stops at anything that implies **secrecy, intrusion or aggression**. We are n
 
 ### Positioning statement
 
-> For **B2B teams who have to act on what their competitors do** — sales, product marketing, founders — **Watchtower** is a **competitive-intelligence platform** that **watches every public channel continuously and returns one briefing that says what changed, why it matters and what to do**. Unlike **alert tools that forward raw page-diffs, or enterprise CI suites that cost five figures and still need a full-time analyst**, Watchtower **reads signals together, cites every claim, and starts at $99 a month.**
+> For **B2B teams who have to act on what their competitors do** — sales, product marketing, founders — **Fortress HQ** is a **competitive-intelligence platform** that **watches every public channel continuously and returns one briefing that says what changed, why it matters and what to do**. Unlike **alert tools that forward raw page-diffs, or enterprise CI suites that cost five figures and still need a full-time analyst**, Fortress HQ **reads signals together, cites every claim, and starts at $99 a month.**
 
 ### The three-sentence version (for a call)
 
-Most teams find out a competitor cut their price or shipped a feature from a lost deal, three weeks late. The tools that exist either forward raw detections you still have to interpret, or cost fifteen thousand a year and need someone to run them. Watchtower watches 22 public channels a day, reads them together, and writes the briefing — every fact cited, from $99.
+Most teams find out a competitor cut their price or shipped a feature from a lost deal, three weeks late. The tools that exist either forward raw detections you still have to interpret, or cost fifteen thousand a year and need someone to run them. Fortress HQ watches 22 public channels a day, reads them together, and writes the briefing — every fact cited, from $99.
 
 ### Category
 
@@ -147,7 +149,7 @@ A consistent internal vocabulary that surfaces in the product and the marketing.
 
 | Term | Means | Notes |
 |---|---|---|
-| **The Tower** | The reasoning layer / the product's voice | Capital T. Never "the AI." Never "the Keeper" (retired). |
+| **The Tower** | The reasoning layer / the product's voice | Capital T. Fortress HQ is the company; the Tower is who does the reading inside it. Never "the AI." Never "the Keeper" (retired). |
 | **Scouts** | The individual channel collectors | Plural, lowercase. |
 | **The watch** | The continuous daily collection | "Standing the watch." |
 | **First light** | The morning briefing moment | Used as a timestamp label in the feed. |
@@ -184,10 +186,10 @@ weaponise, take out, crosshair. These are the words of people who go out and
 attack, which is neither what the product does nor what it reads public data
 for.
 
-The test: a watchtower garrison protects and reports. It does not raid. If a
+The test: a fortress garrison protects and reports. It does not raid. If a
 word belongs to the raid, it is out.
 
-**Retired, do not reuse:** "the Keeper" (the AI's old name), "the frontier" (as a section label), "signal indigo" / "first light" as *palette* names, "alerts"/"triggers" (use *standing orders*), "recommendation" (the Tower reports, the commander decides).
+**Retired, do not reuse:** "Watchtower" (the company's old name — the metaphor and the Tower both survived the rename; only the noun on the door changed), "the Keeper" (the AI's old name), "the frontier" (as a section label), "signal indigo" / "first light" as *palette* names, "alerts"/"triggers" (use *standing orders*), "recommendation" (the Tower reports, the commander decides).
 
 ---
 
@@ -233,13 +235,13 @@ Three courses of stone with staggered joints, the way masonry is actually laid.
  ████████████        ← base, 42% ink
 ```
 
-The **offset is load-bearing**, not a stylistic choice. Centred bars read as a bar chart; a centred stack under a dot reads as a person. The 4-unit stagger is what makes it read as *structure* — a tower, built, solid.
+The **offset is load-bearing**, not a stylistic choice. Centred bars read as a bar chart; a centred stack under a dot reads as a person. The 4-unit stagger is what makes it read as *structure* — a wall, built, solid. It needed no redesign for the rename: offset stone courses are fortress coursework before they're anything else.
 
 **Construction:** three rects, 16 units wide, 6 tall, 1.4 corner radius, on a 34×34 viewBox. Top at x=7, middle at x=11, base at x=7. Vertical rhythm 5.5 / 14 / 22.5.
 
 **Colour behaviour:** the structure is `currentColor` at descending opacity so the mark inverts anywhere. **Only the top course takes the highlighter** — it is the lit course, the beacon, and it is the single place the accent appears in the lockup.
 
-**Lockup:** mark + "watchtower" set as one word, tight. Mark 30px against 17px type in the nav; the footer runs a size larger (35px / 19px) as the sign-off. Gap 7–8px — deliberately tight, so it reads as one object.
+**Lockup:** mark + "fortresshq" set as one word, tight — "fortress" in ink, "hq" in deep teal, nested inside one flex child so no gap opens between them. Mark 30px against 17px type in the nav; the footer runs a size larger (35px / 19px) as the sign-off. Gap 7–8px between mark and wordmark — deliberately tight, so it reads as one object.
 
 **Misuse:** don't recolour the structure. Don't centre the courses. Don't add a beacon flame, a crosshair, an eye, or a shield. Don't outline it. Don't set the wordmark as two words.
 
@@ -252,7 +254,7 @@ The visual story is **a calm morning ground with one lit thing on it.** A muted 
 | **Ink** | `#142522` | Cool near-black. All headings, key numbers, the dark CTA slab. |
 | **Highlighter** | `#eafd35` | **THE accent.** Yellow-green, like a text highlighter — not yellow, not lime. Fills, primary CTAs, the lit course. |
 | Highlighter soft | `#e2f463` | Strokes, chart lines, curve. |
-| **Deep teal** | `#1e6f5c` | Accent *text* on light ground — the highlighter is unreadable as text. Links, the "tower" in the wordmark. |
+| **Deep teal** | `#1e6f5c` | Accent *text* on light ground — the highlighter is unreadable as text. Links, the "hq" in the wordmark. |
 | Muted | `#404d4a` | Body copy. |
 | Faint | `#5b6a66` | Labels, captions, metadata. |
 | On-dark | `#eef6ee` / `#9fb0a8` | Type on the ink slab. |
@@ -308,4 +310,4 @@ Restrained and purposeful. Nothing bounces.
 
 ## 9. The one-paragraph brand summary
 
-*Watchtower is the watch you don't have to stand. It reads every public trace your competitors leave — pricing, ads, hiring, hostnames, press, reviews — and returns one briefing each morning that says what changed, why it matters, and what to do. Every fact is cited, every gap is disclosed, and the beacon is only ever lit for something real. Scouts gather. The Tower sees.*
+*Fortress HQ is the watch you don't have to stand. It reads every public trace your competitors leave — pricing, ads, hiring, hostnames, press, reviews — and returns one briefing each morning that says what changed, why it matters, and what to do. Every fact is cited, every gap is disclosed, and the beacon is only ever lit for something real. Scouts gather. The Tower sees.*

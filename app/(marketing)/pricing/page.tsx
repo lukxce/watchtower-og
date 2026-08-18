@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Pricing — Watchtower',
+  title: 'Pricing — Fortress HQ',
   description: "Self-serve from $99/mo. No demo required to see a price, unlike the rest of this category.",
 };
 

@@ -5,7 +5,7 @@ frosted sheets** (two tones, always), highlighter yellow-green accent, airy
 editorial type at generous scale. Reference implementation (shipped, live
 app-wide): `app/(app)/overview/` for the hero sheet pattern, plus the
 cascade-final glass overrides in `app/globals.css` that apply it to every
-other page and the topbar/rail chrome (Watchtower). Written so it can be
+other page and the topbar/rail chrome (Fortress HQ). Written so it can be
 lifted onto any product.
 
 ---

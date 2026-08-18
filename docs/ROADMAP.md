@@ -1,4 +1,4 @@
-# Watchtower — Roadmap to working
+# Fortress HQ — Roadmap to working
 
 *Last revised: 18 August 2026 · Sequenced by dependency, not by appeal*
 
@@ -45,7 +45,7 @@ edit on day 2 shows up as a card.
 
 | # | Task | Who | Notes |
 |---|---|---|---|
-| 2.1 | **Domains**: `watchtowerhq.ai` + `withwatchtower.com`; offer on `watchtower.ai` | 🔑 | `watchtower.ai` has Google MX but no A record — an owner using it for mail only. Worth an email. |
+| 2.1 | **Domain**: `fortress-hq.com` — decided 18 Aug 2026, register it | 🔑 | Rebrand from Watchtower to Fortress HQ. `fortresshq.com` (no hyphen) is taken; `.com`/`.io`/`.ai` with the hyphen are open. `sentryhq.*` was the other finalist — dropped for colliding with Sentry.io's registered "software monitoring" trademark in our own buyer's market. |
 | 2.2 | **Stripe** — keys, products, webhook | 🔑⌨️ | **You cannot take money today.** All three env vars are empty and nothing reads them. |
 | 2.3 | **Add `trial` plan** to `plans.ts` — $2, 7 or 14 days, full Starter | ⌨️ | Day 1 is genuinely populated (cert logs give ~10 months of history), so 7 days works. 14 costs $1.85 more and roughly doubles the odds a *change* signal lands during the trial. |
 | 2.4 | **Usage panel** — `budget.usageSummary()` has no UI | ⌨️ | Limits people can't see feel like bugs. |

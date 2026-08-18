@@ -1,6 +1,6 @@
-# What Watchtower Is
+# What Fortress HQ Is
 
-Watchtower is a competitive-intelligence SaaS: it watches your competitors across the public web, all day every day, and turns what it finds into a briefing you can actually act on, not a pile of alerts you have to interpret yourself.
+Fortress HQ is a competitive-intelligence SaaS: it watches your competitors across the public web, all day every day, and turns what it finds into a briefing you can actually act on, not a pile of alerts you have to interpret yourself.
 
 **One line:** know your competitors' next move before your customers do.
 
@@ -16,7 +16,7 @@ Most teams track competitors by hand: a shared doc someone updates when they rem
 
 The tools that exist to fix this mostly forward raw detections: "this page changed," "this ad appeared," with no read on whether it matters or what it means together with everything else that competitor is doing.
 
-Watchtower does two things differently:
+Fortress HQ does two things differently:
 1. **It watches continuously and broadly** — 22 public channels per competitor, not just their homepage.
 2. **It reads signals together, not in isolation.** Ten ads on the same day is one story, not ten alerts. A new hostname plus a hiring cluster plus a funding round in the same window is a launch forecast, not three unrelated pings.
 
@@ -84,6 +84,6 @@ B2B teams who need to actually act on competitive information: sales (objection 
 
 ## Where it stands today
 
-Watchtower started as an internal tool built for **Hypefy** (an AI-powered influencer-marketing platform) to track its own competitor set, and is being productized into a standalone SaaS. That Hypefy workspace still exists as the development dataset.
+Fortress HQ started as an internal tool built for **Hypefy** (an AI-powered influencer-marketing platform) to track its own competitor set, and is being productized into a standalone SaaS. That Hypefy workspace still exists as the development dataset.
 
-The **public demo** (`/demo`, no account needed) now runs Watchtower's *own* market instead — five real competitors in competitive intelligence: Kompyte, Crayon, Klue, Visualping and Signal Labs, with genuine signals, not mocked data. The marketing site should show our industry, not a borrowed example set.
+The **public demo** (`/demo`, no account needed) now runs Fortress HQ's *own* market instead — five real competitors in competitive intelligence: Kompyte, Crayon, Klue, Visualping and Signal Labs, with genuine signals, not mocked data. The marketing site should show our industry, not a borrowed example set.

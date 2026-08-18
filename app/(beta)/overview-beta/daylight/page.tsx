@@ -53,7 +53,7 @@ export default async function DaylightBeta() {
         <header className="dx-top">
           <a className="dx-logo" href="/overview">
             <span className="dx-logo-mark"><svg viewBox="0 0 26 26"><line x1="2" y1="21" x2="9" y2="6" /><line x1="8" y1="21" x2="15" y2="3" /><line x1="14" y1="21" x2="21" y2="9" /><line x1="20" y1="21" x2="24" y2="13" /></svg></span>
-            watchtower
+            fortress hq
           </a>
           <nav className="dx-tabs">
             <a className="on" href="/overview-beta/daylight">Overview</a>

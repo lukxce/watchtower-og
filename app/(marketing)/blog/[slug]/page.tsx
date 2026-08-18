@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  return { title: `${post.title} — Watchtower`, description: post.dek };
+  return { title: `${post.title} — Fortress HQ`, description: post.dek };
 }
 
 const fmt = (iso: string) =>
@@ -62,7 +62,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </aside>
 
         <div className="post-cta">
-          <p>Watchtower found every example in this post. It can watch your market the same way.</p>
+          <p>Fortress HQ found every example in this post. It can watch your market the same way.</p>
           <div className="wt-cta">
             <Link href="/sign-up" className="btn btn-primary">Start free</Link>
             <Link href="/demo" className="btn btn-ghost">See the live demo →</Link>

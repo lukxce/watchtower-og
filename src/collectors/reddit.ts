@@ -3,7 +3,7 @@
 // REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET; without them it defers cleanly.
 import { ingestItems, recordRun, type Competitor } from '@/db/queries';
 
-const UA = 'watchtower-ci/0.1 by /u/hypefy';
+const UA = 'fortress-hq-ci/0.1 by /u/hypefy';
 
 async function token(): Promise<string | null> {
   const id = process.env.REDDIT_CLIENT_ID;

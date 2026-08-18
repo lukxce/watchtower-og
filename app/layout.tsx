@@ -14,7 +14,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Watchtower — Verifiable competitive intelligence',
+  title: 'Fortress HQ — Verifiable competitive intelligence',
   description:
     'Every signal cited, every gap disclosed. Track every competitor across 22 channels, self-serve, from $99/mo.',
 };

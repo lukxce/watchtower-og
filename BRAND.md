@@ -1,4 +1,4 @@
-# Watchtower — brand
+# Fortress HQ — brand
 
 **This file has moved to [`docs/BRAND.md`](docs/BRAND.md).**
 

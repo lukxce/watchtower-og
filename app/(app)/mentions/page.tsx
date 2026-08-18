@@ -28,7 +28,7 @@ export default async function Mentions() {
         <section className="feed">
           <h1>Mentions</h1>
           <p className="sub">
-            Tell Watchtower who you are, and this page tracks where your brand shows up — in the news, inside a
+            Tell Fortress HQ who you are, and this page tracks where your brand shows up — in the news, inside a
             competitor&apos;s own site copy, and in signals already captured.
           </p>
           <BrandSettingsForm />
@@ -56,7 +56,7 @@ export default async function Mentions() {
 
         <h3 className="admin-h" style={{ marginTop: 4 }}>On competitor sites</h3>
         <p className="pos-note">
-          The highest-value kind — a competitor&apos;s own page copy naming you. Scanned from pages Watchtower already
+          The highest-value kind — a competitor&apos;s own page copy naming you. Scanned from pages Fortress HQ already
           crawls, not a new fetch.
         </p>
         {m.siteMentions.length === 0 ? (

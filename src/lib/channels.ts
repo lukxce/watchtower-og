@@ -75,7 +75,11 @@ export const CHANNELS: ChannelDef[] = [
   { key: 'linkedin_posts', label: 'LinkedIn company posts', group: 'Voice & PR', status: st(APIFY, 'needs_account'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_LINKEDIN_ACTOR', run: collectLinkedinPosts },
   { key: 'newsletters', label: 'Newsletters & sequences', group: 'Voice & PR', status: st(has(env.NEWSLETTER_INBOX) && has(env.INBOUND_TOKEN), 'needs_account'), note: 'Persona inbox → /api/inbound (secret shopper) · needs NEWSLETTER_INBOX + INBOUND_TOKEN', run: collectNewsletters },
   // Reputation
-  { key: 'trustpilot', label: 'Trustpilot reviews', group: 'Reputation', status: 'active', note: has(env.TRUSTPILOT_API_KEY) ? 'Business API' : 'Public page · set TRUSTPILOT_API_KEY to upgrade', run: collectTrustpilot },
+  // Not 'active' by default: the public-page path 403s on every server-side
+  // request now, so without a key this rides the multi-platform Apify run.
+  // Note also that Trustpilot skews consumer — Klue and Crayon have no profile
+  // at all, so "not listed" is the normal, correct result for enterprise B2B.
+  { key: 'trustpilot', label: 'Trustpilot reviews', group: 'Reputation', status: has(env.TRUSTPILOT_API_KEY) ? 'active' : st(APIFY, 'paid'), note: has(env.TRUSTPILOT_API_KEY) ? 'Business API' : 'Same multi-platform actor · TRUSTPILOT_API_KEY upgrades it', run: collectTrustpilot },
   { key: 'g2', label: 'G2 reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · APIFY_TOKEN + APIFY_G2_ACTOR', run: collectG2 },
   { key: 'capterra', label: 'Capterra reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Licensed vendor · one multi-platform actor (APIFY_REVIEWS_ACTOR)', run: collectCapterra },
   { key: 'trustradius', label: 'TrustRadius reviews', group: 'Reputation', status: st(APIFY, 'paid'), note: 'Same multi-platform actor — no extra integration', run: collectTrustRadius },

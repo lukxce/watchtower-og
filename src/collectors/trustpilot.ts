@@ -3,6 +3,8 @@
 // parsing the public review page (via the fetch ladder → Firecrawl if walled)
 // so the channel works pre-key. Feeds the customer-sentiment Threat dimension.
 import { smartFetch } from '@/lib/fetchLadder';
+import { hasVendor } from '@/lib/vendor';
+import { collectTrustPilotViaVendor } from '@/collectors/reviews';
 import { ingestItems, recordRun, type Competitor, type StreamItem } from '@/db/queries';
 
 interface Parsed {
@@ -69,11 +71,25 @@ async function viaPage(bare: string): Promise<Parsed | null> {
 export async function collectTrustpilot(comp: Competitor): Promise<string> {
   const bare = comp.domain.replace(/^www\./, '');
   const api = await viaApi(bare);
+
+  // Without a key, the public page is no longer a fallback worth trusting:
+  // Trustpilot now answers 403 to every server-side request — the .com page,
+  // the locale mirrors, and their own business-unit find endpoint alike. So
+  // `viaPage` returns null for a reachable profile and an absent one exactly
+  // the same way, and the channel would report "no profile" for a company that
+  // has one.
+  //
+  // The licensed multi-platform run already asks for Trustpilot alongside G2
+  // and Capterra, at no extra cost, and it CAN tell those two apart: if the
+  // same call returned reviews from other platforms, the lookup worked.
+  if (!api && hasVendor()) return collectTrustPilotViaVendor(comp);
+
   const parsed = api ?? (await viaPage(bare));
   const via = api ? 'Business API' : 'public page';
   if (!parsed) {
-    await recordRun(comp.id, 'trustpilot', false, 0, 'no profile or parse failed');
-    return 'no profile / failed';
+    // Deliberately not "no profile" — we cannot see one from here either way.
+    await recordRun(comp.id, 'trustpilot', false, 0, 'Trustpilot unreachable (403) and no API key — coverage unconfirmed');
+    return 'unconfirmed (403, no key)';
   }
   const { added, fresh } = await ingestItems(comp.id, 'trustpilot', parsed.items);
   await recordRun(comp.id, 'trustpilot', true, added, `score ${parsed.score ?? '?'} · ${parsed.total ?? '?'} reviews · via ${via}`);

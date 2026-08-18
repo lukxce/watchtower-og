@@ -1,7 +1,7 @@
 import ContactForm from './ContactForm';
 
 export const metadata = {
-  title: 'Contact — Watchtower',
+  title: 'Contact — Fortress HQ',
   description: 'Questions about a workspace, Enterprise, or anything else. Reach us directly.',
 };
 
@@ -16,7 +16,7 @@ export default function Contact() {
           <ContactForm />
           <div className="contact-info">
             <h4>Prefer email?</h4>
-            <p className="mono">hello@watchtower.example</p>
+            <p className="mono">hello@fortress-hq.example</p>
             <h4>Enterprise &amp; SSO</h4>
             <p>Ask about unlimited competitors, CRM-embedded battlecards, and a native win-loss program.</p>
             <h4>Already a customer?</h4>

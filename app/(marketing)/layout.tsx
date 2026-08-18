@@ -10,7 +10,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         <div className="wrap">
           <Link href="/" className="mkt-logo">
             <Logo />
-            <span className="wm">watchtower</span>
+            <span className="wm">fortress<b>hq</b></span>
           </Link>
           <nav className="mkt-links">
             <Link href="/#platform" className="mkt-navlink">Product</Link>
@@ -26,12 +26,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       </header>
       {children}
       <footer className="mkt-footer">
-        <span className="mkt-watermark" aria-hidden="true">WATCHTOWER</span>
+        <span className="mkt-watermark" aria-hidden="true">FORTRESS HQ</span>
         <div className="wrap">
           <div className="fbrand">
             <div className="mkt-logo">
               <Logo />
-              <span className="wm">watchtower</span>
+              <span className="wm">fortress<b>hq</b></span>
             </div>
             <p>Verifiable competitive intelligence. Every signal cited, every gap disclosed.</p>
           </div>
@@ -54,7 +54,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           </div>
         </div>
         <div className="wrap">
-          <div className="mkt-footer-bottom">© {new Date().getFullYear()} Watchtower. Built to be verifiable.</div>
+          <div className="mkt-footer-bottom">© {new Date().getFullYear()} Fortress HQ. Built to be verifiable.</div>
         </div>
       </footer>
     </div>

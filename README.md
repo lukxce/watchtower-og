@@ -1,4 +1,4 @@
-# Watchtower
+# Fortress HQ
 
 Verifiable competitive-intelligence SaaS — Next.js/Vercel, multi-tenant. Every
 workspace tracks its own competitor set across 22 channels, turns captured
@@ -94,7 +94,7 @@ curl -X POST localhost:3000/api/run -H 'content-type: application/json' \
   hostnames, hiring clusters, and these real "corporate moves" from news.
 - **Brand mentions** (`/mentions`, `src/lib/mentions.ts`, `src/lib/brand.ts`):
   a workspace sets its own brand identity (name, domain, aliases — nothing is
-  guessed, `org_settings` table) and Watchtower searches for it across three
+  guessed, `org_settings` table) and Fortress HQ searches for it across three
   real, sourced lenses: general news (Google News RSS), a competitor's own
   already-captured page content (the highest-value kind — the workspace's
   brand named on a competitor's site), and any already-ingested signal whose

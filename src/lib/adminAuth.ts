@@ -1,5 +1,5 @@
 // Platform-admin identity and cross-tenant "view as" — lets the person who
-// runs Watchtower (not a customer) see across every workspace, impersonate
+// runs Fortress HQ (not a customer) see across every workspace, impersonate
 // one to see exactly what that client sees, and leave feedback that teaches
 // the LLM reasoning layer (interpretation_feedback, src/lib/reason.ts).
 // Deliberately separate from Clerk's per-workspace org membership: a

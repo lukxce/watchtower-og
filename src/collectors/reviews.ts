@@ -16,7 +16,7 @@ import { resolveG2Products } from '@/lib/g2';
  * needs to set.
  */
 const MAX_REVIEWS = Number(process.env.APIFY_MAX_REVIEWS ?? 25);
-import { ingestItems, recordRun, getSource, type Competitor } from '@/db/queries';
+import { ingestItems, recordRun, getSource, setSource, type Competitor } from '@/db/queries';
 
 interface VendorReview {
   id?: string;
@@ -142,7 +142,19 @@ export function normalizeReview(raw: Record<string, unknown>): VendorReview {
 // Because one run answers three of our channels, the result is memoized per
 // competitor per collection run. Whichever channel executes first pays for the
 // call; the others read the cache. Cleared alongside the page capture cache.
-const reviewRunCache = new Map<number, Map<string, VendorReview[]>>();
+interface ReviewRun {
+  byChannel: Map<string, VendorReview[]>;
+  totalRows: number;
+  /**
+   * The run came back at the row cap, so it was cut off mid-collection and a
+   * platform with no rows may simply never have been reached. Absence proves
+   * nothing here — a competitor with 200 G2 reviews could exhaust the cap
+   * before Trustpilot is ever looked at.
+   */
+  truncated: boolean;
+}
+
+const reviewRunCache = new Map<number, ReviewRun>();
 
 export function clearReviewCache(): void {
   reviewRunCache.clear();
@@ -157,7 +169,7 @@ const PLATFORM_CHANNEL: Record<string, string> = {
   gartner: 'gartner',
 };
 
-async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorReview[]> | null> {
+async function fetchAllReviews(comp: Competitor): Promise<ReviewRun | null> {
   const cached = reviewRunCache.get(comp.id);
   if (cached) return cached;
 
@@ -165,6 +177,7 @@ async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorRevi
   if (!actor) return null;
 
   const bare = comp.domain.replace(/^www\./, '');
+  const cap = Math.max(100, MAX_REVIEWS);
   const input = buildActorInput(
     'APIFY_REVIEWS_INPUT',
     { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
@@ -177,7 +190,7 @@ async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorRevi
       // to a MONTHLY cadence: 100 rows once a month is $0.50 per competitor
       // for five platforms, where weekly would be $2.00 for the same reviews.
       // Reviews move slowly enough that monthly loses nothing.
-      maxResults: Math.max(100, MAX_REVIEWS),
+      maxResults: cap,
       sort: 'most_recent',
     },
   );
@@ -194,8 +207,9 @@ async function fetchAllReviews(comp: Competitor): Promise<Map<string, VendorRevi
     list.push(normalizeReview(row));
     byChannel.set(channel, list);
   }
-  reviewRunCache.set(comp.id, byChannel);
-  return byChannel;
+  const run: ReviewRun = { byChannel, totalRows: raw.length, truncated: raw.length >= cap };
+  reviewRunCache.set(comp.id, run);
+  return run;
 }
 
 async function collectReviewSource(
@@ -211,7 +225,20 @@ async function collectReviewSource(
 
   // Preferred path: the one multi-platform actor, queried by domain.
   const all = await fetchAllReviews(comp);
-  let rows: VendorReview[] | null = all ? (all.get(channel) ?? []) : null;
+  let rows: VendorReview[] | null = all ? (all.byChannel.get(channel) ?? []) : null;
+
+  // The combined actor covers five platforms, but not equally well. Measured:
+  // it returns zero Gartner rows for Klue, which has 20 Gartner Peer Insights
+  // reviews at 4.8 stars — its Gartner module is effectively a stub, and the
+  // same developer publishes a separate `gartner-review-scraper` precisely
+  // because of that.
+  //
+  // So an empty slice has to be able to fall through to a dedicated actor.
+  // Previously the fallback fired only when the WHOLE combined call failed,
+  // which meant a per-channel actor could never rescue a channel the combined
+  // run merely covered badly — the exact case we have. Opt-in: this only
+  // costs a second run when that channel's actor env var is actually set.
+  if (rows !== null && rows.length === 0 && process.env[actorEnv]) rows = null;
 
   // Fallback: a per-channel actor, for anything the combined one does not
   // cover (Glassdoor) or if it is simply not configured.
@@ -287,8 +314,39 @@ async function collectReviewSource(
       payload: r.extra ?? { rating: r.rating },
     })),
   );
+  if (rows.length === 0) {
+    // Three different facts hide behind "zero rows", and collapsing them into
+    // one message is a false fire in the quiet direction. `no Trustpilot
+    // reviews found` reads as "we read their profile and it was empty" — but
+    // Klue has NO Trustpilot profile, and searching Trustpilot for "crayon"
+    // returns eight unrelated companies. Reporting that we watched something
+    // we cannot see is exactly the failure the brand exists to prevent.
+    //
+    // The combined run separates them for free. If the SAME call returned
+    // reviews from other platforms and was not cut off at the cap, the lookup
+    // demonstrably worked — so this platform's silence is a fact about the
+    // competitor, not about us, and we are entitled to say so.
+    if (all && !all.truncated && all.totalRows > 0) {
+      // Careful with the wording. A successful run that found nothing here
+      // means the LOOKUP came back empty — which is not the same as the
+      // competitor being absent, because the actor's module for a platform can
+      // simply be weak. Measured case: Klue has 20 Gartner Peer Insights
+      // reviews at 4.8 stars, and this actor returns zero Gartner rows for it.
+      // "Not listed on Gartner" would have been confident and false — the
+      // exact failure mode this whole branch exists to avoid. So we report
+      // what we did, not what is true of the world, and show the evidence.
+      await setSource(comp.id, channel, 'presence', 'not_found');
+      const note = `no ${label} listing found — the same run returned ${all.totalRows} reviews from other platforms, so the lookup itself worked`;
+      await recordRun(comp.id, channel, true, 0, note);
+      return `no ${label} listing found`;
+    }
+    await recordRun(comp.id, channel, true, 0, `${label} returned nothing and nothing proves the lookup ran — coverage unconfirmed`);
+    return `${label} unconfirmed`;
+  }
+
+  await setSource(comp.id, channel, 'presence', 'listed');
   await recordRun(comp.id, channel, true, added, `${rows.length} reviews via vendor`);
-  return rows.length === 0 ? `no ${label} reviews found` : `+${added} (${fresh} pending) — ${rows.length} reviews`;
+  return `+${added} (${fresh} pending) — ${rows.length} reviews`;
 }
 
 export const collectG2 = (c: Competitor) => collectReviewSource(c, 'g2', 'APIFY_G2_ACTOR', 'G2');
@@ -296,3 +354,12 @@ export const collectCapterra = (c: Competitor) => collectReviewSource(c, 'capter
 export const collectGlassdoor = (c: Competitor) => collectReviewSource(c, 'glassdoor', 'APIFY_GLASSDOOR_ACTOR', 'Glassdoor');
 export const collectTrustRadius = (c: Competitor) => collectReviewSource(c, 'trustradius', 'APIFY_TRUSTRADIUS_ACTOR', 'TrustRadius');
 export const collectGartner = (c: Competitor) => collectReviewSource(c, 'gartner', 'APIFY_GARTNER_ACTOR', 'Gartner');
+
+/**
+ * Trustpilot via the licensed multi-platform run.
+ *
+ * Used only when there is no TRUSTPILOT_API_KEY — see `collectors/trustpilot.ts`
+ * for why the public-page fallback can no longer stand on its own.
+ */
+export const collectTrustPilotViaVendor = (c: Competitor) =>
+  collectReviewSource(c, 'trustpilot', 'APIFY_TRUSTPILOT_ACTOR', 'Trustpilot');

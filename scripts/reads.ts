@@ -69,7 +69,7 @@ const READS: Record<string, Read> = {
       { label: 'Buildouts', text: 'launch.hypefy.ai and ai-agent.hypefy.ai on the certificate log, ~5 weeks after the round' },
     ],
   },
-  // ---- demo workspace (Watchtower's own market, ORG_ID=demo-workspace) ----
+  // ---- demo workspace (Fortress HQ's own market, ORG_ID=demo-workspace) ----
   klue: {
     hook: 'The funded category leader, and it shows in the infrastructure',
     narrative: `Klue is the best-capitalised competitor in the set and the crawl shows where the money went: 255 hostnames on the certificate log, most of them per-pull-request preview environments, which is the fingerprint of a large engineering org shipping continuously. Their own news trail runs $4M at launch, then a $15M Series A, then $62M to accelerate "competitive enablement" — they named the category and then funded owning it. Paid presence is modest (~11 Google ads, 6 on LinkedIn) because they do not need to buy the category. The opening is not their capability, it is their shape: enterprise-weighted, sold to product marketing teams, priced on a call.`,

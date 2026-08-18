@@ -1,4 +1,4 @@
-# Watchtower — What to wire, create and configure
+# Fortress HQ — What to wire, create and configure
 
 *Last revised: 18 August 2026 · Audited against the codebase, not from memory*
 
@@ -99,7 +99,7 @@ This matters more than it looks. From the GTM doc: *"CI churns when it becomes b
 
 ```
 RESEND_API_KEY=
-EMAIL_FROM="Watchtower <watch@yourdomain>"
+EMAIL_FROM="Fortress HQ <watch@yourdomain>"
 ```
 
 Plus DNS: SPF, DKIM and DMARC on the sending domain, or everything lands in spam.

@@ -4,9 +4,9 @@ import BattlecardDemo from './BattlecardDemo';
 import FogPanel from './FogPanel';
 
 export const metadata = {
-  title: 'Watchtower · Know the moment your competitors move.',
+  title: 'Fortress HQ · Know the moment your competitors move.',
   description:
-    'Watchtower turns everything your competitors do in public into one briefing that says what it means and what to do. Every fact cited. From $99/mo.',
+    'Fortress HQ turns everything your competitors do in public into one briefing that says what it means and what to do. Every fact cited. From $99/mo.',
 };
 
 // Real lines from our own workspace, worded the way the feed words them.
@@ -53,7 +53,7 @@ export default function Home() {
               part of the hero rather than a slab dropped under it. */}
           <div className="wt-hero-shot">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/screenshots/overview.png" alt="The Watchtower dashboard: market activity, competitor ratings, biggest threat and launch radar" />
+            <img src="/screenshots/overview.png" alt="The Fortress HQ dashboard: market activity, competitor ratings, biggest threat and launch radar" />
           </div>
         </div>
       </section>
@@ -85,7 +85,7 @@ export default function Home() {
 
           {/* the feed itself, right where the claim is made — this column was
               empty and the page sagged here */}
-          <aside className="wt-panel" aria-label="A morning of Watchtower signals">
+          <aside className="wt-panel" aria-label="A morning of Fortress HQ signals">
             <div className="wt-panel-head">
               <span className="mono">first light · 06:04</span>
               <span className="wt-live"><i />live</span>
@@ -104,7 +104,10 @@ export default function Home() {
       {/* ---------- the artifact, interactive ---------- */}
       <section className="wt-card-sec" id="platform">
         <div className="wrap">
-          <span className="wt-eyebrow">The Watchtower</span>
+          {/* Deliberately "The Tower", not the company name — this section is
+              the reasoning layer's own byline, and the Tower is who lives
+              inside the walls and does the reading. See BRAND.md §1. */}
+          <span className="wt-eyebrow">The Tower</span>
           <h2 className="wt-h2">Then it writes how you win.</h2>
           <p className="wt-lede">
             One briefing per competitor, written against your positioning. These are real cards from our own

@@ -2,7 +2,7 @@
 //
 // Deliberately not the dev/Hypefy workspace: that one holds a real company's
 // private competitive analysis, and /demo is world-readable. This workspace is
-// Watchtower dogfooding itself — us against the real competitive-intelligence
+// Fortress HQ dogfooding itself — us against the real competitive-intelligence
 // market. Every competitor below is a genuine public company in this category,
 // so every signal the demo shows is real, which is the whole pitch.
 //
@@ -77,15 +77,20 @@ async function main() {
 
   // Our own identity, so Mentions has something real to look for and the
   // battlecards are written against our actual positioning.
+  // brandDomain stays the current live host — that's what mention-matching
+  // (classifyMention) actually verifies against, and it hasn't moved yet.
+  // Aliases carry both names through the transition: old backlinks and
+  // stray mentions of "Watchtower" are still us until the cutover is done,
+  // and dropping the old name here would misclassify them as same-name noise.
   await setBrandSettings(
     DEMO_ORG_ID,
-    'Watchtower',
+    'Fortress HQ',
     'watchtower-og.vercel.app',
-    ['Watchtower', 'watchtower.ai'],
+    ['Fortress HQ', 'Watchtower', 'watchtower-og.vercel.app'],
     'Competitive intelligence that reads signals together instead of forwarding detections. Tracks 22 public channels per competitor including certificate transparency logs, ad libraries, job boards and review sites, bundles them into one card per real event, and writes one cited briefing per competitor. Self-serve from $99/mo, prices published, no demo call.',
     'Signal bundling, cross-referenced reads, cited evidence with disclosed gaps, pre-launch detection via certificate logs, self-serve pricing',
   );
-  console.log('seeded brand identity: Watchtower →', DEMO_ORG_ID);
+  console.log('seeded brand identity: Fortress HQ →', DEMO_ORG_ID);
   process.exit(0);
 }
 main().catch((e) => { console.error(e); process.exit(1); });

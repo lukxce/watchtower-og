@@ -84,7 +84,7 @@ export default async function GlassBeta({ searchParams }: { searchParams: Promis
           <header className="gx-top">
             <a className="gx-logo" href="/overview">
               <span className="gx-logo-mark" />
-              watchtower
+              fortress hq
             </a>
             <nav className="gx-nav">
               {NAV.map((n) => <a key={n.label} href={n.href} className={n.on ? 'on' : ''}>{n.label}</a>)}

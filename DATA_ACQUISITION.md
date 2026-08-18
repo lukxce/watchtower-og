@@ -1,4 +1,4 @@
-# Watchtower — Data Acquisition Audit & Target Architecture
+# Fortress HQ — Data Acquisition Audit & Target Architecture
 
 How each of the 22 channels *should* pull data, ranked by robustness. The rule:
 **never hand-scrape when a real source exists.** Prefer, in order:

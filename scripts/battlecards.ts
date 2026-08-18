@@ -260,7 +260,7 @@ const STRATEGY: Record<string, (n: { meta: string; google: string; linkedin: str
       },
     },
   }),
-  // ---- demo workspace (Watchtower's own market) ----
+  // ---- demo workspace (Fortress HQ's own market) ----
   klue: (n) => ({
     positioning: `The funded category leader in "competitive enablement" — sold to product marketing, delivered to sales through CRM. Named the category, then raised $62M to own it. Pricing is quote-only. Threat Index ${n.threat}.`,
     strengths: [

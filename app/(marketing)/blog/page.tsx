@@ -3,7 +3,7 @@ import { POSTS, CATEGORIES } from '@/lib/blog';
 import BlogCover from '../BlogCover';
 
 export const metadata = {
-  title: 'Blog — Watchtower',
+  title: 'Blog — Fortress HQ',
   description: 'Field notes and method from building competitive intelligence. Written from real finds, not filler.',
 };
 

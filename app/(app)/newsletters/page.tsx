@@ -86,7 +86,7 @@ export default async function Newsletters() {
         <div className="callout-box">
           Signup itself is a manual, one-time action per competitor: visit their site, subscribe with your persona
           email, confirm from the inbox. Nothing here fakes that step. Once you&apos;re subscribed, forward
-          (or auto-forward) their emails to the address above and Watchtower does the rest: matches the sender
+          (or auto-forward) their emails to the address above and Fortress HQ does the rest: matches the sender
           domain, dedupes, and ingests it as a signal. Mail from companies you don&apos;t track is ignored rather
           than stored — the persona inbox will receive plenty of unrelated post.
         </div>

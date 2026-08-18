@@ -13,7 +13,7 @@ import { cookies } from 'next/headers';
 
 // Its own workspace, NOT the dev/Hypefy one: /demo is world-readable and the
 // dev workspace holds a real company's private competitive analysis. This one
-// is Watchtower tracking its own market (see scripts/seed-demo.ts).
+// is Fortress HQ tracking its own market (see scripts/seed-demo.ts).
 export const DEMO_ORG_ID = 'demo-workspace';
 export const DEMO_COOKIE = 'wt_demo';
 

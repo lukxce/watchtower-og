@@ -44,7 +44,7 @@ function escapeRe(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Brand names are rarely unique words. Searching Google News for "Watchtower"
+// Brand names are rarely unique words. Searching Google News for "Fortress HQ"
 // returns the Jehovah's Witnesses magazine, a thrash band, a venue and a
 // concert listing long before it returns anything about this company. A bare
 // name search is a keyword alert, not intelligence.

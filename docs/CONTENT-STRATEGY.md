@@ -1,4 +1,4 @@
-# Watchtower — Website & Content Strategy
+# Fortress HQ — Website & Content Strategy
 
 *Owner: Luka Jovanović · Last revised: 18 August 2026*
 
@@ -114,7 +114,7 @@ Four, in descending order of how much they differentiate us.
 - **800–1,500 words.** Long enough to prove it, short enough to read.
 - **Every post ends with the same honest CTA**: this is what the product does automatically, here's the live demo.
 - **Generated SVG covers**, in-palette, keyed to the post. Never stock photography.
-- **Author is a person**, not "Watchtower Team."
+- **Author is a person**, not "Fortress HQ Team."
 
 ### The editorial flywheel
 
@@ -133,7 +133,7 @@ Every post → newsletter issue → social thread → /watch page evidence
 
 This is the highest-leverage unbuilt thing on the list.
 
-Each tool takes a domain, returns a real answer in seconds, and is a **working slice of the product**. No email gate on the result — gate the *depth* instead ("this is one channel; Watchtower watches 22 — see all of them for this domain").
+Each tool takes a domain, returns a real answer in seconds, and is a **working slice of the product**. No email gate on the result — gate the *depth* instead ("this is one channel; Fortress HQ watches 22 — see all of them for this domain").
 
 ### What's actually cheap and fast
 
@@ -160,7 +160,7 @@ I timed every keyless source against live endpoints on 17 Aug 2026. These are re
 
 **No API key needed.** Google News RSS is free and unauthenticated — 746ms, no quota headaches. `GNEWS_API_KEY` is an optional upgrade for higher limits and cleaner metadata, not a requirement. We already run on the free RSS path.
 
-**Important caveat learned the hard way:** a bare name search is worthless for common brand names. Searching `"Watchtower"` returned ten results — the Dylan/Hendrix song ×3, a prog-metal band, a 2015 film, a medieval farmhouse. Every news-based tool or feature must classify matches (*client / same-name / noise*) before showing them. This is now enforced in `src/lib/mentions.ts`.
+**Important caveat learned the hard way:** a bare name search is worthless for common brand names. Searching `"Fortress HQ"` returned ten results — the Dylan/Hendrix song ×3, a prog-metal band, a 2015 film, a medieval farmhouse. Every news-based tool or feature must classify matches (*client / same-name / noise*) before showing them. This is now enforced in `src/lib/mentions.ts`.
 
 ### The tools, ranked by build-value
 
@@ -191,7 +191,7 @@ Every tool page follows the same shape, which is also an SEO asset:
 H1: What is [company] hiring for right now?
 [ domain input ] → live result in <1s
 The read — plain language, what it means
-"This is 1 of 22 channels Watchtower watches. See all of them for [domain] →"
+"This is 1 of 22 channels Fortress HQ watches. See all of them for [domain] →"
 Method: exactly where this data comes from, and its limits
 FAQ (schema markup)
 ```
@@ -211,7 +211,7 @@ Structure:
 2. Feature table, no rigged rows
 3. **Pricing, stated plainly** — our strongest card against Klue/Crayon/Signal Labs, all of whom gate it
 4. "Choose Crayon if…" — and mean it
-5. "Choose Watchtower if…"
+5. "Choose Fortress HQ if…"
 6. Live demo CTA
 
 We should also, with a straight face, **run these competitors in our own demo workspace** — which we already do. That's the flex: *our comparison pages are maintained by the product.*

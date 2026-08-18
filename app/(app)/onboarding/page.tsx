@@ -1,4 +1,4 @@
-// Onboarding — the first thing a fresh workspace sees: tell Watchtower who
+// Onboarding — the first thing a fresh workspace sees: tell Fortress HQ who
 // YOU are (or just your link), get competitor recommendations, one click
 // each to start tracking. New orgs land here from the org-create flow.
 import { requireOrgId } from '@/lib/tenant';
@@ -13,7 +13,7 @@ export default async function Onboarding() {
       <section className="feed">
         <h1>Who are you?</h1>
         <p className="sub">
-          Watchtower personalizes everything to your company — battlecards say how <b>you</b> win, mentions track{' '}
+          Fortress HQ personalizes everything to your company — battlecards say how <b>you</b> win, mentions track{' '}
           <b>your</b> name, recommendations fit <b>your</b> market. Describe yourself or just drop your link.
         </p>
         <OnboardingFlow />

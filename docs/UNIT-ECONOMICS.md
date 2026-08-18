@@ -1,4 +1,4 @@
-# Watchtower — Unit Economics (v4 — fully measured)
+# Fortress HQ — Unit Economics (v4 — fully measured)
 
 *Last revised: 18 August 2026 · Models: `scripts/econ.mjs`, `scripts/econ-channels.mjs`*
 
