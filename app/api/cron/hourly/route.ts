@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runCollection } from '@/lib/orchestrator';
 import { computeThreat, snapshotThreat } from '@/lib/threat';
-import { authorized } from '@/lib/auth';
+import { authorize } from '@/lib/auth';
 import { workspacesAtLocalHour, COLLECT_HOUR, DELIVER_HOUR } from '@/lib/schedule';
 import { getDb } from '@/db/client';
 
@@ -15,7 +15,12 @@ export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  if (!authorized(req)) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // On rejection, say WHICH condition failed — booleans only, never the
+  // secret. A 401 with no detail is how this went undiagnosed for five days.
+  const auth = authorize(req);
+  if (!auth.ok) {
+    return NextResponse.json({ error: 'unauthorized', ...auth.diagnostics }, { status: 401 });
+  }
   const now = new Date();
 
   const toCollect = await workspacesAtLocalHour(COLLECT_HOUR, now);
@@ -60,6 +65,7 @@ export async function GET(req: NextRequest) {
   const delivered = toDeliver.map((w) => ({ orgId: w.orgId, timezone: w.timezone }));
 
   return NextResponse.json({
+    authorizedVia: auth.via,
     ranAt: now.toISOString(),
     utcHour: now.getUTCHours(),
     collected: collected.length,
