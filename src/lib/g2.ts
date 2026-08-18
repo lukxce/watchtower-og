@@ -92,7 +92,9 @@ export async function resolveG2Products(
     { company: comp.name, domain: bare(comp.domain) },
     {
       searchQueries: [comp.name],
-      // Resolution is a one-off per competitor, but it still costs rows.
+      // Resolution happens once per competitor and is cached, so 10 is cheap
+      // and gives fuzzy matches room to appear before the domain filter cuts
+      // them. Overridable for throwaway tests; deployments need not set it.
       maxItems: Number(process.env.APIFY_MAX_SEARCH ?? 10),
       useCachedData: false,
       proxy: { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] },

@@ -6,7 +6,15 @@
 import { hasVendor, runApifyActor, buildActorInput } from '@/lib/vendor';
 import { resolveG2Products } from '@/lib/g2';
 
-/** Reviews pulled per product per run. Small while testing, 25 in anger. */
+/**
+ * Reviews pulled per product per run.
+ *
+ * 25 is the production value. Rows are the billed unit — measured at $1.75
+ * per 1,000 on top of a $0.01 start fee — so a run costs about 5c. The env
+ * override exists so a throwaway test can be run at 5 without editing code
+ * or carrying a value in anyone's config; it is not something a deployment
+ * needs to set.
+ */
 const MAX_REVIEWS = Number(process.env.APIFY_MAX_REVIEWS ?? 25);
 import { ingestItems, recordRun, type Competitor } from '@/db/queries';
 
