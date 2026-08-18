@@ -4,6 +4,10 @@
 // Each defers cleanly without APIFY_TOKEN + its actor env var. Gray sources —
 // gate to paid tiers, degrade gracefully.
 import { hasVendor, runApifyActor, buildActorInput } from '@/lib/vendor';
+import { resolveG2Products } from '@/lib/g2';
+
+/** Reviews pulled per product per run. Small while testing, 25 in anger. */
+const MAX_REVIEWS = Number(process.env.APIFY_MAX_REVIEWS ?? 25);
 import { ingestItems, recordRun, type Competitor } from '@/db/queries';
 
 interface VendorReview {
@@ -102,13 +106,47 @@ async function collectReviewSource(
   }
   const actor = process.env[actorEnv] ?? '';
   const bare = comp.domain.replace(/^www\./, '');
+
+  // G2 needs resolving before it can be read. A search for "Klue" returns
+  // Klue, Klue Win-Loss, Kluster, Wolters Kluwer and KlientBoost — three of
+  // which are other companies. resolveG2Products keeps only the listings whose
+  // companyDomain IS ours, caches them, and hands back real G2 slugs. Reviews
+  // are then fetched per slug, which is what the actor actually needs;
+  // searchQueries returns product cards, not reviews.
+  let slugs: string[] = [comp.slug];
+  if (channel === 'g2') {
+    const products = await resolveG2Products(comp);
+    if (products === null) {
+      await recordRun(comp.id, channel, false, 0, 'vendor run failed resolving G2 products');
+      return 'FAILED (vendor)';
+    }
+    if (products.length === 0) {
+      await recordRun(comp.id, channel, true, 0, `no G2 listing found for ${bare}`);
+      return 'no G2 listing';
+    }
+    slugs = products.map((p) => p.slug);
+  }
+
   const input = buildActorInput(
     actorEnv.replace('_ACTOR', '_INPUT'),
-    { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
-    { company: comp.name, domain: comp.domain, maxItems: 25 },
+    { company: comp.name, domain: bare, slug: slugs[0], url: `https://${bare}` },
+    {
+      productSlugs: slugs,
+      sortOrder: 'most_recent',
+      // Rows are the billed unit and the start fee dominates at low volume
+      // (measured: $0.01 start + $1.75/1,000 rows). APIFY_MAX_REVIEWS keeps
+      // test runs cheap without editing code — set it to 5 while validating.
+      maxReviews: MAX_REVIEWS,
+      maxItems: MAX_REVIEWS * slugs.length,
+      onlyNewReviews: true,
+      useCachedData: false,
+      proxy: { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] },
+      slowMode: true,
+    },
   );
   const raw = await runApifyActor<Record<string, unknown>>(actor, input);
-  const rows = raw?.map(normalizeReview) ?? null;
+  // Search/summary rows share the dataset with review rows; keep only reviews.
+  const rows = raw?.filter((r) => r.type === 'review' || r.reviewId || r.review_id).map(normalizeReview) ?? null;
   if (rows === null) {
     await recordRun(comp.id, channel, false, 0, `vendor run failed / ${actorEnv} unset`);
     return 'FAILED (vendor)';
