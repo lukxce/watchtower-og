@@ -51,7 +51,7 @@ const APIFY = has(env.APIFY_TOKEN);
 
 export const CHANNELS: ChannelDef[] = [
   // Product
-  { key: 'website', label: 'Website & pricing', group: 'Product', status: 'active', note: 'Tiered page capture + content diff (Firecrawl for walled sites)', run: (c, t2) => collectWebsite(c, t2) },
+  { key: 'website', label: 'Website & pricing', group: 'Product', status: 'active', note: 'Tiered page capture + content diff (Firecrawl for walled sites)', run: (c) => collectWebsite(c) },
   { key: 'sitemap', label: 'New & changed pages', group: 'Product', status: 'active', note: 'Sitemap diff — blog, case studies, changelog, product', run: collectSitemap },
   { key: 'appstore', label: 'iOS app releases', group: 'Product', status: 'active', note: 'iTunes Search API, verified by seller domain', run: collectAppstore },
   { key: 'googleplay', label: 'Android app releases', group: 'Product', status: 'active', note: 'Play Store listing (Firecrawl-backed)', run: collectGooglePlay },
