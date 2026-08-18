@@ -7,6 +7,9 @@ const LINKS = [
   { href: '/#platform', label: 'Product' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/blog', label: 'Blog' },
+  { href: '/alternatives', label: 'Alternatives' },
+  { href: '/compare', label: 'Comparisons' },
+  { href: '/companies', label: 'Companies' },
   { href: '/contact', label: 'Contact' },
 ];
 

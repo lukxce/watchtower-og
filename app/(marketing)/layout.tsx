@@ -15,7 +15,15 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           <nav className="mkt-links">
             <Link href="/#platform" className="mkt-navlink">Product</Link>
             <Link href="/pricing" className="mkt-navlink">Pricing</Link>
-            <Link href="/blog" className="mkt-navlink">Blog</Link>
+            <div className="mkt-drop">
+              <button type="button" className="mkt-navlink mkt-drop-t">Resources</button>
+              <div className="mkt-drop-menu">
+                <Link href="/blog">Blog</Link>
+                <Link href="/alternatives">All alternatives</Link>
+                <Link href="/compare">All comparisons</Link>
+                <Link href="/companies">All companies</Link>
+              </div>
+            </div>
           </nav>
           <div className="mkt-cta-row">
             <Link href="/sign-in" className="btn btn-ghost">Sign in</Link>
@@ -63,16 +71,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/hubs/spend-management">Spend Management</Link>
           </div>
           <div className="fcol">
-            <h5>Compare &amp; Resources</h5>
+            <h5>Compare</h5>
             <Link href="/free-radar">Free competitor radar</Link>
-            <Link href="/blog">Resources &amp; guides</Link>
             <Link href="/alternatives/klue">Klue Alternative</Link>
             <Link href="/alternatives/crayon">Crayon Alternative</Link>
             <Link href="/alternatives/kompyte">Kompyte Alternative</Link>
             <Link href="/compare/chatgpt">Fortress HQ vs ChatGPT</Link>
-            <Link href="/alternatives">All alternatives →</Link>
-            <Link href="/compare">All comparisons →</Link>
-            <Link href="/companies">All companies →</Link>
           </div>
           <div className="fcol">
             <h5>Company</h5>
@@ -83,11 +87,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>
             <Link href="/email-preferences">Email preferences</Link>
-          </div>
-          <div className="fcol">
-            <h5>Account</h5>
+            <span className="fcol-sep" aria-hidden="true" />
             <Link href="/sign-in">Sign in</Link>
-            <Link href="/sign-up">Start free</Link>
+            <Link href="/sign-up">Start free →</Link>
           </div>
         </div>
         <div className="wrap">

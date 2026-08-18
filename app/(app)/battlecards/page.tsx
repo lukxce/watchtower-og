@@ -17,6 +17,7 @@ import { computeThreat } from '@/lib/threat';
 import { positionOf } from '@/lib/positioning';
 import FeedbackControl from '../FeedbackControl';
 import AddCompetitor from './AddCompetitor';
+import ChannelSources from './ChannelSources';
 
 export const dynamic = 'force-dynamic';
 
@@ -105,6 +106,7 @@ export default async function Battlecards() {
           </div>
           <AddCompetitor />
         </div>
+        <ChannelSources />
         {rows.map((r) => {
           const c = (typeof r.content === 'string' ? JSON.parse(r.content) : r.content) as Card;
           const read = reads.get(r.slug);
