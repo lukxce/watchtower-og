@@ -82,7 +82,7 @@ export const CHANNELS: ChannelDef[] = [
   { key: 'traffic', label: 'Traffic & SEO', group: 'Market', status: st(has(env.DATAFORSEO_LOGIN), 'paid'), note: 'DataForSEO · set DATAFORSEO_LOGIN/PASSWORD', run: collectTraffic },
   { key: 'trends', label: 'Search interest', group: 'Market', status: st(has(env.DATAFORSEO_LOGIN), 'paid'), note: 'Google Trends via DataForSEO', run: collectTrends },
   // Corporate
-  { key: 'funding', label: 'Funding & M&A', group: 'Corporate', status: st(has(env.CRUNCHBASE_API_KEY), 'needs_key'), note: 'Crunchbase API · also flows via News · set CRUNCHBASE_API_KEY', run: collectFunding },
+  { key: 'funding', label: 'Funding & M&A', group: 'Corporate', status: 'active', note: 'SEC EDGAR Form D + funding news — keyless', run: collectFunding },
 ];
 
 // Every channel runs; blocked ones self-defer as a cheap no-op and record their
