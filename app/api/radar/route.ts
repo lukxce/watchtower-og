@@ -110,38 +110,74 @@ interface CrtShRow {
   not_before?: string;
 }
 
+/**
+ * Certificate history via crt.sh, falling back to certspotter.
+ *
+ * The fallback is the whole point. crt.sh is a free public service that goes
+ * down — it was returning 502 on 19 Aug 2026 — and without a second source
+ * this route told every visitor "certificate history wasn't available",
+ * meaning the public tool was half-broken whenever crt.sh sneezed. The
+ * internal collector has had two CT sources since it was written
+ * (src/collectors/subdomains.ts); this one did not, which is exactly backwards
+ * for the page that is the first thing a prospect touches.
+ *
+ * Still exactly one request per source, no retry or backoff: this route is
+ * unauthenticated and must never be the thing that hammers a free service.
+ */
 async function checkSubdomains90d(domain: string): Promise<{ count90d: number | null; error: string | null }> {
   const cached = certCache.get(domain);
   if (cached && cached.expiresAt > Date.now()) return cached.data;
 
-  let result: { count90d: number | null; error: string | null };
+  const cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
+  const hosts = new Set<string>();
+  const add = (raw: string) => {
+    const h = raw.trim().toLowerCase();
+    if (!h || h.startsWith('*.')) return;
+    if (h === domain || h.endsWith(`.${domain}`)) hosts.add(h);
+  };
+
+  let ok = false;
   try {
-    // Exactly one request. No retry, no backoff — crt.sh is a free public
-    // service (see src/collectors/subdomains.ts) and this route is
-    // unauthenticated, so it cannot be the thing that hammers it.
     const res = await fetchWithTimeout(`https://crt.sh/?q=%25.${encodeURIComponent(domain)}&output=json`, 5000);
-    if (res.status !== 200) {
-      result = { count90d: null, error: "certificate history wasn't available right now" };
-    } else {
-      const rows = (await res.json()) as CrtShRow[];
-      const cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
-      const recentHosts = new Set<string>();
-      for (const row of rows) {
-        if (!row.not_before) continue;
-        const notBefore = Date.parse(row.not_before);
+    if (res.status === 200) {
+      for (const row of (await res.json()) as CrtShRow[]) {
+        const notBefore = Date.parse(row.not_before ?? '');
         if (Number.isNaN(notBefore) || notBefore < cutoff) continue;
-        for (const raw of String(row.name_value ?? '').split('\n')) {
-          const h = raw.trim().toLowerCase();
-          if (!h || h.startsWith('*.')) continue;
-          if (h === domain || h.endsWith(`.${domain}`)) recentHosts.add(h);
-        }
+        for (const raw of String(row.name_value ?? '').split('\n')) add(raw);
       }
-      result = { count90d: recentHosts.size, error: null };
+      ok = true;
     }
   } catch {
-    result = { count90d: null, error: "certificate history wasn't available right now" };
+    /* fall through to certspotter */
   }
 
+  if (!ok) {
+    try {
+      const res = await fetchWithTimeout(
+        `https://api.certspotter.com/v1/issuances?domain=${encodeURIComponent(domain)}&include_subdomains=true&expand=dns_names&expand=cert`,
+        8000,
+      );
+      if (res.status === 200) {
+        const data = (await res.json()) as { dns_names?: string[]; cert?: { not_before?: string } }[];
+        if (Array.isArray(data)) {
+          for (const iss of data) {
+            const notBefore = Date.parse(iss.cert?.not_before ?? '');
+            // certspotter without a usable date still tells us the host exists;
+            // counting it is better than reporting nothing.
+            if (!Number.isNaN(notBefore) && notBefore < cutoff) continue;
+            for (const n of iss.dns_names ?? []) add(n);
+          }
+          ok = true;
+        }
+      }
+    } catch {
+      /* both sources down */
+    }
+  }
+
+  const result = ok
+    ? { count90d: hosts.size, error: null }
+    : { count90d: null, error: "certificate history wasn't available right now" };
   certCache.set(domain, { data: result, expiresAt: Date.now() + CERT_CACHE_TTL_MS });
   return result;
 }
