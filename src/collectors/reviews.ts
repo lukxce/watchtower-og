@@ -190,10 +190,26 @@ async function collectReviewSource(
       return 'deferred (no actor)';
     }
     const bare = comp.domain.replace(/^www\./, '');
+    // Per-channel actors do NOT share an input shape. memo23's Glassdoor
+    // scraper takes startUrls + command, with no `query` field at all — a
+    // generic {query,maxItems} body would have been rejected outright. Checked
+    // against its published schema rather than assumed, after making exactly
+    // that mistake with G2.
+    const fallback: Record<string, unknown> =
+      channel === 'glassdoor'
+        ? {
+            // Glassdoor employer pages are keyed by an internal employer id we
+            // cannot derive, so we hand it a search URL and let it resolve.
+            // UNVERIFIED: confirm against a real run before trusting it.
+            startUrls: [{ url: `https://www.glassdoor.com/Search/results.htm?keyword=${encodeURIComponent(comp.name)}` }],
+            command: 'reviews',
+            maxItems: MAX_REVIEWS,
+          }
+        : { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS };
     const input = buildActorInput(
       actorEnv.replace('_ACTOR', '_INPUT'),
       { company: comp.name, domain: bare, slug: comp.slug, url: `https://${bare}` },
-      { query: bare, maxItems: MAX_REVIEWS, maxResults: MAX_REVIEWS },
+      fallback,
     );
     const raw = await runApifyActor<Record<string, unknown>>(actor, input);
     if (raw === null) {
