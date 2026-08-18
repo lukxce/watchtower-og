@@ -1,68 +1,63 @@
-const m=n=>'$'+n.toFixed(3);
-const D=30, FC=83/100000, APIFY=0.15, DFS=0.002;
-// [channel, runs/mo, vendor, unitCost, note]
-const CH=[
-  // free: plain HTTP or keyless API — no vendor fee, only our own compute
-  ['sitemap',        30,'free',   0,   'XML fetch, 1-25 files'],
-  ['subdomains',     30,'free',   0,   'certspotter JSON'],
-  ['jobs',           30,'free',   0,   '6 ATS JSON APIs'],
-  ['appstore',       30,'free',   0,   'iTunes Search'],
-  ['podcasts',       30,'free',   0,   'iTunes Search'],
-  ['news',           30,'free',   0,   'Google News RSS'],
-  ['youtube',        30,'free',   0,   'channel RSS'],
-  ['events',         30,'free',   0,   'HTML fetch'],
-  ['logos',          30,'free',   0,   'shares website capture'],
-  ['techstack',      30,'free',   0,   'homepage fingerprint'],
-  ['reddit',         30,'free',   0,   'OAuth API, free app'],
-  ['producthunt',    30,'free',   0,   'GraphQL, free token'],
-  ['ads_meta',       30,'free',   0,   'Graph API, free token'],
-  ['ads_linkedin',   30,'free',   0,   'HTML, no render needed'],
-  ['funding',        30,'free',   0,   'Crunchbase / via news'],
-  ['newsletters',    30,'free',   0,   'inbound email'],
-  // firecrawl-rendered channels I had NOT counted separately
-  ['ads_google',     30,'FC',    FC,   'JS shell, needs render'],
-  ['googleplay',     30,'FC',    FC,   'needs render'],
-  // apify
-  ['trustpilot',      4,'apify',APIFY,'403 on public page'],
-  ['glassdoor',       4,'apify',APIFY,''],
-  ['g2',              4,'apify',APIFY,''],
-  ['capterra',        4,'apify',APIFY,''],
-  ['linkedin_posts',  8,'apify',APIFY,''],
-  ['linkedin_founder',8,'apify',APIFY,'not built yet'],
-  // dataforseo
-  ['traffic',         4,'dfs',  DFS,  ''],
-  ['trends',          4,'dfs',  DFS,  ''],
-];
-console.log('EVERY CHANNEL, per competitor / month (pessimistic vendor rates)\n');
-const byVendor={};
-for(const [c,r,v,u] of CH){ byVendor[v]=(byVendor[v]||0)+r*u; }
-let runs=0;
-for(const [c,r,v,u,n] of CH){ runs+=r;
-  if(u>0) console.log(`  ${c.padEnd(18)} ${String(r).padStart(3)} runs  ${v.padEnd(6)} ${m(r*u).padStart(8)}  ${n}`);
-}
-console.log(`  ${'— 16 free channels —'.padEnd(18)} ${String(CH.filter(x=>x[2]==='free').reduce((s,x)=>s+x[1],0)).padStart(3)} runs  free      $0.000`);
+// Watchtower cost model — v3, with VERIFIED Apify pricing.
+// Run: node scripts/econ-channels.mjs
+//
+// v2 modelled Apify as $0.15 per actor run, marginal. That was wrong in kind,
+// not just degree. Checked against apify.com/pricing on 18 Aug 2026:
+//
+//   Platform:  Free $0 ($5 credit) · Starter $29 · Scale $199 · Business $999
+//   Compute:   1 CU = 1 GB-RAM-hour. $0.20/CU (Starter), $0.16 (Scale), $0.13 (Business)
+//   Actors:    EITHER a monthly rental — the LinkedIn Post Scraper is
+//              "$30.00/month + usage" — OR pay-per-result, typically $1-10
+//              per 1,000 results.
+//
+// The structural point: a rental is a FIXED monthly fee that covers every
+// competitor and every customer. It does not scale per competitor at all, so
+// most of what v2 booked as marginal cost is actually fixed cost.
+const m = n => '$' + n.toFixed(3);
+const D = 30, FC = 83 / 100000;
+const CU_RATE = 0.20;            // Starter tier
+const CU_PER_RUN = 0.03;         // ~2 min at 1GB — confirm against real runs
+const RUNS = 32;                 // 6 vendor channels/competitor/month
 
-console.log('\nCHANNEL SUBTOTAL BY VENDOR');
-for(const [v,c] of Object.entries(byVendor)) console.log(`  ${v.padEnd(8)} ${m(c)}`);
+// results pulled per competitor per month, for pay-per-result actors
+const RESULTS = 140;
+const PER_RESULT_LO = 1 / 1000, PER_RESULT_HI = 10 / 1000;
 
-// page fetching, tiered, per plan
-console.log('\nCOMPLETE PER-COMPETITOR COST');
-for(const [tier,pages,comps,price] of [['Starter',200,3,149],['Growth',1000,10,399],['Enterprise',5000,30,1500]]){
-  const daily=Math.round(pages*0.10),weekly=Math.round(pages*0.25),monthly=pages-daily-weekly;
-  const fetches=daily*D+weekly*4+monthly;
-  const pageFC=fetches*0.20*FC;
-  const channels=Object.values(byVendor).reduce((a,b)=>a+b,0);
-  const llm=0.27, neon=0.02;
-  // Vercel compute: 26 channels x 30 days, ~4s avg @1GB
-  const gbHours=(26*D*4)/3600;
-  const vercel=Math.max(0,gbHours-0)*0.18;
-  const per=pageFC+channels+llm+neon+vercel;
-  const total=per*comps;
-  console.log(`\n  ${tier} — ${pages} pages, ${comps} competitors, $${price}`);
-  console.log(`    page fetches   ${String(fetches).padStart(6)}/mo → firecrawl ${m(pageFC)}`);
-  console.log(`    all channels                      ${m(channels)}`);
-  console.log(`    claude + neon                     ${m(llm+neon)}`);
-  console.log(`    vercel compute (${gbHours.toFixed(2)} GB-h)       ${m(vercel)}`);
-  console.log(`    ── per competitor                 ${m(per)}   ${per<=12?'under $12':'OVER $12'}`);
-  console.log(`    x${comps} competitors = $${total.toFixed(2)}  → margin ${(100*(1-total/price)).toFixed(1)}%`);
+const apifyCompute = RUNS * CU_PER_RUN * CU_RATE;
+const apifyRentalOnly = apifyCompute;                       // all 6 are rentals
+const apifyPerResult  = apifyCompute + RESULTS * PER_RESULT_HI;
+
+console.log(`APIFY, per competitor / month (MARGINAL only)
+  compute  ${RUNS} runs x ${CU_PER_RUN} CU x $${CU_RATE}/CU        ${m(apifyCompute)}
+  if all 6 actors are RENTAL                     ${m(apifyRentalOnly)}
+  if all 6 are pay-per-result @ $10/1k           ${m(apifyPerResult)}
+  v2 assumed                                     $4.800   <- wrong by 25x
+`);
+
+console.log(`APIFY, FIXED per month (covers ALL customers and competitors)
+  platform Starter                               $29.00
+  6 actor rentals @ ~$30 (LinkedIn verified)     $180.00
+  ── total                                       $209.00
+`);
+
+const other = { claude: 0.27, neon: 0.02, vercel: 0.156, dfs: 0.016, renderChannels: 0.05 };
+const fixedOther = { vercel: 20, neon: 19, clerk: 25, firecrawl: 83, dfs: 50 };
+
+console.log('COMPLETE PER-COMPETITOR MARGINAL COST');
+for (const [tier, pages, comps, price] of [['Starter', 200, 3, 149], ['Growth', 1000, 10, 399], ['Enterprise', 5000, 30, 1500]]) {
+  const daily = Math.round(pages * .10), weekly = Math.round(pages * .25), monthly = pages - daily - weekly;
+  const fetches = daily * D + weekly * 4 + monthly;
+  const pageFC = fetches * 0.20 * FC;
+  const base = pageFC + Object.values(other).reduce((a, b) => a + b, 0);
+  const lo = base + apifyRentalOnly, hi = base + apifyPerResult;
+  console.log(`\n  ${tier} — ${pages} pages, ${comps} comps, $${price}`);
+  console.log(`    ${fetches} fetches/mo → firecrawl ${m(pageFC)}`);
+  console.log(`    per competitor:  ${m(lo)} (rental actors)  →  ${m(hi)} (per-result actors)`);
+  console.log(`    x${comps}:          $${(lo * comps).toFixed(2)}  →  $${(hi * comps).toFixed(2)}`);
+  console.log(`    margin:          ${(100 * (1 - lo * comps / price)).toFixed(1)}%  →  ${(100 * (1 - hi * comps / price)).toFixed(1)}%`);
+  console.log(`    vs $15 ceiling:  ${hi <= 15 ? 'well under' : 'OVER'}`);
 }
+
+const fixed = 209 + Object.values(fixedOther).reduce((a, b) => a + b, 0);
+console.log(`\nFIXED FLOOR  $${fixed}/mo`);
+console.log(`  break-even: ${Math.ceil(fixed / 149)} Starter, or ${Math.ceil(fixed / 399)} Growth customers`);
